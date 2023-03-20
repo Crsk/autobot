@@ -90,7 +90,7 @@ button:focus-visible {
 }
 
 .box.dragging {
-  fill: #f0f0f2;
+  fill: #0091ff;
 }
 
 @keyframes pulse {

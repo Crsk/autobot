@@ -10,11 +10,13 @@ const DraggableBoxes = () => {
     const svg = d3.select(svgRef.current)
     const boxWidth = 50
     const boxHeight = 50
+    const snapValue = 100
 
     if (svg.selectAll('*').empty()) {
       const createBox = (x, y) => svg.append('rect').attr('x', x).attr('y', y).attr('width', boxWidth).attr('height', boxHeight).attr('fill', 'steelblue')
-      const box1 = createBox(50, 50)
-      const box2 = createBox(250, 50)
+      const snapToGrid = (val) => Math.round(val / snapValue) * snapValue
+      const box1 = createBox(snapToGrid(50), snapToGrid(50))
+      const box2 = createBox(snapToGrid(250), snapToGrid(50))
       const line = svg.append('line').attr('stroke', 'black').attr('stroke-width', 2)
 
       const updateLine = () => {
@@ -39,7 +41,10 @@ const DraggableBoxes = () => {
           })),
           switchMap((offset) =>
             mousemove$.pipe(
-              map((event) => ({ x: event.clientX - offset.offsetX, y: event.clientY - offset.offsetY })),
+              map((event) => ({
+                x: snapToGrid(event.clientX - offset.offsetX),
+                y: snapToGrid(event.clientY - offset.offsetY),
+              })),
               takeUntil(mouseup$)
             )
           )

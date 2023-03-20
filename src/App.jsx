@@ -8,19 +8,19 @@ const DraggableBoxes = () => {
 
   useEffect(() => {
     const svg = d3.select(svgRef.current)
-    const boxWidth = 50
-    const boxHeight = 50
+    const boxWidth = 180
+    const boxHeight = 80
     const snapValue = 100
 
     if (svg.selectAll('*').empty()) {
-      const createBox = (x, y) => svg.append('rect').attr('x', x).attr('y', y).attr('width', boxWidth).attr('height', boxHeight).attr('fill', 'steelblue')
+      const createBox = (x, y) => svg.append('rect').attr('x', x).attr('y', y).attr('width', boxWidth).attr('height', boxHeight).attr('fill', '#f2f2f4')
       const snapToGrid = (val) => Math.round(val / snapValue) * snapValue
+      const line = svg.append('line').attr('stroke', '#f2f2f4').attr('stroke-width', 2)
       const box1 = createBox(snapToGrid(50), snapToGrid(50))
       const box2 = createBox(snapToGrid(250), snapToGrid(50))
-      const line = svg.append('line').attr('stroke', '#025948').attr('stroke-width', 2)
       const textGroup = svg.append('g').attr('class', 'non-selectable').attr('text-anchor', 'middle')
-      const textRect = textGroup.append('rect').attr('rx', 5).attr('ry', 5).attr('fill', 'rgba(10, 15, 14, 0.2)')
-      const text = textGroup.append('text').attr('font-size', 16).attr('fill', '#05735e').text('Yes')
+      const textRect = textGroup.append('rect').attr('rx', 5).attr('ry', 5).attr('fill', 'white')
+      const text = textGroup.append('text').attr('font-size', 16).attr('fill', '#7eccc8').text('Yes')
 
       const updateLine = () => {
         const x1 = parseFloat(box1.attr('x')) + boxWidth / 2

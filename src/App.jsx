@@ -16,7 +16,7 @@ const DraggableBoxes = () => {
       const width = window.innerWidth
       const height = window.innerHeight
       const dotRadius = 2
-      const dotColor = '#e9e9ec'
+      const dotColor = '#f2f2f5'
 
       for (let x = 0; x <= width; x += snapValue) {
         for (let y = 0; y <= height; y += snapValue) {
@@ -27,7 +27,7 @@ const DraggableBoxes = () => {
 
     if (svg.selectAll('*').empty()) {
       createGrid()
-      const createBox = (x, y) => svg.append('rect').attr('x', x).attr('y', y).attr('width', boxWidth).attr('height', boxHeight).attr('fill', '#f2f2f4')
+      const createBox = (x, y) => svg.append('rect').attr('x', x).attr('y', y).attr('rx', 5).attr('width', boxWidth).attr('height', boxHeight).attr('fill', '#f2f2f4').attr('class', 'box')
       const snapToGrid = (val) => Math.round(val / snapValue) * snapValue
       const line = svg.append('line').attr('stroke', '#f2f2f4').attr('stroke-width', 2)
       const box1 = createBox(snapToGrid(50), snapToGrid(50))
@@ -52,28 +52,40 @@ const DraggableBoxes = () => {
       updateLine()
 
       const drag = (element) => {
-        const mousedown$ = fromEvent(element.node(), 'mousedown')
-        const mousemove$ = fromEvent(svg.node(), 'mousemove')
-        const mouseup$ = fromEvent(svg.node(), 'mouseup')
+        const mousedown$ = fromEvent(element.node(), "mousedown")
+        const mousemove$ = fromEvent(svg.node(), "mousemove")
+        const mouseup$ = fromEvent(svg.node(), "mouseup")
 
         mousedown$.pipe(
-          map((event) => ({
-            offsetX: event.clientX - parseFloat(element.attr('x')),
-            offsetY: event.clientY - parseFloat(element.attr('y')),
-          })),
+          map((event) => {
+            element.classed("dragging", true)
+            return {
+              offsetX: event.clientX - parseFloat(element.attr("x")),
+              offsetY: event.clientY - parseFloat(element.attr("y")),
+            }
+          }),
           switchMap((offset) =>
             mousemove$.pipe(
               map((event) => ({
-                x: snapToGrid(event.clientX - offset.offsetX),
-                y: snapToGrid(event.clientY - offset.offsetY),
+                x: event.clientX - offset.offsetX,
+                y: event.clientY - offset.offsetY,
               })),
-              takeUntil(mouseup$)
+              takeUntil(
+                mouseup$.pipe(
+                  map(() => {
+                    const x = snapToGrid(parseFloat(element.attr("x")))
+                    const y = snapToGrid(parseFloat(element.attr("y")))
+                    element.classed("dragging", false).transition().duration(200).attr("x", x).attr("y", y).on("end", updateLine)
+                  })
+                )
+              )
             )
           )
-        ).subscribe(({ x, y }) => {
-          element.attr('x', x).attr('y', y)
-          updateLine()
-        })
+        )
+          .subscribe(({ x, y }) => {
+            element.attr("x", x).attr("y", y)
+            updateLine()
+          })
       }
 
       drag(box1)

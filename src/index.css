@@ -80,3 +80,25 @@ button:focus-visible {
   stroke-width: 0px;
   stroke-opacity: 0;
 }
+
+.box {
+  transition: transform 0.3s ease;
+}
+
+.box:hover {
+  animation: pulse 2s infinite;
+}
+
+.box.dragging {
+  fill: #f0f0f2;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.008);
+  }
+}

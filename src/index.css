@@ -67,38 +67,3 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-
-.non-selectable {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-
-.non-selectable rect {
-  stroke: rgba(0, 0, 0, 0);
-  stroke-width: 0px;
-  stroke-opacity: 0;
-}
-
-.box {
-  transition: transform 0.3s ease;
-}
-
-.box:hover {
-  animation: pulse 2s infinite;
-}
-
-.box.dragging {
-  fill: #0091ff;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.008);
-  }
-}

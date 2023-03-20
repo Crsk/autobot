@@ -17,14 +17,22 @@ const DraggableBoxes = () => {
       const snapToGrid = (val) => Math.round(val / snapValue) * snapValue
       const box1 = createBox(snapToGrid(50), snapToGrid(50))
       const box2 = createBox(snapToGrid(250), snapToGrid(50))
-      const line = svg.append('line').attr('stroke', 'black').attr('stroke-width', 2)
+      const line = svg.append('line').attr('stroke', '#025948').attr('stroke-width', 2)
+      const textGroup = svg.append('g').attr('class', 'non-selectable').attr('text-anchor', 'middle')
+      const textRect = textGroup.append('rect').attr('rx', 5).attr('ry', 5).attr('fill', 'rgba(10, 15, 14, 0.2)')
+      const text = textGroup.append('text').attr('font-size', 16).attr('fill', '#05735e').text('Yes')
 
       const updateLine = () => {
-        line
-          .attr('x1', parseFloat(box1.attr('x')) + boxWidth / 2)
-          .attr('y1', parseFloat(box1.attr('y')) + boxHeight / 2)
-          .attr('x2', parseFloat(box2.attr('x')) + boxWidth / 2)
-          .attr('y2', parseFloat(box2.attr('y')) + boxHeight / 2)
+        const x1 = parseFloat(box1.attr('x')) + boxWidth / 2
+        const y1 = parseFloat(box1.attr('y')) + boxHeight / 2
+        const x2 = parseFloat(box2.attr('x')) + boxWidth / 2
+        const y2 = parseFloat(box2.attr('y')) + boxHeight / 2
+        const textX = (x1 + x2) / 2
+        const textY = (y1 + y2) / 2
+        line.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
+        text.attr('x', textX).attr('y', textY)
+        const textBox = text.node().getBBox()
+        textRect.attr('x', textBox.x - 5).attr('y', textBox.y - 5).attr('width', textBox.width + 10).attr('height', textBox.height + 10)
       }
 
       updateLine()

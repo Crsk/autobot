@@ -1,0 +1,7 @@
+.box {
+  transition: transform 0.3s ease;
+}
+
+.box:hover {
+  animation: pulse 2s infinite;
+}

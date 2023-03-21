@@ -1,10 +1,15 @@
+import { snapToGrid } from '@/automation-engine/utils'
 import { useEffect } from 'react'
 import * as d3 from 'd3'
 import { fromEvent } from 'rxjs'
 import { map, takeUntil, switchMap } from 'rxjs/operators'
+import { useDispatch } from 'react-redux'
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 import styles from './index.module.scss'
 
-const useDrag = (elementRef: any, snapFunction: any, onPositionChange: any) => {
+const useDrag = (elementRef: any, setBoxPosition: ActionCreatorWithPayload<any, string>) => {
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const element = d3.select(elementRef.current)
 
@@ -38,8 +43,8 @@ const useDrag = (elementRef: any, snapFunction: any, onPositionChange: any) => {
           takeUntil(
             mouseup$.pipe(
               map(() => {
-                const x = snapFunction(parseFloat(element.attr('x')))
-                const y = snapFunction(parseFloat(element.attr('y')))
+                const x = snapToGrid(parseFloat(element.attr('x')))
+                const y = snapToGrid(parseFloat(element.attr('y')))
                 element
                   .classed(styles.dragging, false)
                   .transition()
@@ -52,14 +57,14 @@ const useDrag = (elementRef: any, snapFunction: any, onPositionChange: any) => {
         )),
       ).subscribe(({ x, y }) => {
         element.attr('x', x).attr('y', y)
-        onPositionChange({ x, y })
+        dispatch(setBoxPosition({ x, y }))
       })
 
     // eslint-disable-next-line consistent-return
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, snapFunction, onPositionChange])
+  }, [elementRef, dispatch, setBoxPosition])
 }
 
 export default useDrag

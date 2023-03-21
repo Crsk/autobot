@@ -1,14 +1,16 @@
 import { Point } from '@/automation-engine/types'
-import { areNodesAligned, defaultBoxHeight, defaultBoxWidth } from '@/automation-engine/utils'
+import { areNodesAligned, getConnectionPoints } from '@/automation-engine/utils'
 import React from 'react'
+import Dot from '../Dot'
 import LineTextLabel from '../LineTextLabel'
 
 function Line({ origin, destination }: { origin: Point, destination: Point }) {
+  const { originPoint, destinationPoint } = getConnectionPoints(origin, destination)
   const { x1, y1, x2, y2 } = {
-    x1: origin.x + defaultBoxWidth / 2,
-    y1: origin.y + defaultBoxHeight / 2,
-    x2: destination.x + defaultBoxWidth / 2,
-    y2: destination.y + defaultBoxHeight / 2,
+    x1: originPoint.x,
+    y1: originPoint.y,
+    x2: destinationPoint.x,
+    y2: destinationPoint.y,
   }
   const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
@@ -30,6 +32,8 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
         fill="none"
       />
       <LineTextLabel x={textPosition.x} y={textPosition.y} text="Yes" />
+      <Dot x={originPoint.x} y={originPoint.y} />
+      <Dot x={destinationPoint.x} y={destinationPoint.y} />
     </>
   )
 }

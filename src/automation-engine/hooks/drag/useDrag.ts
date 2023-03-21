@@ -57,7 +57,7 @@ const useDrag = (elementRef: any, setBoxPosition: ActionCreatorWithPayload<any, 
         )),
       ).subscribe(({ x, y }) => {
         element.attr('x', x).attr('y', y)
-        dispatch(setBoxPosition({ x, y }))
+        dispatch(setBoxPosition({ x: snapToGrid(x), y: snapToGrid(y) }))
       })
 
     // eslint-disable-next-line consistent-return

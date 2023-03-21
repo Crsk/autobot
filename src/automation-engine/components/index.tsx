@@ -34,10 +34,10 @@ function AutomationEngine() {
   return (
     <svg ref={svgRef} width="100vw" height="100vh">
       <Grid />
-      <Box x={box1Position.x} y={box1Position.y} setBoxPosition={setBox1Position} />
-      <Box x={box2Position.x} y={box2Position.y} setBoxPosition={setBox2Position} />
       <Line {...linePoints} />
       <LineTextLabel x={textPosition.x} y={textPosition.y} text="Yes" />
+      <Box x={box1Position.x} y={box1Position.y} setBoxPosition={setBox1Position} />
+      <Box x={box2Position.x} y={box2Position.y} setBoxPosition={setBox2Position} />
     </svg>
   )
 }

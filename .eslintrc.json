@@ -21,7 +21,8 @@
         "ignoreTemplateLiterals": true
       }
     ],
-    "newline-before-return": 1
+    "newline-before-return": 1,
+    "object-curly-newline": 0
   },
   "settings": {
     "import/resolver": {

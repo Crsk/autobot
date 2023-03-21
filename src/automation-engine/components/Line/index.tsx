@@ -1,40 +1,36 @@
+import { Point } from '@/automation-engine/types'
+import { areNodesAligned, defaultBoxHeight, defaultBoxWidth } from '@/automation-engine/utils'
 import React from 'react'
+import LineTextLabel from '../LineTextLabel'
 
-function Line({
-  x1,
-  y1,
-  x2,
-  y2,
-}: { x1: number, y1: number, x2: number, y2: number }) {
-  // Define a threshold to determine when the nodes are considered aligned
-  const alignmentThreshold = 10
+function Line({ origin, destination }: { origin: Point, destination: Point }) {
+  const { x1, y1, x2, y2 } = {
+    x1: origin.x + defaultBoxWidth / 2,
+    y1: origin.y + defaultBoxHeight / 2,
+    x2: destination.x + defaultBoxWidth / 2,
+    y2: destination.y + defaultBoxHeight / 2,
+  }
+  const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
   // Calculate the control points for the curve
-  const controlPoint1 = {
-    x: (x1 + x2) / 2,
-    y: y1,
-  }
-
-  const controlPoint2 = {
-    x: (x1 + x2) / 2,
-    y: y2,
-  }
-
-  // Check if the nodes are aligned vertically or horizontally
-  const areNodesAligned = Math.abs(x1 - x2) <= alignmentThreshold || Math.abs(y1 - y2) <= alignmentThreshold
+  const controlPoint1 = { x: (x1 + x1) / 2, y: y1 }
+  const controlPoint2 = { x: (x1 + x2) / 2, y: y2 }
 
   // Calculate the path's d attribute based on nodes' alignment
-  const pathD = areNodesAligned
+  const pathD = areNodesAligned(origin, destination)
     ? `M ${x1} ${y1} L ${x2} ${y2}`
     : `M ${x1} ${y1} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${x2} ${y2}`
 
   return (
-    <path
-      d={pathD}
-      stroke="#058af0"
-      strokeWidth={1.5}
-      fill="none"
-    />
+    <>
+      <path
+        d={pathD}
+        stroke="#058af0"
+        strokeWidth={1.5}
+        fill="none"
+      />
+      <LineTextLabel x={textPosition.x} y={textPosition.y} text="Yes" />
+    </>
   )
 }
 

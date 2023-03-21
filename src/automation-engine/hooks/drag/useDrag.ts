@@ -56,7 +56,6 @@ const useDrag = (elementRef: any, setBoxPosition: ActionCreatorWithPayload<any, 
           ),
         )),
       ).subscribe(({ x, y }) => {
-        element.attr('x', x).attr('y', y)
         dispatch(setBoxPosition({ x, y }))
       })
 

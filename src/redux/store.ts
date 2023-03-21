@@ -1,7 +1,7 @@
 // store.ts
 import { createSlice, configureStore, DevToolsEnhancerOptions } from '@reduxjs/toolkit'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import { snapToGrid } from '../automation-engine/utils'
+import { snapToGrid } from '@/automation-engine/utils'
 
 const initialState = {
   box1Position: {

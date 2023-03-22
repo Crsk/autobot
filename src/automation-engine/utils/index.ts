@@ -1,3 +1,4 @@
+import { Node } from '@/automation-engine/models/node'
 import { Point } from '../types'
 
 export const defaultBoxWidth = 225
@@ -46,20 +47,14 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
   })
 
   return {
-    originPoint: { x: snapToGrid(sourceConnection.x), y: snapToGrid(sourceConnection.y) },
-    destinationPoint: { x: snapToGrid(destinationConnection.x), y: snapToGrid(destinationConnection.y) },
+    originPoint: { x: sourceConnection.x, y: sourceConnection.y },
+    destinationPoint: { x: destinationConnection.x, y: destinationConnection.y },
   }
 }
 
 export function getConnections(nodes: Node[]): { origin: Node; destination: Node }[] {
-  const connections: { origin: Node; destination: Node }[] = []
-
-  nodes.forEach((node) => {
-    node.childrenIds.forEach((childId: string) => {
-      const childNode = nodes.find((n) => n.id === childId)
-      if (childNode) connections.push({ origin: node, destination: childNode })
-    })
-  })
-
-  return connections
+  return nodes.flatMap((node) => node.childrenIds
+    .map((childId: string) => nodes.find((n) => n.id === childId))
+    .filter((childNode) => !!childNode)
+    .map((childNode) => ({ origin: node, destination: childNode }))) as { origin: Node; destination: Node }[]
 }

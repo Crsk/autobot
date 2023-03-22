@@ -1,4 +1,3 @@
-import { snapToGrid } from '@/automation-engine/utils'
 import { useEffect } from 'react'
 import * as d3 from 'd3'
 import { fromEvent } from 'rxjs'
@@ -43,8 +42,8 @@ const useDrag = (elementRef: any, boxId: string) => {
           takeUntil(
             mouseup$.pipe(
               map(() => {
-                const x = snapToGrid(parseFloat(element.attr('x')))
-                const y = snapToGrid(parseFloat(element.attr('y')))
+                const x = parseFloat(element.attr('x'))
+                const y = parseFloat(element.attr('y'))
                 element
                   .classed(styles.dragging, false)
                   .transition()

@@ -1,5 +1,4 @@
-import { Point } from '@/automation-engine/types'
-import { areNodesAligned, getConnectionPoints } from '@/automation-engine/utils'
+import { getConnectionPoints } from '@/automation-engine/utils'
 import React from 'react'
 import { Node } from '@/automation-engine/models/node'
 import Dot from '../Dot'
@@ -19,10 +18,8 @@ function Line({ origin, destination }: { origin: Node, destination: Node }) {
   const controlPoint1 = { x: (x1 + x1) / 2, y: y1 }
   const controlPoint2 = { x: (x1 + x2) / 2, y: y2 }
 
-  // Calculate the path's d attribute based on nodes' alignment
-  const pathD = areNodesAligned(origin, destination)
-    ? `M ${x1} ${y1} L ${x2} ${y2}`
-    : `M ${x1} ${y1} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${x2} ${y2}`
+  // Create the line curvature
+  const pathD = `M ${x1} ${y1} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${x2} ${y2}`
 
   return (
     <>

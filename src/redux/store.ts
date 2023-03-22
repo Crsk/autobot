@@ -1,38 +1,51 @@
 // store.ts
-import { createSlice, configureStore, DevToolsEnhancerOptions } from '@reduxjs/toolkit'
+import { createSlice, configureStore, DevToolsEnhancerOptions, PayloadAction } from '@reduxjs/toolkit'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import { snapToGrid } from '@/automation-engine/utils'
+import { Node } from '@/automation-engine/models/node'
 
-const initialState = {
-  box1Position: {
-    x: snapToGrid(50),
-    y: snapToGrid(50),
-  },
-  box2Position: {
-    x: snapToGrid(350),
-    y: snapToGrid(50),
-  },
+interface AddNodePayload {
+  parentId: string | null
+  id: string
+  x: number
+  y: number
 }
 
-const positionSlice = createSlice({
-  name: 'position',
+interface UpdateNodePayload {
+  id: string
+  x: number
+  y: number
+}
+
+interface State {
+  nodesById: Record<string, Node>
+}
+
+const initialState: State = {
+  nodesById: {},
+}
+
+const nodeSlice = createSlice({
+  name: 'node',
   initialState,
   reducers: {
-    setBox1Position: (state, action) => {
-      // eslint-disable-next-line no-param-reassign
-      state.box1Position = action.payload
+    addNode: (state, action: PayloadAction<AddNodePayload>) => {
+      const { parentId, id, x, y }: { parentId: string | null, id: string, x: number, y: number } = action.payload
+      const parent = parentId ? state.nodesById[parentId] : null
+      parent?.childrenIds.push(id)
+      state.nodesById[id] = { id, x, y, childrenIds: [] }
     },
-    setBox2Position: (state, action) => {
-      // eslint-disable-next-line no-param-reassign
-      state.box2Position = action.payload
+    updateNode: (state, action: PayloadAction<UpdateNodePayload>) => {
+      const { id, x, y } = action.payload
+      state.nodesById[id].x = x
+      state.nodesById[id].y = y
     },
   },
 })
 
-export const { setBox1Position, setBox2Position } = positionSlice.actions
+export const { addNode, updateNode } = nodeSlice.actions
 
 const store = configureStore({
-  reducer: positionSlice.reducer,
+  reducer: nodeSlice.reducer,
   devTools: [devToolsEnhancer({ realtime: true } as any)] as DevToolsEnhancerOptions,
 })
 

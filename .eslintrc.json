@@ -22,7 +22,8 @@
       }
     ],
     "newline-before-return": 1,
-    "object-curly-newline": 0
+    "object-curly-newline": 0,
+    "no-param-reassign": 0
   },
   "settings": {
     "import/resolver": {

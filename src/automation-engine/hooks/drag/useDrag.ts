@@ -4,10 +4,10 @@ import * as d3 from 'd3'
 import { fromEvent } from 'rxjs'
 import { map, takeUntil, switchMap } from 'rxjs/operators'
 import { useDispatch } from 'react-redux'
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
+import { updateNode } from '@/redux/store'
 import styles from './index.module.scss'
 
-const useDrag = (elementRef: any, setBoxPosition: ActionCreatorWithPayload<any, string>) => {
+const useDrag = (elementRef: any, boxId: string) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -56,14 +56,14 @@ const useDrag = (elementRef: any, setBoxPosition: ActionCreatorWithPayload<any, 
           ),
         )),
       ).subscribe(({ x, y }) => {
-        dispatch(setBoxPosition({ x, y }))
+        dispatch(updateNode({ id: boxId, x, y }))
       })
 
     // eslint-disable-next-line consistent-return
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, setBoxPosition])
+  }, [elementRef, dispatch, boxId])
 }
 
 export default useDrag

@@ -1,28 +1,21 @@
-import React, { useRef } from 'react'
-import useDrag from '@/automation-engine/hooks/drag/useDrag'
+import React, { useEffect } from 'react'
 import Grid from '@/automation-engine/components/Grid'
 import Box from '@/automation-engine/components/Box'
-import Line from '@/automation-engine/components/Line'
-import { useSelector } from 'react-redux'
-import { setBox1Position, setBox2Position } from '../../redux/store'
+import { addNode } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
 
 function AutomationEngine() {
-  const svgRef: React.MutableRefObject<null> = useRef(null)
-  const box1Ref: React.MutableRefObject<null> = useRef(null)
-  const box2Ref: React.MutableRefObject<null> = useRef(null)
+  const dispatch = useDispatch()
+  const node = useSelector((state: any) => state.nodesById['0'])
 
-  const box1Position = useSelector((state: any) => state.box1Position)
-  const box2Position = useSelector((state: any) => state.box2Position)
-
-  useDrag(box1Ref, setBox1Position)
-  useDrag(box2Ref, setBox2Position)
+  useEffect(() => {
+    dispatch(addNode({ parentId: null, id: '0', x: 300, y: 300 }))
+  }, [dispatch])
 
   return (
-    <svg ref={svgRef} width="100vw" height="100vh">
+    <svg width="100vw" height="100vh">
       <Grid />
-      <Line origin={box1Position} destination={box2Position} />
-      <Box x={box1Position.x} y={box1Position.y} setBoxPosition={setBox1Position} />
-      <Box x={box2Position.x} y={box2Position.y} setBoxPosition={setBox2Position} />
+      {node && <Box node={node} />}
     </svg>
   )
 }

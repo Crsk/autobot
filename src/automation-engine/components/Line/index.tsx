@@ -1,10 +1,11 @@
 import { Point } from '@/automation-engine/types'
 import { areNodesAligned, getConnectionPoints } from '@/automation-engine/utils'
 import React from 'react'
+import { Node } from '@/automation-engine/models/node'
 import Dot from '../Dot'
 import LineTextLabel from '../LineTextLabel'
 
-function Line({ origin, destination }: { origin: Point, destination: Point }) {
+function Line({ origin, destination }: { origin: Node, destination: Node }) {
   const { originPoint, destinationPoint } = getConnectionPoints(origin, destination)
   const { x1, y1, x2, y2 } = {
     x1: originPoint.x,

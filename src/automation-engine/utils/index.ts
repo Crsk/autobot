@@ -50,3 +50,16 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
     destinationPoint: { x: snapToGrid(destinationConnection.x), y: snapToGrid(destinationConnection.y) },
   }
 }
+
+export function getConnections(nodes: Node[]): { origin: Node; destination: Node }[] {
+  const connections: { origin: Node; destination: Node }[] = []
+
+  nodes.forEach((node) => {
+    node.childrenIds.forEach((childId: string) => {
+      const childNode = nodes.find((n) => n.id === childId)
+      if (childNode) connections.push({ origin: node, destination: childNode })
+    })
+  })
+
+  return connections
+}

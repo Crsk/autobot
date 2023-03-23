@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import { fromEvent } from 'rxjs'
 import { map, takeUntil, switchMap } from 'rxjs/operators'
 import { useDispatch } from 'react-redux'
-import { dropNewNode, startNewNode, updateNewNode } from '@/redux/store'
+import { dropNewNode, updateNewNode } from '@/redux/store'
 import { v4 as uuid } from 'uuid'
 
 const useDragDot = (elementRef: any, boxId: string) => {
@@ -23,7 +23,6 @@ const useDragDot = (elementRef: any, boxId: string) => {
     const mousedown$ = fromEvent<MouseEvent>(element.node(), 'mousedown')
     const mousemove$ = fromEvent<MouseEvent>(svg.node(), 'mousemove')
     const mouseup$ = fromEvent<MouseEvent>(svg.node(), 'mouseup')
-    dispatch(startNewNode({ x: 0, y: 0 }))
 
     const subscription = mousedown$
       .pipe(

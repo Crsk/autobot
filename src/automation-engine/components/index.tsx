@@ -23,8 +23,8 @@ function AutomationEngine() {
       {connections.map((connection) => (
         <Line key={`${connection.origin.id}-${connection.destination.id}`} origin={connection.origin} destination={connection.destination} />
       ))}
-      {(nodes as Node[]).filter((x) => !!x).map((nodee: Node) => (
-        <Box key={nodee.id} node={nodee} />
+      {(nodes as Node[]).filter((x) => !!x).map((node: Node) => (
+        <Box key={node.id} node={node} />
       ))}
     </svg>
   )

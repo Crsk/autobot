@@ -28,44 +28,36 @@ interface State {
 
 const initialState: State = {
   nodesById: {},
-  newNode: null,
+  newNode: { x: 0, y: 0 } || null,
+}
+
+const createChild = (state: any, parentId: string | null, childId: string, x: number, y: number) => {
+  const parent = parentId ? state.nodesById[parentId] : null
+  parent?.childrenIds.push(childId)
+  state.nodesById[childId] = { id: childId, x, y, childrenIds: [] }
+  state.newNode = null
 }
 
 const nodeSlice = createSlice({
   name: 'node',
   initialState,
   reducers: {
-    addNode: (state, action: PayloadAction<AddNodePayload>) => {
-      const { parentId, id, x, y }: { parentId: string | null, id: string, x: number, y: number } = action.payload
-      const parent = parentId ? state.nodesById[parentId] : null
-      parent?.childrenIds.push(id)
-      state.nodesById[id] = { id, x, y, childrenIds: [] }
+    addNode: (state, { payload: { parentId, id, x, y } }: PayloadAction<AddNodePayload>) => {
+      createChild(state, parentId, id, x, y)
     },
-    updateNode: (state, action: PayloadAction<UpdateNodePayload>) => {
-      const { id, x, y } = action.payload
-      state.nodesById[id].x = x
-      state.nodesById[id].y = y
+    updateNode: (state, { payload: { id, x, y } }: PayloadAction<UpdateNodePayload>) => {
+      state.nodesById[id] = { ...state.nodesById[id], x, y }
     },
-    startNewNode: (state, action: PayloadAction<NewNodePayload>) => {
-      state.newNode = action.payload
+    updateNewNode: (state, { payload: { x, y } }: PayloadAction<NewNodePayload>) => {
+      state.newNode = { x, y }
     },
-    updateNewNode: (state, action: PayloadAction<NewNodePayload>) => {
-      if (state.newNode) {
-        state.newNode.x = action.payload.x
-        state.newNode.y = action.payload.y
-      }
-    },
-    dropNewNode: (state, action: PayloadAction<AddNodePayload>) => {
-      const { parentId, id, x, y } = action.payload
-      const parent = parentId ? state.nodesById[parentId] : null
-      parent?.childrenIds.push(id)
-      state.nodesById[id] = { id, x, y, childrenIds: [] }
-      state.newNode = null
+    dropNewNode: (state, { payload: { parentId, id, x, y } }: PayloadAction<AddNodePayload>) => {
+      createChild(state, parentId, id, x, y)
     },
   },
 })
 
-export const { addNode, updateNode, startNewNode, updateNewNode, dropNewNode } = nodeSlice.actions
+export const { addNode, updateNode, updateNewNode, dropNewNode } = nodeSlice.actions
 
 const store = configureStore({
   reducer: nodeSlice.reducer,

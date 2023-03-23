@@ -16,12 +16,19 @@ interface UpdateNodePayload {
   y: number
 }
 
+interface NewNodePayload {
+  x: number
+  y: number
+}
+
 interface State {
   nodesById: Record<string, Node>
+  newNode: NewNodePayload | null
 }
 
 const initialState: State = {
   nodesById: {},
+  newNode: null,
 }
 
 const nodeSlice = createSlice({
@@ -39,10 +46,26 @@ const nodeSlice = createSlice({
       state.nodesById[id].x = x
       state.nodesById[id].y = y
     },
+    startNewNode: (state, action: PayloadAction<NewNodePayload>) => {
+      state.newNode = action.payload
+    },
+    updateNewNode: (state, action: PayloadAction<NewNodePayload>) => {
+      if (state.newNode) {
+        state.newNode.x = action.payload.x
+        state.newNode.y = action.payload.y
+      }
+    },
+    dropNewNode: (state, action: PayloadAction<AddNodePayload>) => {
+      const { parentId, id, x, y } = action.payload
+      const parent = parentId ? state.nodesById[parentId] : null
+      parent?.childrenIds.push(id)
+      state.nodesById[id] = { id, x, y, childrenIds: [] }
+      state.newNode = null
+    },
   },
 })
 
-export const { addNode, updateNode } = nodeSlice.actions
+export const { addNode, updateNode, startNewNode, updateNewNode, dropNewNode } = nodeSlice.actions
 
 const store = configureStore({
   reducer: nodeSlice.reducer,

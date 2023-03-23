@@ -28,23 +28,23 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
     bottom: { x: destination.x + defaultBoxWidth / 2, y: destination.y + defaultBoxHeight },
   }
 
-  let minDistance = Infinity
+  // Calculate the horizontal and vertical distances between the center points of the two nodes
+  const horizontalDistance = Math.abs((origin.x + defaultBoxWidth / 2) - (destination.x + defaultBoxWidth / 2))
+  const verticalDistance = Math.abs((origin.y + defaultBoxHeight / 2) - (destination.y + defaultBoxHeight / 2))
+
   let sourceConnection: Point = { x: 0, y: 0 }
   let destinationConnection: Point = { x: 0, y: 0 }
 
-  /**
-   * Calculates the distance between each pair of sides
-   */
-  Object.values(sourceSides).forEach((sourceSide) => {
-    Object.values(destinationSides).forEach((destinationSide) => {
-      const distance = Math.hypot(sourceSide.x - destinationSide.x, sourceSide.y - destinationSide.y)
-      if (distance < minDistance) {
-        minDistance = distance
-        sourceConnection = sourceSide
-        destinationConnection = destinationSide
-      }
-    })
-  })
+  // Determine whether the nodes are more aligned vertically or horizontally
+  if (verticalDistance > horizontalDistance) {
+    // Vertically more aligned
+    sourceConnection = origin.y < destination.y ? sourceSides.bottom : sourceSides.top
+    destinationConnection = origin.y < destination.y ? destinationSides.top : destinationSides.bottom
+  } else {
+    // Horizontally more aligned
+    sourceConnection = origin.x < destination.x ? sourceSides.right : sourceSides.left
+    destinationConnection = origin.x < destination.x ? destinationSides.left : destinationSides.right
+  }
 
   return {
     originPoint: { x: sourceConnection.x, y: sourceConnection.y },

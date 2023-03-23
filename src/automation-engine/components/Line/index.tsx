@@ -14,9 +14,20 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
   }
   const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
+  // Calculate the alignment distance
+  const horizontalDistance = Math.abs(x2 - x1)
+  const verticalDistance = Math.abs(y2 - y1)
+  const alignmentDistance = Math.min(horizontalDistance, verticalDistance)
+
+  // Calculate tension based on the alignment distance
+  const maxTension = 0.25
+  const tension = (alignmentDistance / Math.max(horizontalDistance, verticalDistance)) * maxTension
+
   // Calculate the control points for the curve
-  const controlPoint1 = { x: (x1 + x1) / 2, y: y1 }
-  const controlPoint2 = { x: (x1 + x2) / 2, y: y2 }
+  const midPoint = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
+  const vector = { x: (x2 - x1) * tension, y: (y2 - y1) * tension }
+  const controlPoint1 = { x: midPoint.x - vector.y, y: midPoint.y + vector.x }
+  const controlPoint2 = { x: midPoint.x + vector.y, y: midPoint.y - vector.x }
 
   // Create the line curvature
   const pathD = `M ${x1} ${y1} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${x2} ${y2}`

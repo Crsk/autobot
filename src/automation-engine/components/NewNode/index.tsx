@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
-import useDragDot from '@/automation-engine/hooks/drag/useDragDot'
+import React, { useRef, useState } from 'react'
 import { Node } from '@/automation-engine/models/node'
 import { useSelector } from 'react-redux'
+import useDrag from '@/automation-engine/hooks/drag/useDrag'
+import { v4 as uuid } from 'uuid'
 import styles from './new-node.module.scss'
 
 function NewNode({ parentNode }: { parentNode: Node }) {
   const ref = React.useRef<SVGRectElement>(null)
-  const newNode: { x: number, y: number } = useSelector((state: any) => state.newNode)
+  const newNodeIdRef = useRef<string>(uuid())
   const [isExpanded, setIsExpanded] = useState(false)
-  useDragDot(ref, parentNode.id)
+  const newNode: Node = useSelector((state: any) => state.nodesById[newNodeIdRef.current])
+  useDrag(ref, newNodeIdRef.current, parentNode.id)
 
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
@@ -19,8 +21,8 @@ function NewNode({ parentNode }: { parentNode: Node }) {
       transform={`translate(${newNode?.x ? newNode.x : parentNode.x + 113}, ${newNode?.y ? newNode.y : parentNode.y + 101})`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      x={newNode ? newNode.x : -10}
-      y={newNode ? newNode.y : -10}
+      x={newNode?.x ? newNode.x : parentNode.x + 113}
+      y={newNode?.y ? newNode.y : parentNode.y + 101}
     >
       <rect ref={ref} rx={4} className={`${styles.dot} ${isExpanded ? styles.dotExpanded : ''}`} />
     </g>

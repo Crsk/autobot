@@ -52,9 +52,33 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
   }
 }
 
-export function getConnections(nodes: Node[]): { origin: Node; destination: Node }[] {
-  return nodes.flatMap((node) => node.childrenIds
-    .map((childId: string) => nodes.find((n) => n.id === childId))
-    .filter((childNode) => !!childNode)
-    .map((childNode) => ({ origin: node, destination: childNode }))) as { origin: Node; destination: Node }[]
+export const getConnections = (nodes: Node[]): { origin: Node; destination: Node }[] => nodes.flatMap((node) => node.childrenIds
+  .map((childId: string) => nodes.find((n) => n.id === childId))
+  .filter((childNode) => !!childNode)
+  .map((childNode) => ({ origin: node, destination: childNode }))) as { origin: Node; destination: Node }[]
+
+export const getNodesOrientation = (node1: Point, node2: Point): {
+  orientation: 'HORIZONTAL' | 'VERTICAL',
+  alignmentDistance: number,
+  horizontalDistance: number,
+  verticalDistance: number,
+  nodeCenter1: Point,
+  nodeCenter2: Point
+} => {
+  const nodeCenter1 = { x: node1.x + defaultBoxWidth / 2, y: node1.y + defaultBoxHeight / 2 }
+  const nodeCenter2 = { x: node2.x + defaultBoxWidth / 2, y: node2.y + defaultBoxHeight / 2 }
+
+  const horizontalDistance = Math.abs(nodeCenter1.x - nodeCenter2.x)
+  const verticalDistance = Math.abs(nodeCenter1.y - nodeCenter2.y)
+  const orientation = verticalDistance > horizontalDistance ? 'VERTICAL' : 'HORIZONTAL'
+  const alignmentDistance = Math.min(horizontalDistance, verticalDistance)
+
+  return {
+    orientation,
+    alignmentDistance,
+    horizontalDistance,
+    verticalDistance,
+    nodeCenter1,
+    nodeCenter2,
+  }
 }

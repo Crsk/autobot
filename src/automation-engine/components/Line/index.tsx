@@ -1,4 +1,4 @@
-import { getConnectionPoints } from '@/automation-engine/utils'
+import { getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
 import React from 'react'
 import { Point } from '@/automation-engine/types'
 import Dot from '../Dot'
@@ -13,11 +13,7 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
     y2: destinationPoint.y,
   }
   const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
-
-  // Calculate the alignment distance
-  const horizontalDistance = Math.abs(x2 - x1)
-  const verticalDistance = Math.abs(y2 - y1)
-  const alignmentDistance = Math.min(horizontalDistance, verticalDistance)
+  const { alignmentDistance, horizontalDistance, verticalDistance } = getNodesOrientation(origin, destination)
 
   // Calculate tension based on the alignment distance
   const maxTension = 0.1

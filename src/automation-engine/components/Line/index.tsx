@@ -20,7 +20,7 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
   const alignmentDistance = Math.min(horizontalDistance, verticalDistance)
 
   // Calculate tension based on the alignment distance
-  const maxTension = 0.25
+  const maxTension = 0.1
   const tension = (alignmentDistance / Math.max(horizontalDistance, verticalDistance)) * maxTension
 
   // Calculate the control points for the curve

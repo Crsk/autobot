@@ -49,7 +49,7 @@ function Box({ node }: { node: Node }) {
             y={node.y + defaultBoxHeight / 2}
             textAnchor="middle"
             dominantBaseline="central"
-            style={{ pointerEvents: 'none' }}
+            style={{ pointerEvents: 'none', fill: 'white', fontFamily: 'Roboto, sans-serif', fontSize: '1.1em' }}
             className={styles.nonSelectable}
           >
             {inputValue}

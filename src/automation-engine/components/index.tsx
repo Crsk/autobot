@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import Grid from '@/automation-engine/components/Grid'
 import Box from '@/automation-engine/components/Box'
 import Line from '@/automation-engine/components/Line'
 import { addNode } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node } from '@/automation-engine/models/node'
-import { getConnections } from '@/automation-engine/utils'
+import { Connection } from '@/automation-engine/types'
 
 function AutomationEngine() {
   const dispatch = useDispatch()
   const nodes = useSelector((state: any) => Object.values(state.nodesById))
-  const connections = useMemo(() => getConnections(nodes as Node[]), [nodes])
+  const connections: Connection[] = useSelector((state: any) => Object.values(state.connections))
 
   useEffect(() => {
     dispatch(addNode({ parentId: null, id: '0', x: 300, y: 300 }))

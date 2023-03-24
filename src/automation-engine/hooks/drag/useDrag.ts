@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import { fromEvent } from 'rxjs'
-import { map, takeUntil, switchMap } from 'rxjs/operators'
+import { map, takeUntil, switchMap, tap } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNode, updateNode } from '@/redux/store'
+import { addNode, updateConnections, updateNode } from '@/redux/store'
+import { snapToGrid } from '@/automation-engine/utils'
+import { Node } from '@/automation-engine/models/node'
 import styles from './index.module.scss'
 
 const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null = null) => {
@@ -11,10 +13,18 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
 
   // Updating manually to avoid unnecessary re-renders and circular dependency
   const node: Node | null = useSelector((state: any) => state.nodesById[boxId])
+  const nodes = useSelector((state: any) => Object.values<Node>(state.nodesById))
   const nodeRef = useRef(node)
+  const nodesRef = useRef(nodes)
   nodeRef.current = node
+  nodesRef.current = nodes
 
   useEffect(() => {
+    const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
+      if (newNodeParentId && !nodeRef.current) dispatch(addNode({ parentId: newNodeParentId, id: boxId, x, y }))
+      else dispatch(updateNode({ id: boxId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
+      dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
+    }
     const element = d3.select(elementRef.current)
 
     if (!element) return
@@ -46,9 +56,10 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
           })),
           takeUntil(
             mouseup$.pipe(
-              map(() => {
-                const x = parseFloat(element.attr('x'))
-                const y = parseFloat(element.attr('y'))
+              tap(() => {
+                const x = snapToGrid(parseFloat(element.attr('x')))
+                const y = snapToGrid(parseFloat(element.attr('y')))
+                updateNodeAndConnections(x, y, true)
                 element
                   .classed(styles.dragging, false)
                   .transition()
@@ -59,10 +70,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
             ),
           ),
         )),
-      ).subscribe(({ x, y }) => {
-        if (newNodeParentId && !nodeRef.current) dispatch(addNode({ parentId: newNodeParentId, id: boxId, x, y }))
-        else dispatch(updateNode({ id: boxId, x, y }))
-      })
+      ).subscribe(({ x, y }) => updateNodeAndConnections(x, y))
 
     // eslint-disable-next-line consistent-return
     return () => {

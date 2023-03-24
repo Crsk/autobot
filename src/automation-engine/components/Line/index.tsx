@@ -6,6 +6,7 @@ import LineTextLabel from '../LineTextLabel'
 
 function Line({ origin, destination }: { origin: Point, destination: Point }) {
   const { originPoint, destinationPoint } = getConnectionPoints(origin, destination)
+  const { orientation } = getNodesOrientation(origin, destination)
   const { x1, y1, x2, y2 } = {
     x1: originPoint.x,
     y1: originPoint.y,
@@ -13,20 +14,19 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
     y2: destinationPoint.y,
   }
   const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
-  const { alignmentDistance, horizontalDistance, verticalDistance } = getNodesOrientation(origin, destination)
-
-  // Calculate tension based on the alignment distance
-  const maxTension = 0.1
-  const tension = (alignmentDistance / Math.max(horizontalDistance, verticalDistance)) * maxTension
-
-  // Calculate the control points for the curve
-  const midPoint = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
-  const vector = { x: (x2 - x1) * tension, y: (y2 - y1) * tension }
-  const controlPoint1 = { x: midPoint.x - vector.y, y: midPoint.y + vector.x }
-  const controlPoint2 = { x: midPoint.x + vector.y, y: midPoint.y - vector.x }
-
-  // Create the line curvature
-  const pathD = `M ${x1} ${y1} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${x2} ${y2}`
+  const tension = 0.5
+  const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+  const { x: originX, y: originY } = originPoint
+  const { x: destX, y: destY } = destinationPoint
+  const tensionDistance = tension * distance
+  const horizontal = orientation === 'HORIZONTAL'
+  const tensionX = originX < destX ? tensionDistance : -tensionDistance
+  const tensionY = originY < destY ? tensionDistance : -tensionDistance
+  const cp1x = horizontal ? x1 + tensionX : x1
+  const cp1y = horizontal ? y1 : y1 + tensionY
+  const cp2x = horizontal ? x2 - tensionX : x2
+  const cp2y = horizontal ? y2 : y2 - tensionY
+  const pathD = `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}` // Create the Bezier curve
 
   return (
     <>

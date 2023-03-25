@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
-import { fromEvent } from 'rxjs'
-import { map, takeUntil, switchMap, tap } from 'rxjs/operators'
+import { fromEvent, Subject } from 'rxjs'
+import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNode, updateConnections, updateNode } from '@/redux/store'
 import { snapToGrid } from '@/automation-engine/utils'
@@ -18,6 +18,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
   const nodesRef = useRef(nodes)
   nodeRef.current = node
   nodesRef.current = nodes
+  const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 
   useEffect(() => {
     const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
@@ -38,6 +39,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
     const mousedown$ = fromEvent<MouseEvent>(element.node(), 'mousedown')
     const mousemove$ = fromEvent<MouseEvent>(svg.node(), 'mousemove')
     const mouseup$ = fromEvent<MouseEvent>(svg.node(), 'mouseup')
+      .pipe(share()) // Avoid separate chain of observables executed independently for each subscriber
 
     const subscription = mousedown$
       .pipe(
@@ -66,6 +68,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
                   .duration(200)
                   .attr('x', x)
                   .attr('y', y)
+                mouseupSubject.next()
               }),
             ),
           ),
@@ -76,7 +79,9 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, boxId, newNodeParentId])
+  }, [elementRef, dispatch, boxId, newNodeParentId, mouseupSubject])
+
+  return mouseupSubject
 }
 
 export default useDrag

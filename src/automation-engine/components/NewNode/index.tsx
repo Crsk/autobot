@@ -5,6 +5,7 @@ import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { v4 as uuid } from 'uuid'
 import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
 import { Point } from '@/automation-engine/types'
+import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import styles from './new-node.module.scss'
 
 const dotWidth = 8
@@ -25,7 +26,9 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
 
-  useDrag(ref, newNodeIdRef.current, parentNode.id)
+  useSubscribe(useDrag(ref, newNodeIdRef.current, parentNode.id), () => {
+    newNodeIdRef.current = uuid()
+  })
 
   useEffect(() => {
     setCoords({ x: dotX, y: dotY })

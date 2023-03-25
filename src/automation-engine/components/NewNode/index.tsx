@@ -1,38 +1,53 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect, memo } from 'react'
 import { Node } from '@/automation-engine/models/node'
 import { useSelector } from 'react-redux'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { v4 as uuid } from 'uuid'
 import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
+import { Point } from '@/automation-engine/types'
 import styles from './new-node.module.scss'
 
+const dotWidth = 8
+const dotSeparation = 16
+
+const getPosition = (newNode: Node, parent: Node): Point => ({
+  x: newNode ? newNode.x : parent.x - dotWidth / 2 + defaultNodeWidth / 2,
+  y: newNode ? newNode.y : parent.y + defaultNodeHeight + dotSeparation,
+})
+
 function NewNode({ parentNode }: { parentNode: Node }) {
-  const ref = React.useRef<SVGRectElement>(null)
+  const ref = useRef<SVGRectElement>(null)
   const newNodeIdRef = useRef<string>(uuid())
   const [isExpanded, setIsExpanded] = useState(false)
-  const newNode: Node = useSelector((state: any) => state.nodesById[newNodeIdRef.current])
-  useDrag(ref, newNodeIdRef.current, parentNode.id)
-
+  const newNode = useSelector((state: any) => state.nodesById[newNodeIdRef.current])
+  const { x: dotX, y: dotY } = getPosition(newNode, parentNode)
+  const [coords, setCoords] = useState<Point>({ x: dotX, y: dotY })
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
+
+  useDrag(ref, newNodeIdRef.current, parentNode.id)
+
+  useEffect(() => {
+    setCoords({ x: dotX, y: dotY })
+  }, [dotX, dotY])
 
   return (
     <g
       ref={ref}
-      transform={`translate(${newNode?.x ? newNode.x : parentNode.x - 4 + defaultNodeWidth / 2}, ${newNode?.y ? newNode.y : parentNode.y + defaultNodeHeight + 16})`}
+      transform={`translate(${coords.x}, ${coords.y})`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      x={newNode?.x ? newNode.x : parentNode.x + defaultNodeWidth / 2}
-      y={newNode?.y ? newNode.y : parentNode.y + defaultNodeHeight + 16}
+      x={coords.x}
+      y={coords.y}
     >
       <rect
         ref={ref}
         rx={defaultNodeRadius}
-        style={{ width: isExpanded ? `${defaultNodeWidth}px` : '8px', height: isExpanded ? `${defaultNodeHeight}px` : '8px' }}
+        style={{ width: isExpanded ? `${defaultNodeWidth}px` : `${dotWidth}px`, height: isExpanded ? `${defaultNodeHeight}px` : `${dotWidth}px` }}
         className={styles.dot}
       />
     </g>
   )
 }
 
-export default NewNode
+export default memo(NewNode)

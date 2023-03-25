@@ -1,7 +1,6 @@
 import { getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
 import React from 'react'
 import { Point } from '@/automation-engine/types'
-import Dot from '../Dot'
 import LineTextLabel from '../LineTextLabel'
 
 function getCurve(origin: Point, destination: Point) {
@@ -33,21 +32,12 @@ function getCurve(origin: Point, destination: Point) {
 }
 
 function Line({ origin, destination }: { origin: Point, destination: Point }) {
-  const {
-    center,
-    curve,
-    line: {
-      origin: { x: x1, y: y1 },
-      destination: { x: x2, y: y2 },
-    },
-  } = getCurve(origin, destination)
+  const { center, curve } = getCurve(origin, destination)
 
   return (
     <>
       <path d={curve} stroke="#058af0" strokeWidth={1.5} fill="none" />
       <LineTextLabel x={center.x} y={center.y} text="Yes" />
-      <Dot x={x1} y={y1} />
-      <Dot x={x2} y={y2} />
     </>
   )
 }

@@ -1,8 +1,9 @@
 import { Node } from '@/automation-engine/models/node'
 import { Connection, ConnectionNode, Point } from '../types'
 
-export const defaultBoxWidth = 225
-export const defaultBoxHeight = 75
+export const defaultNodeWidth = 225
+export const defaultNodeHeight = 55
+export const defaultNodeRadius = 24
 export const snapValue = 25
 const verticallyThreshold = 1.5 // the greater the value, the wider the range to change from vertical to horizontal
 
@@ -16,22 +17,22 @@ export const areNodesAligned = (origin: Point, destination: Point) => Math.abs(o
 
 export const getConnectionPoints = (origin: Point, destination: Point) => {
   const sourceSides = {
-    left: { x: origin.x, y: origin.y + defaultBoxHeight / 2 },
-    right: { x: origin.x + defaultBoxWidth, y: origin.y + defaultBoxHeight / 2 },
-    top: { x: origin.x + defaultBoxWidth / 2, y: origin.y },
-    bottom: { x: origin.x + defaultBoxWidth / 2, y: origin.y + defaultBoxHeight },
+    left: { x: origin.x, y: origin.y + defaultNodeHeight / 2 },
+    right: { x: origin.x + defaultNodeWidth, y: origin.y + defaultNodeHeight / 2 },
+    top: { x: origin.x + defaultNodeWidth / 2, y: origin.y },
+    bottom: { x: origin.x + defaultNodeWidth / 2, y: origin.y + defaultNodeHeight },
   }
 
   const destinationSides = {
-    left: { x: destination.x, y: destination.y + defaultBoxHeight / 2 },
-    right: { x: destination.x + defaultBoxWidth, y: destination.y + defaultBoxHeight / 2 },
-    top: { x: destination.x + defaultBoxWidth / 2, y: destination.y },
-    bottom: { x: destination.x + defaultBoxWidth / 2, y: destination.y + defaultBoxHeight },
+    left: { x: destination.x, y: destination.y + defaultNodeHeight / 2 },
+    right: { x: destination.x + defaultNodeWidth, y: destination.y + defaultNodeHeight / 2 },
+    top: { x: destination.x + defaultNodeWidth / 2, y: destination.y },
+    bottom: { x: destination.x + defaultNodeWidth / 2, y: destination.y + defaultNodeHeight },
   }
 
   // Calculate the horizontal and vertical distances between the center points of the two nodes
-  const horizontalDistance = Math.abs((origin.x + defaultBoxWidth / 2) - (destination.x + defaultBoxWidth / 2))
-  const verticalDistance = Math.abs((origin.y + defaultBoxHeight / 2) - (destination.y + defaultBoxHeight / 2))
+  const horizontalDistance = Math.abs((origin.x + defaultNodeWidth / 2) - (destination.x + defaultNodeWidth / 2))
+  const verticalDistance = Math.abs((origin.y + defaultNodeHeight / 2) - (destination.y + defaultNodeHeight / 2))
 
   let sourceConnection: Point = { x: 0, y: 0 }
   let destinationConnection: Point = { x: 0, y: 0 }
@@ -70,9 +71,8 @@ export const getNodesOrientation = (node1: Point, node2: Point): {
   nodeCenter1: Point,
   nodeCenter2: Point
 } => {
-  const nodeCenter1 = { x: node1.x + defaultBoxWidth / 2, y: node1.y + defaultBoxHeight / 2 }
-  const nodeCenter2 = { x: node2.x + defaultBoxWidth / 2, y: node2.y + defaultBoxHeight / 2 }
-
+  const nodeCenter1 = { x: node1.x + defaultNodeWidth / 2, y: node1.y + defaultNodeHeight / 2 }
+  const nodeCenter2 = { x: node2.x + defaultNodeWidth / 2, y: node2.y + defaultNodeHeight / 2 }
   const horizontalDistance = Math.abs(nodeCenter1.x - nodeCenter2.x)
   const verticalDistance = Math.abs(nodeCenter1.y - nodeCenter2.y)
   const orientation = verticalDistance * verticallyThreshold > horizontalDistance ? 'VERTICAL' : 'HORIZONTAL'

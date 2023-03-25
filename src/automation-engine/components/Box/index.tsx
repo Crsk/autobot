@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { defaultBoxWidth, defaultBoxHeight } from '@/automation-engine/utils'
+import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from '@/automation-engine/utils'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { Node } from '@/automation-engine/models/node'
 import NewNode from '../NewNode'
@@ -22,16 +22,16 @@ function Box({ node }: { node: Node }) {
         ref={ref}
         x={node.x}
         y={node.y}
-        rx={5}
-        width={defaultBoxWidth}
-        height={defaultBoxHeight}
+        rx={defaultNodeRadius}
+        width={defaultNodeWidth}
+        height={defaultNodeHeight}
         fill="#058af0"
         className={styles.box}
         onDoubleClick={handleDoubleClick}
       />
       {editMode
         ? (
-          <foreignObject x={node.x} y={node.y} width={defaultBoxWidth} height={defaultBoxHeight}>
+          <foreignObject x={node.x} y={node.y} width={defaultNodeWidth} height={defaultNodeHeight}>
             <input
               autoFocus
               type="text"
@@ -45,8 +45,8 @@ function Box({ node }: { node: Node }) {
         )
         : (
           <text
-            x={node.x + defaultBoxWidth / 2}
-            y={node.y + defaultBoxHeight / 2}
+            x={node.x + defaultNodeWidth / 2}
+            y={node.y + defaultNodeHeight / 2}
             textAnchor="middle"
             dominantBaseline="central"
             style={{ pointerEvents: 'none', fill: 'white', fontFamily: 'Roboto, sans-serif', fontSize: '1.1em' }}

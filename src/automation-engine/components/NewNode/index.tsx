@@ -3,6 +3,7 @@ import { Node } from '@/automation-engine/models/node'
 import { useSelector } from 'react-redux'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { v4 as uuid } from 'uuid'
+import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
 import styles from './new-node.module.scss'
 
 function NewNode({ parentNode }: { parentNode: Node }) {
@@ -18,13 +19,18 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   return (
     <g
       ref={ref}
-      transform={`translate(${newNode?.x ? newNode.x : parentNode.x + 113}, ${newNode?.y ? newNode.y : parentNode.y + 101})`}
+      transform={`translate(${newNode?.x ? newNode.x : parentNode.x - 4 + defaultNodeWidth / 2}, ${newNode?.y ? newNode.y : parentNode.y + defaultNodeHeight + 16})`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      x={newNode?.x ? newNode.x : parentNode.x + 113}
-      y={newNode?.y ? newNode.y : parentNode.y + 101}
+      x={newNode?.x ? newNode.x : parentNode.x + defaultNodeWidth / 2}
+      y={newNode?.y ? newNode.y : parentNode.y + defaultNodeHeight + 16}
     >
-      <rect ref={ref} rx={4} className={`${styles.dot} ${isExpanded ? styles.dotExpanded : ''}`} />
+      <rect
+        ref={ref}
+        rx={defaultNodeRadius}
+        style={{ width: isExpanded ? `${defaultNodeWidth}px` : '8px', height: isExpanded ? `${defaultNodeHeight}px` : '8px' }}
+        className={styles.dot}
+      />
     </g>
   )
 }

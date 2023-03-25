@@ -4,20 +4,14 @@ import { Point } from '@/automation-engine/types'
 import Dot from '../Dot'
 import LineTextLabel from '../LineTextLabel'
 
-function Line({ origin, destination }: { origin: Point, destination: Point }) {
-  const { originPoint, destinationPoint } = getConnectionPoints(origin, destination)
+function getCurve(origin: Point, destination: Point) {
   const { orientation } = getNodesOrientation(origin, destination)
-  const { x1, y1, x2, y2 } = {
-    x1: originPoint.x,
-    y1: originPoint.y,
-    x2: destinationPoint.x,
-    y2: destinationPoint.y,
-  }
-  const textPosition = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
+  const { originPoint: lineOrigin, destinationPoint: lineDest } = getConnectionPoints(origin, destination)
+  const { x1, y1, x2, y2 } = { x1: lineOrigin.x, y1: lineOrigin.y, x2: lineDest.x, y2: lineDest.y }
   const tension = 0.5
   const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-  const { x: originX, y: originY } = originPoint
-  const { x: destX, y: destY } = destinationPoint
+  const { x: originX, y: originY } = lineOrigin
+  const { x: destX, y: destY } = lineDest
   const tensionDistance = tension * distance
   const horizontal = orientation === 'HORIZONTAL'
   const tensionX = originX < destX ? tensionDistance : -tensionDistance
@@ -28,17 +22,32 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
   const cp2y = horizontal ? y2 : y2 - tensionY
   const pathD = `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}` // Create the Bezier curve
 
+  return {
+    center: { x: (x1 + x2) / 2, y: (y1 + y2) / 2 },
+    curve: pathD,
+    line: {
+      origin: lineOrigin,
+      destination: lineDest,
+    },
+  }
+}
+
+function Line({ origin, destination }: { origin: Point, destination: Point }) {
+  const {
+    center,
+    curve,
+    line: {
+      origin: { x: x1, y: y1 },
+      destination: { x: x2, y: y2 },
+    },
+  } = getCurve(origin, destination)
+
   return (
     <>
-      <path
-        d={pathD}
-        stroke="#058af0"
-        strokeWidth={1.5}
-        fill="none"
-      />
-      <LineTextLabel x={textPosition.x} y={textPosition.y} text="Yes" />
-      <Dot x={originPoint.x} y={originPoint.y} />
-      <Dot x={destinationPoint.x} y={destinationPoint.y} />
+      <path d={curve} stroke="#058af0" strokeWidth={1.5} fill="none" />
+      <LineTextLabel x={center.x} y={center.y} text="Yes" />
+      <Dot x={x1} y={y1} />
+      <Dot x={x2} y={y2} />
     </>
   )
 }

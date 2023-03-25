@@ -4,6 +4,7 @@ import { Connection, ConnectionNode, Point } from '../types'
 export const defaultBoxWidth = 225
 export const defaultBoxHeight = 75
 export const snapValue = 25
+const verticallyThreshold = 1.5 // the greater the value, the wider the range to change from vertical to horizontal
 
 export const snapToGrid = (val: number) => Math.round(val / snapValue) * snapValue
 
@@ -36,7 +37,7 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
   let destinationConnection: Point = { x: 0, y: 0 }
 
   // Determine whether the nodes are more aligned vertically or horizontally
-  if (verticalDistance > horizontalDistance) {
+  if (verticalDistance * verticallyThreshold > horizontalDistance) {
     // Vertically more aligned
     sourceConnection = origin.y < destination.y ? sourceSides.bottom : sourceSides.top
     destinationConnection = origin.y < destination.y ? destinationSides.top : destinationSides.bottom
@@ -74,7 +75,7 @@ export const getNodesOrientation = (node1: Point, node2: Point): {
 
   const horizontalDistance = Math.abs(nodeCenter1.x - nodeCenter2.x)
   const verticalDistance = Math.abs(nodeCenter1.y - nodeCenter2.y)
-  const orientation = verticalDistance > horizontalDistance ? 'VERTICAL' : 'HORIZONTAL'
+  const orientation = verticalDistance * verticallyThreshold > horizontalDistance ? 'VERTICAL' : 'HORIZONTAL'
   const alignmentDistance = Math.min(horizontalDistance, verticalDistance)
 
   return {

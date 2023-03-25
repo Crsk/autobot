@@ -42,8 +42,20 @@ function NewNode({ parentNode }: { parentNode: Node }) {
     >
       <rect
         ref={ref}
+        x="-12"
+        y="-12"
         rx={defaultNodeRadius}
-        style={{ width: isExpanded ? `${defaultNodeWidth}px` : `${dotWidth}px`, height: isExpanded ? `${defaultNodeHeight}px` : `${dotWidth}px` }}
+        width={isExpanded ? defaultNodeWidth + 32 : dotWidth + 32}
+        height={isExpanded ? defaultNodeHeight + 32 : dotWidth + 32}
+        className={styles.container}
+      />
+      <rect
+        rx={defaultNodeRadius}
+        style={{
+          width: isExpanded ? `${defaultNodeWidth}px` : `${dotWidth}px`,
+          height: isExpanded ? `${defaultNodeHeight}px` : `${dotWidth}px`,
+          padding: '16px',
+        }}
         className={styles.dot}
       />
     </g>

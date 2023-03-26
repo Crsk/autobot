@@ -8,7 +8,7 @@ import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
 import styles from './index.module.scss'
 
-const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null = null) => {
+const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null = null, dotRef: any = null) => {
   const dispatch = useDispatch()
 
   // Updating manually to avoid unnecessary re-renders and circular dependency
@@ -27,6 +27,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
       dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
     }
     const element = d3.select(elementRef.current)
+    const dotElement = d3.select(dotRef?.current)
 
     if (!element) return
     if (!elementRef.current) return
@@ -46,10 +47,15 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
         map((event) => {
           element.classed(styles.dragging, true)
 
-          return {
-            offsetX: event.clientX - parseFloat(element.attr('x')),
-            offsetY: event.clientY - parseFloat(element.attr('y')),
-          }
+          return dotRef && dotElement
+            ? {
+              offsetX: event.clientX - parseFloat(dotElement.attr('x')),
+              offsetY: event.clientY - parseFloat(dotElement.attr('y')),
+            }
+            : {
+              offsetX: event.clientX - parseFloat(element.attr('x')),
+              offsetY: event.clientY - parseFloat(element.attr('y')),
+            }
         }),
         switchMap((offset) => mousemove$.pipe(
           map((event) => ({
@@ -79,7 +85,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, boxId, newNodeParentId, mouseupSubject])
+  }, [elementRef, dispatch, boxId, newNodeParentId, mouseupSubject, dotRef])
 
   return mouseupSubject
 }

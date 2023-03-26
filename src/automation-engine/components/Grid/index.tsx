@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import * as d3 from 'd3'
+import { select } from 'd3'
 import { snapValue } from '@/automation-engine/utils'
 
 const createGrid = (svg: any, width: number, height: number) => {
@@ -18,7 +18,7 @@ function Grid() {
   const ref = React.useRef(null)
 
   useEffect(() => {
-    const svg = d3.select(ref.current)
+    const svg = select(ref.current)
     createGrid(svg, window.innerWidth, window.innerHeight)
   }, [])
 

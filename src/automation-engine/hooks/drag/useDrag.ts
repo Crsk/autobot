@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import * as d3 from 'd3'
+import { select } from 'd3'
 import { fromEvent, Subject } from 'rxjs'
 import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,8 +30,8 @@ const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref
       else dispatch(updateNode({ id: boxId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
       dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
     }
-    const element = d3.select(elementRef.current)
-    const dotElement = d3.select(newDot?.ref?.current)
+    const element = select(elementRef.current)
+    const dotElement = select(newDot?.ref?.current)
 
     if (!element) return
     if (!elementRef.current) return

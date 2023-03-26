@@ -8,6 +8,10 @@ import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
 import styles from './index.module.scss'
 
+/**
+ * The hook uses the Redux store to manage the state of the nodes and connections in the diagram.
+ * It dispatches actions to update the position of the dragged node and the connected elements during and after dragging.
+ */
 const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref: any } | undefined = undefined) => {
   const dispatch = useDispatch()
   const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current

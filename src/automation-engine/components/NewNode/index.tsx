@@ -27,6 +27,10 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
 
+  /**
+   * Enable dragging functionality for the node.
+   * The useSubscribe hook is used to generate a new ID when the dragging ends.
+   */
   useSubscribe(useDrag(ref, newNodeIdRef.current, { parentId: parentNode.id, ref: dotRef }), () => {
     newNodeIdRef.current = uuid()
   })

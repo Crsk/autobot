@@ -8,8 +8,9 @@ import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
 import styles from './index.module.scss'
 
-const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null = null, dotRef: any = null) => {
+const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref: any } | undefined = undefined) => {
   const dispatch = useDispatch()
+  const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 
   // Updating manually to avoid unnecessary re-renders and circular dependency
   const node: Node | null = useSelector((state: any) => state.nodesById[boxId])
@@ -18,16 +19,15 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
   const nodesRef = useRef(nodes)
   nodeRef.current = node
   nodesRef.current = nodes
-  const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 
   useEffect(() => {
     const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
-      if (newNodeParentId && !nodeRef.current) dispatch(addNode({ parentId: newNodeParentId, id: boxId, x, y }))
+      if (newDot?.parentId && !nodeRef.current) dispatch(addNode({ parentId: newDot?.parentId, id: boxId, x, y }))
       else dispatch(updateNode({ id: boxId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
       dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
     }
     const element = d3.select(elementRef.current)
-    const dotElement = d3.select(dotRef?.current)
+    const dotElement = d3.select(newDot?.ref?.current)
 
     if (!element) return
     if (!elementRef.current) return
@@ -47,7 +47,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
         map((event) => {
           element.classed(styles.dragging, true)
 
-          return dotRef && dotElement
+          return newDot?.ref && dotElement
             ? {
               offsetX: event.clientX - parseFloat(dotElement.attr('x')),
               offsetY: event.clientY - parseFloat(dotElement.attr('y')),
@@ -85,7 +85,7 @@ const useDrag = (elementRef: any, boxId: string, newNodeParentId: string | null 
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, boxId, newNodeParentId, mouseupSubject, dotRef])
+  }, [elementRef, dispatch, boxId, mouseupSubject, newDot?.parentId, newDot?.ref])
 
   return mouseupSubject
 }

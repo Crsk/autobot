@@ -27,7 +27,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
 
-  useSubscribe(useDrag(ref, newNodeIdRef.current, parentNode.id, dotRef), () => {
+  useSubscribe(useDrag(ref, newNodeIdRef.current, { parentId: parentNode.id, ref: dotRef }), () => {
     newNodeIdRef.current = uuid()
   })
 
@@ -37,19 +37,10 @@ function NewNode({ parentNode }: { parentNode: Node }) {
 
   return (
     <>
-      <g
-        ref={dotRef}
-        transform={`translate(${dotX}, ${dotY})`}
-        x={dotX}
-        y={dotY}
-      >
+      <g ref={dotRef} transform={`translate(${dotX}, ${dotY})`} x={dotX} y={dotY}>
         <rect
           rx={defaultNodeRadius}
-          style={{
-            width: `${dotWidth}px`,
-            height: `${dotWidth}px`,
-            padding: '16px',
-          }}
+          style={{ width: `${dotWidth}px`, height: `${dotWidth}px`, padding: '16px' }}
           className={styles.dot}
         />
       </g>

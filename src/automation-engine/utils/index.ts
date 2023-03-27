@@ -6,6 +6,14 @@ export const defaultNodeHeight = 55
 export const defaultNodeRadius = 24
 export const snapValue = 25
 const verticallyThreshold = 1.5 // the greater the value, the wider the range to change from vertical to horizontal
+export const colors = {
+  background: {
+    light: '#f8f8f8',
+    dark: '#f8f8f8', // TODO
+  },
+  primary: '#058af0',
+  strong: '#232830',
+}
 
 export const snapToGrid = (val: number) => Math.round(val / snapValue) * snapValue
 

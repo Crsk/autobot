@@ -1,4 +1,4 @@
-import { getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
+import { colors, getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
 import React from 'react'
 import { Point } from '@/automation-engine/types'
 import LineTextLabel from '../LineTextLabel'
@@ -36,7 +36,7 @@ function Line({ origin, destination }: { origin: Point, destination: Point }) {
 
   return (
     <>
-      <path d={curve} stroke="#058af0" strokeWidth={1.5} fill="none" />
+      <path d={curve} stroke={colors.primary} strokeWidth={1.5} fill="none" />
       <LineTextLabel x={center.x} y={center.y} text="Yes" />
     </>
   )

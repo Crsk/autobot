@@ -1,3 +1,4 @@
+import { colors } from '@/automation-engine/utils'
 import React from 'react'
 import styles from './text-label.module.scss'
 
@@ -11,7 +12,7 @@ function LineTextLabel({ x, y, text }: { x: number, y: number, text: string }) {
         height={20}
         rx={5}
         ry={5}
-        fill="white"
+        fill={colors.background.light}
       />
       <text x={x} y={y} fontSize={12} fill="#058af0">
         {text}

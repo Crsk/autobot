@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from '@/automation-engine/utils'
+import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius, colors } from '@/automation-engine/utils'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
-import { Node } from '@/automation-engine/models/node'
+import { Node as NodeType } from '@/automation-engine/models/node'
 import NewNode from '../NewNode'
-import styles from './box.module.scss'
+import styles from './node.module.scss'
 
-function Box({ node }: { node: Node }) {
+function Node({ node }: { node: NodeType }) {
   const ref = React.useRef<SVGRectElement>(null)
   const [editMode, setEditMode] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -25,8 +25,8 @@ function Box({ node }: { node: Node }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill="#058af0"
-        className={styles.box}
+        fill={colors.primary}
+        className={styles.node}
         onDoubleClick={handleDoubleClick}
       />
       {editMode
@@ -60,4 +60,4 @@ function Box({ node }: { node: Node }) {
   )
 }
 
-export default Box
+export default Node

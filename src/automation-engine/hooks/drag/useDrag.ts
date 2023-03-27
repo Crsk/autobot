@@ -12,12 +12,12 @@ import styles from './index.module.scss'
  * The hook uses the Redux store to manage the state of the nodes and connections in the diagram.
  * It dispatches actions to update the position of the dragged node and the connected elements during and after dragging.
  */
-const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref: any } | undefined = undefined) => {
+const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, ref: any } | undefined = undefined) => {
   const dispatch = useDispatch()
   const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 
   // Updating manually to avoid unnecessary re-renders and circular dependency
-  const node: Node | null = useSelector((state: any) => state.nodesById[boxId])
+  const node: Node | null = useSelector((state: any) => state.nodesById[nodeId])
   const nodes = useSelector((state: any) => Object.values<Node>(state.nodesById))
   const nodeRef = useRef(node)
   const nodesRef = useRef(nodes)
@@ -26,12 +26,12 @@ const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref
 
   useEffect(() => {
     const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
-      if (newDot?.parentId && !nodeRef.current) dispatch(addNode({ parentId: newDot?.parentId, id: boxId, x, y }))
-      else dispatch(updateNode({ id: boxId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
+      if (newNode?.parentId && !nodeRef.current) dispatch(addNode({ parentId: newNode?.parentId, id: nodeId, x, y }))
+      else dispatch(updateNode({ id: nodeId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
       dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
     }
     const element = select(elementRef.current)
-    const dotElement = select(newDot?.ref?.current)
+    const dotElement = select(newNode?.ref?.current)
 
     if (!element) return
     if (!elementRef.current) return
@@ -51,7 +51,7 @@ const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref
         map((event) => {
           element.classed(styles.dragging, true)
 
-          return newDot?.ref && dotElement
+          return newNode?.ref && dotElement
             ? {
               offsetX: event.clientX - parseFloat(dotElement.attr('x')),
               offsetY: event.clientY - parseFloat(dotElement.attr('y')),
@@ -89,7 +89,7 @@ const useDrag = (elementRef: any, boxId: string, newDot: { parentId: string, ref
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, boxId, mouseupSubject, newDot?.parentId, newDot?.ref])
+  }, [elementRef, dispatch, nodeId, mouseupSubject, newNode?.parentId, newNode?.ref])
 
   return mouseupSubject
 }

@@ -1,8 +1,8 @@
-.box {
+.node {
   transition: transform 0.3s ease;
 }
 
-.box:hover {
+.node:hover {
   animation: pulse 2s infinite;
 }
 

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import Grid from '@/automation-engine/components/Grid'
-import Box from '@/automation-engine/components/Box'
+import Node from '@/automation-engine/components/Node'
 import Line from '@/automation-engine/components/Line'
 import { addNode } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { Node } from '@/automation-engine/models/node'
+import { Node as NodeType } from '@/automation-engine/models/node'
 import { Connection } from '@/automation-engine/types'
 
 function AutomationEngine() {
@@ -27,8 +27,8 @@ function AutomationEngine() {
           destination={{ x: connection.destination.x, y: connection.destination.y }}
         />
       ))}
-      {(nodes as Node[]).filter((x) => !!x).map((node: Node) => (
-        <Box key={node.id} node={node} />
+      {(nodes as NodeType[]).filter((x) => !!x).map((node: NodeType) => (
+        <Node key={node.id} node={node} />
       ))}
     </svg>
   )

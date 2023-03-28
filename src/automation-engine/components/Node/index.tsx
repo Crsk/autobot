@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius, colors } from '@/automation-engine/utils'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { Node as NodeType } from '@/automation-engine/models/node'
+import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'
+import { select } from 'd3'
 import NewNode from '../NewNode'
 import styles from './node.module.scss'
+import NodePopover from './NodePopover'
 
 function Node({ node }: { node: NodeType }) {
   const ref = React.useRef<SVGRectElement>(null)
@@ -11,10 +14,28 @@ function Node({ node }: { node: NodeType }) {
   const [inputValue, setInputValue] = useState('')
   const handleDoubleClick = () => setEditMode(!editMode)
   const handleInputToLabel = () => setEditMode(false)
+  const [showPopover, setShowPopover] = useState<boolean>(false)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleInputToLabel()
   }
   useDrag(ref, node.id)
+
+  useEffect(() => {
+    const element = select(ref.current)
+    if (!element) return undefined
+    if (!ref.current) return undefined
+
+    const mousedown$ = fromEvent<MouseEvent>(element.node()!, 'mousedown').pipe(timestamp())
+    const mouseup$ = fromEvent<MouseEvent>(element.node()!, 'mouseup').pipe(timestamp())
+    const noDragMouseup$ = mouseup$.pipe(
+      withLatestFrom(mousedown$),
+      filter(([mouseup, mousedown]) => mouseup.timestamp - mousedown.timestamp <= 200),
+      tap(() => setShowPopover(!showPopover)),
+    )
+    const subscribe = noDragMouseup$.subscribe()
+
+    return () => subscribe.unsubscribe()
+  }, [showPopover])
 
   return (
     <>
@@ -56,6 +77,7 @@ function Node({ node }: { node: NodeType }) {
           </text>
         )}
       <NewNode parentNode={node} />
+      {showPopover && <NodePopover node={node} />}
     </>
   )
 }

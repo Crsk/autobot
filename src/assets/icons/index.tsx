@@ -3,13 +3,13 @@ import React from 'react'
 
 type Size = 'S' | 'M' | 'L' | 'XL'
 type Color = 'dark' | 'primary'
-const sizeMap = { S: 32, M: 40, L: 48, XL: 56 }
+const sizeMap = { S: 16, M: 24, L: 32, XL: 40 }
 const paddingMap = { default: 0, S: 4, M: 8, L: 12, XL: 16 }
 const colorMap = { dark: colors.strong, primary: colors.primary }
 
 // eslint-disable-next-line react/require-default-props
 function Delete({ color, size, paddingLeft }: { color?: Color, size?: Size, paddingLeft?: Size }) {
-  const sizeValue = !size ? sizeMap.S : sizeMap[size]
+  const sizeValue = !size ? sizeMap.M : sizeMap[size]
   const paddingLeftValue = !paddingLeft ? paddingMap.default : paddingMap[paddingLeft]
   const colorValue = !color ? colorMap.dark : colorMap[color]
 

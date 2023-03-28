@@ -2,13 +2,17 @@ import React from 'react'
 import { ActionButton, View } from '@adobe/react-spectrum'
 import { Node } from '@/automation-engine/models/node'
 import { Delete } from '@/assets/icons'
+import { useDispatch } from 'react-redux'
+import { deleteNode } from '@/redux/store'
 import styles from './node-popover.module.scss'
 
 function NodePopover({ node }: { node: Node }) {
   const { x, y } = node
   const actionButtonWidth = 32
+  const dispatch = useDispatch()
+  const handleDelete = () => dispatch(deleteNode({ id: node.id }))
   const actionButtons = [
-    <ActionButton isQuiet>
+    <ActionButton key="delete" isQuiet onPress={handleDelete}>
       <Delete />
     </ActionButton>,
   ]

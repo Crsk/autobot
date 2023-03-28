@@ -4,11 +4,13 @@ import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'
 import { select } from 'd3'
+import { useSelector } from 'react-redux'
 import NewNode from '../NewNode'
 import styles from './node.module.scss'
 import NodePopover from './NodePopover'
 
-function Node({ node }: { node: NodeType }) {
+function Node({ nodeId }: { nodeId: string }) {
+  const node: NodeType = useSelector((state: any) => state.nodesById[nodeId])
   const ref = React.useRef<SVGRectElement>(null)
   const [editMode, setEditMode] = useState(false)
   const [inputValue, setInputValue] = useState('')

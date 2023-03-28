@@ -51,10 +51,26 @@ const nodeSlice = createSlice({
     updateConnections: (state, { payload: { nodes, snapToGrid = false } }: PayloadAction<UpdateConnectionsPayload>) => {
       state.connections = getConnections(nodes, snapToGrid)
     },
+    deleteNode: (state, { payload: { id } }: PayloadAction<{ id: string }>) => {
+      const node = state.nodesById[id]
+      if (node) {
+        // Remove the deleting nodeId from each parent
+        const parentNodes = Object.values(state.nodesById).filter((n) => n.childrenIds.includes(id))
+        parentNodes.forEach((parent) => {
+          parent.childrenIds = parent.childrenIds.filter((childId) => childId !== id)
+        })
+
+        // Remove the node
+        delete state.nodesById[id]
+
+        // Rebuild all the connections according to the remaining nodes
+        state.connections = getConnections(Object.values(state.nodesById), true)
+      }
+    },
   },
 })
 
-export const { addNode, updateNode, updateConnections } = nodeSlice.actions
+export const { addNode, updateNode, updateConnections, deleteNode } = nodeSlice.actions
 
 const store = configureStore({
   reducer: nodeSlice.reducer,

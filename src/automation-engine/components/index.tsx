@@ -28,7 +28,7 @@ function AutomationEngine() {
         />
       ))}
       {(nodes as NodeType[]).filter((x) => !!x).map((node: NodeType) => (
-        <Node key={node.id} node={node} />
+        <Node key={node.id} nodeId={node.id} />
       ))}
     </svg>
   )

@@ -64,11 +64,9 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
 
 export const getConnections = (nodes: Node[], snap: boolean = false): Connection[] => nodes.flatMap((node) => {
   const getPoints = ({ id, x, y }: ConnectionNode) => ({ id, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y })
+  const nodeChildren = nodes.filter((n) => n.parentId === node.id)
 
-  return node.childrenIds
-    .map((childId: string) => nodes.find((n) => n.id === childId))
-    .filter((childNode) => !!childNode)
-    .map((childNode) => ({ origin: getPoints(node), destination: !childNode ? null : getPoints(childNode) })) as Connection[]
+  return nodeChildren.map((child) => ({ origin: getPoints(node), destination: getPoints(child) }))
 })
 
 export const getNodesOrientation = (node1: Point, node2: Point): {

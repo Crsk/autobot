@@ -13,8 +13,8 @@ function AutomationEngine() {
   const connections: Connection[] = useSelector((state: any) => Object.values(state.connections))
 
   useEffect(() => {
-    // dispatch(addNode({ parentId: null, id: '0', x: 300, y: 300 }))
-    // dispatch(addNode({ id: '1', x: 400, y: 600, parentId: '0' }))
+    // dispatch(addNode({ id: '0', name: '', parentId: null, x: 300, y: 300 }))
+    // dispatch(addNode({ id: '1', name: '', parentId: '0', x: 400, y: 600 }))
   }, [dispatch])
 
   return (

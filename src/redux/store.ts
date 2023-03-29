@@ -3,6 +3,8 @@ import { createSlice, configureStore, DevToolsEnhancerOptions, PayloadAction } f
 import { devToolsEnhancer } from 'redux-devtools-extension'
 import { Node } from '@/automation-engine/models/node'
 import { getConnections } from '@/automation-engine/utils'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { PersistConfig, persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 
 interface AddNodePayload {
   parentId: string | null
@@ -70,11 +72,29 @@ const nodeSlice = createSlice({
   },
 })
 
+interface RootState extends ReturnType<typeof nodeSlice.reducer> { }
 export const { addNode, updateNode, updateConnections, deleteNode } = nodeSlice.actions
 
+const persistConfig: PersistConfig<RootState> = {
+  key: 'root',
+  storage: AsyncStorage,
+}
+const persistedReducer = persistReducer(persistConfig, nodeSlice.reducer)
+
 const store = configureStore({
-  reducer: nodeSlice.reducer,
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => {
+    const middleware = getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    })
+
+    return middleware
+  },
   devTools: [devToolsEnhancer({ realtime: true } as any)] as DevToolsEnhancerOptions,
 })
 
-export default store
+const persistor = persistStore(store)
+
+export { store, persistor }

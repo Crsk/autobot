@@ -5,7 +5,7 @@ import Line from '@/automation-engine/components/Line'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { Connection } from '@/automation-engine/types'
-// import { addNode } from '@/redux/store'
+// import { addNode } from '@/redux/slices/nodeSlice'
 
 function AutomationEngine() {
   const dispatch = useDispatch()

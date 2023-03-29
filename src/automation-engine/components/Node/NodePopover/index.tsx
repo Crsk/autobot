@@ -3,7 +3,7 @@ import { ActionButton, View } from '@adobe/react-spectrum'
 import { Node } from '@/automation-engine/models/node'
 import { Delete } from '@/assets/icons'
 import { useDispatch } from 'react-redux'
-import { deleteNode } from '@/redux/store'
+import { deleteNode } from '@/redux/slices/nodeSlice'
 import styles from './node-popover.module.scss'
 
 function NodePopover({ node }: { node: Node }) {

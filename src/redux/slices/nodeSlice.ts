@@ -1,33 +1,6 @@
-// store.ts
-import { createSlice, configureStore, DevToolsEnhancerOptions, PayloadAction } from '@reduxjs/toolkit'
-import { devToolsEnhancer } from 'redux-devtools-extension'
-import { Node } from '@/automation-engine/models/node'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getConnections } from '@/automation-engine/utils'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { PersistConfig, persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
-
-interface AddNodePayload {
-  parentId: string | null
-  id: string
-  x: number
-  y: number
-}
-
-interface UpdateNodePayload {
-  id: string
-  x: number
-  y: number
-}
-
-interface UpdateConnectionsPayload {
-  nodes: Node[]
-  snapToGrid?: boolean // the idea is not to snap to grid while dragging, only on drop so it moves smoothly
-}
-
-interface State {
-  nodesById: Record<string, Node>
-  connections: { origin: Node; destination: Node }[]
-}
+import { AddNodePayload, UpdateNodePayload, UpdateConnectionsPayload, State } from '../types'
 
 const initialState: State = {
   nodesById: {},
@@ -44,6 +17,7 @@ const nodeSlice = createSlice({
   name: 'node',
   initialState,
   reducers: {
+
     addNode: (state, { payload: { parentId, id, x, y } }: PayloadAction<AddNodePayload>) => {
       createChild(state, parentId, id, x, y)
     },
@@ -72,29 +46,5 @@ const nodeSlice = createSlice({
   },
 })
 
-interface RootState extends ReturnType<typeof nodeSlice.reducer> { }
 export const { addNode, updateNode, updateConnections, deleteNode } = nodeSlice.actions
-
-const persistConfig: PersistConfig<RootState> = {
-  key: 'root',
-  storage: AsyncStorage,
-}
-const persistedReducer = persistReducer(persistConfig, nodeSlice.reducer)
-
-const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => {
-    const middleware = getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    })
-
-    return middleware
-  },
-  devTools: [devToolsEnhancer({ realtime: true } as any)] as DevToolsEnhancerOptions,
-})
-
-const persistor = persistStore(store)
-
-export { store, persistor }
+export default nodeSlice

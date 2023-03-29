@@ -3,9 +3,9 @@ import { select } from 'd3'
 import { fromEvent, Subject } from 'rxjs'
 import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNode, updateConnections, updateNode } from '@/redux/store'
 import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
+import { addNode, updateConnections, updateNode } from '@/redux/slices/nodeSlice'
 import styles from './index.module.scss'
 
 /**

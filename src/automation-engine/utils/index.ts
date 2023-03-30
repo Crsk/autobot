@@ -1,4 +1,5 @@
 import { Node } from '@/automation-engine/models/node'
+import { catchError, of } from 'rxjs'
 import { Connection, ConnectionNode, Point } from '../types'
 
 export const defaultNodeWidth = 125
@@ -93,3 +94,9 @@ export const getNodesOrientation = (node1: Point, node2: Point): {
     nodeCenter2,
   }
 }
+
+export const catchErrorCallback = catchError((error: any) => {
+  console.error('Operation failed:', error)
+
+  return of()
+})

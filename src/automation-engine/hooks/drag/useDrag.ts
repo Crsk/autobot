@@ -5,7 +5,7 @@ import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
 import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
-import { addNode, updateConnections, updateNodeCoords } from '@/redux/slices/nodeSlice'
+import { addNode, updateConnections, updateNodePosition } from '@/redux/slices/nodeSlice'
 import styles from './index.module.scss'
 
 /**
@@ -27,7 +27,7 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
   useEffect(() => {
     const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
       if (newNode?.parentId && !nodeRef.current) dispatch(addNode({ id: nodeId, name: '', parentId: newNode?.parentId, x, y }))
-      else dispatch(updateNodeCoords({ id: nodeId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
+      else dispatch(updateNodePosition({ id: nodeId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
       dispatch(updateConnections({ nodes: nodesRef.current, snapToGrid: snap }))
     }
     const element = select(elementRef.current)

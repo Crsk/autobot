@@ -24,7 +24,8 @@
     "newline-before-return": 1,
     "object-curly-newline": 0,
     "no-param-reassign": 0,
-    "jsx-a11y/no-autofocus": 0
+    "jsx-a11y/no-autofocus": 0,
+    "no-console": 0
   },
   "settings": {
     "import/resolver": {

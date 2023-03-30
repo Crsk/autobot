@@ -5,16 +5,15 @@ import Line from '@/automation-engine/components/Line'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { Connection } from '@/automation-engine/types'
-// import { addNode } from '@/redux/slices/nodeSlice'
+import { fetchNodes } from '@/redux/slices/nodeSlice'
 
 function AutomationEngine() {
-  const dispatch = useDispatch()
-  const nodes: NodeType[] = useSelector((state: Record<string, Node>) => Object.values(state.nodesById))
   const connections: Connection[] = useSelector((state: any) => Object.values(state.connections))
+  const dispatch = useDispatch()
+  const nodes: NodeType[] = useSelector((state: any) => Object.values(state.nodesById))
 
   useEffect(() => {
-    // dispatch(addNode({ id: '0', name: '', parentId: null, x: 300, y: 300 }))
-    // dispatch(addNode({ id: '1', name: '', parentId: '0', x: 400, y: 600 }))
+    dispatch(fetchNodes())
   }, [dispatch])
 
   return (
@@ -27,8 +26,8 @@ function AutomationEngine() {
           destination={{ x: connection.destination.x, y: connection.destination.y }}
         />
       ))}
-      {nodes.filter((x) => !!x).map((node: NodeType) => (
-        <Node key={node.id} nodeId={node.id} />
+      {nodes && nodes.filter((x) => !!x).map((node: NodeType) => (
+        <Node key={node.id} node={node} />
       ))}
     </svg>
   )

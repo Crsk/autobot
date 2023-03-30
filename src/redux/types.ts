@@ -1,6 +1,10 @@
 import { ConnectionNode } from '@/automation-engine/types'
 import { Node } from '@/automation-engine/models/node'
 
+interface InitializeNodesPayload {
+  nodes: Node[]
+}
+
 interface AddNodePayload {
   id: string
   name: string
@@ -27,4 +31,4 @@ interface State {
 
 type RootState = State
 
-export type { AddNodePayload, UpdateNodePositionPayload, UpdateConnectionsPayload, State, RootState }
+export type { InitializeNodesPayload, AddNodePayload, UpdateNodePositionPayload, UpdateConnectionsPayload, State, RootState }

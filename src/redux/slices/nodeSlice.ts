@@ -23,8 +23,10 @@ const nodeSlice = createSlice({
     builder
       .addMatcher(
         (action): action is PayloadAction<FetchNodesPayload> => action.type === NodeActionTypes.FETCH,
-        (state, { payload: { nodes } }) => {
-          state.nodesById = nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {})
+        (state, { payload }) => {
+          state.nodesById = payload?.nodes
+            ? payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {})
+            : state.nodesById
         },
       )
       .addMatcher(

@@ -5,7 +5,7 @@ import Line from '@/automation-engine/components/Line'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { Connection } from '@/automation-engine/types'
-import { fetchNodes } from '@/redux/slices/nodeSlice'
+import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
 
 function AutomationEngine() {
   const connections: Connection[] = useSelector((state: any) => Object.values(state.connections))
@@ -13,7 +13,7 @@ function AutomationEngine() {
   const nodes: NodeType[] = useSelector((state: any) => Object.values(state.nodesById))
 
   useEffect(() => {
-    dispatch(fetchNodes())
+    dispatch(fetchNodesTrigger())
   }, [dispatch])
 
   return (

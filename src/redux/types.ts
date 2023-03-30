@@ -1,7 +1,7 @@
 import { ConnectionNode } from '@/automation-engine/types'
 import { Node } from '@/automation-engine/models/node'
 
-interface InitializeNodesPayload {
+interface FetchNodesPayload {
   nodes: Node[]
 }
 
@@ -13,15 +13,18 @@ interface AddNodePayload {
   y: number
 }
 
-interface UpdateNodePositionPayload {
+interface UpdateNodePayload {
   id: string
-  x: number
-  y: number
+  propsToUpdate: Partial<Node>
 }
 
 interface UpdateConnectionsPayload {
   nodes: Node[]
   snapToGrid?: boolean
+}
+
+interface DeleteNodePayload {
+  id: string
 }
 
 interface State {
@@ -31,4 +34,23 @@ interface State {
 
 type RootState = State
 
-export type { InitializeNodesPayload, AddNodePayload, UpdateNodePositionPayload, UpdateConnectionsPayload, State, RootState }
+export enum NodeActionTypes {
+  FETCH = 'node/fetch',
+  ADD = 'node/add',
+  UPDATE = 'node/update',
+  DELETE = 'node/delete',
+}
+
+export enum ConnectionActionTypes {
+  UPDATE = 'connection/update',
+}
+
+export type {
+  FetchNodesPayload,
+  AddNodePayload,
+  UpdateNodePayload,
+  UpdateConnectionsPayload,
+  State,
+  RootState,
+  DeleteNodePayload,
+}

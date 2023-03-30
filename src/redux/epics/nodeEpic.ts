@@ -1,6 +1,6 @@
 import { ofType, Epic, combineEpics } from 'redux-observable'
-import { catchError, map, switchMap } from 'rxjs/operators'
-import { from, of } from 'rxjs'
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
+import { EMPTY, from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
 import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateConnectionsTrigger, updateNodeTrigger } from '../slices/nodeSlice'
@@ -16,8 +16,10 @@ const nodeApi = {
 
 const connectionApi = {
   baseURL: 'http://localhost:3000/api/v1/connections',
-  update: async (): Promise<void> => { await axios.put<void>(`${nodeApi.baseURL}`) },
+  update: async (): Promise<void> => { await axios.put<void>(`${connectionApi.baseURL}`) },
 }
+
+const DEBOUNCE_TIME = 300
 
 const fetchNodesEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(fetchNodesTrigger.type),
@@ -34,12 +36,15 @@ const addNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   )),
 )
 
-const updateNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
+const updateNodeEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(updateNodeTrigger.type),
-  switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update(id, propsToUpdate)).pipe(
-    map((node) => ({ type: NodeActionTypes.UPDATE, payload: node })),
-    catchError(() => of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
-  )),
+  map(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
+)
+const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pipe(
+  ofType(updateNodeTrigger.type),
+  debounceTime(DEBOUNCE_TIME),
+  switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update(id, propsToUpdate))
+    .pipe(catchError(() => EMPTY))),
 )
 
 const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
@@ -50,8 +55,13 @@ const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   )),
 )
 
+const updateConnectionsEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
+  ofType(updateConnectionsTrigger.type),
+  map(({ payload: { nodes, snapToGrid = false } }: { payload: UpdateConnectionsPayload }) => ({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
+)
 const updateConnectionsEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(updateConnectionsTrigger.type),
+  debounceTime(DEBOUNCE_TIME),
   switchMap(({ payload: { nodes, snapToGrid = false } }: { payload: UpdateConnectionsPayload }) => from(connectionApi.update()).pipe(
     map(() => ({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
     catchError(() => of({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
@@ -61,7 +71,9 @@ const updateConnectionsEpic: Epic<any, any, RootState> = (action$) => action$.pi
 export default combineEpics(
   fetchNodesEpic,
   addNodeEpic,
-  updateNodeEpic,
+  updateNodeEpicUI,
+  updateNodeEpicRemote,
   deleteNodeEpic,
+  updateConnectionsEpicUI,
   updateConnectionsEpic,
 )

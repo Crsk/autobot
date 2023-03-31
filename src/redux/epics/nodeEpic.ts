@@ -3,12 +3,15 @@ import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
 import { from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
-import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateConnectionsTrigger, updateNodeTrigger } from '../slices/nodeSlice'
-import { AddNodePayload, ConnectionActionTypes, DeleteNodePayload, NodeActionTypes, RootState, UpdateConnectionsPayload, UpdateNodePayload } from '../types'
+import { toCamel, SnakeCase } from '@/automation-engine/utils/type.utils'
 
 const nodeApi = {
   baseURL: 'http://localhost:3000/api/v1/nodes',
-  fetch: async (): Promise<Node[]> => (await axios.get<Node[]>(`${nodeApi.baseURL}`)).data,
+  fetch: async (): Promise<Node[]> => {
+    const response = (await axios.get<SnakeCase<Node>[]>(`${nodeApi.baseURL}`)).data
+
+    return toCamel<Node>(response)
+  },
   create: async (node: Node): Promise<Node> => (await axios.post<Node>(`${nodeApi.baseURL}`, node)).data,
   update: async (id: string, propsToUpdate: Partial<Node>): Promise<Node> => (await axios.put<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data,
   delete: async (id: string): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },

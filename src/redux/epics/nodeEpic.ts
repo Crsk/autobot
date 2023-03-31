@@ -1,6 +1,6 @@
 import { ofType, Epic, combineEpics } from 'redux-observable'
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
-import { EMPTY, from, of } from 'rxjs'
+import { from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
 import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateConnectionsTrigger, updateNodeTrigger } from '../slices/nodeSlice'
@@ -44,7 +44,10 @@ const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pip
   ofType(updateNodeTrigger.type),
   debounceTime(DEBOUNCE_TIME),
   switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update(id, propsToUpdate))
-    .pipe(catchError(() => EMPTY))),
+    .pipe(
+      map((node) => ({ type: NodeActionTypes.UPDATE, payload: node })),
+      catchError(() => of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
+    )),
 )
 
 const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(

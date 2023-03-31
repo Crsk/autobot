@@ -1,4 +1,3 @@
-import { ConnectionNode } from '@/automation-engine/types'
 import { Node } from '@/automation-engine/models/node'
 
 interface FetchNodesPayload {
@@ -29,7 +28,6 @@ interface DeleteNodePayload {
 
 interface State {
   nodesById: Record<string, Node>
-  connections: { origin: ConnectionNode; destination: ConnectionNode }[]
 }
 
 type RootState = State
@@ -39,10 +37,6 @@ export enum NodeActionTypes {
   ADD = 'node/add',
   UPDATE = 'node/update',
   DELETE = 'node/delete',
-}
-
-export enum ConnectionActionTypes {
-  UPDATE = 'connection/update',
 }
 
 export type {

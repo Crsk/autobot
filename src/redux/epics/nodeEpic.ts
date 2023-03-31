@@ -4,6 +4,8 @@ import { from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
 import { toCamel, SnakeCase } from '@/automation-engine/utils/type.utils'
+import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
+import { AddNodePayload, DeleteNodePayload, NodeActionTypes, RootState, UpdateNodePayload } from '../types'
 
 const nodeApi = {
   baseURL: 'http://localhost:3000/api/v1/nodes',
@@ -15,11 +17,6 @@ const nodeApi = {
   create: async (node: Node): Promise<Node> => (await axios.post<Node>(`${nodeApi.baseURL}`, node)).data,
   update: async (id: string, propsToUpdate: Partial<Node>): Promise<Node> => (await axios.put<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data,
   delete: async (id: string): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
-}
-
-const connectionApi = {
-  baseURL: 'http://localhost:3000/api/v1/connections',
-  update: async (): Promise<void> => { await axios.put<void>(`${connectionApi.baseURL}`) },
 }
 
 const DEBOUNCE_TIME = 300
@@ -61,25 +58,10 @@ const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   )),
 )
 
-const updateConnectionsEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
-  ofType(updateConnectionsTrigger.type),
-  map(({ payload: { nodes, snapToGrid = false } }: { payload: UpdateConnectionsPayload }) => ({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
-)
-const updateConnectionsEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
-  ofType(updateConnectionsTrigger.type),
-  debounceTime(DEBOUNCE_TIME),
-  switchMap(({ payload: { nodes, snapToGrid = false } }: { payload: UpdateConnectionsPayload }) => from(connectionApi.update()).pipe(
-    map(() => ({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
-    catchError(() => of({ type: ConnectionActionTypes.UPDATE, payload: { nodes, snapToGrid } })),
-  )),
-)
-
 export default combineEpics(
   fetchNodesEpic,
   addNodeEpic,
   updateNodeEpicUI,
   updateNodeEpicRemote,
   deleteNodeEpic,
-  updateConnectionsEpicUI,
-  updateConnectionsEpic,
 )

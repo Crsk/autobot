@@ -1,5 +1,4 @@
-import { Node } from '@/automation-engine/models/node'
-import { Connection, ConnectionNode, Point } from '../types'
+import { Point } from '../types'
 
 export const defaultNodeWidth = 125
 export const defaultNodeHeight = 55
@@ -61,13 +60,6 @@ export const getConnectionPoints = (origin: Point, destination: Point) => {
     destinationPoint: { x: destinationConnection.x, y: destinationConnection.y },
   }
 }
-
-export const getConnections = (nodes: Node[], snap: boolean = false): Connection[] => nodes.flatMap((node) => {
-  const getPoints = ({ id, x, y }: ConnectionNode) => ({ id, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y })
-  const nodeChildren = nodes.filter((n) => n.parentId === node.id)
-
-  return nodeChildren.map((child) => ({ origin: getPoints(node), destination: getPoints(child) }))
-})
 
 export const getNodesOrientation = (node1: Point, node2: Point): {
   orientation: 'HORIZONTAL' | 'VERTICAL',

@@ -4,13 +4,16 @@ import Node from '@/automation-engine/components/Node'
 import Line from '@/automation-engine/components/Line'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
-import { Connection } from '@/automation-engine/types'
 import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
 
 function AutomationEngine() {
-  const connections: Connection[] = useSelector((state: any) => Object.values(state.connections))
   const dispatch = useDispatch()
   const nodes: NodeType[] = useSelector((state: any) => Object.values(state.nodesById))
+  const connections = nodes.reduce((acc: { parent: NodeType, child: NodeType }[], node: NodeType) => {
+    const parent: NodeType | undefined = nodes.find((n) => n.id === node.parentId)
+
+    return parent ? [...acc, { parent, child: node }] : acc
+  }, [])
 
   useEffect(() => {
     dispatch(fetchNodesTrigger())
@@ -20,11 +23,13 @@ function AutomationEngine() {
     <svg width="100vw" height="100vh">
       <Grid />
       {connections.map((connection) => (
-        <Line
-          key={`${connection.origin.id}-${connection.destination.id}`}
-          origin={{ x: connection.origin.x, y: connection.origin.y }}
-          destination={{ x: connection.destination.x, y: connection.destination.y }}
-        />
+        connection.child && connection.parent && (
+          <Line
+            key={`${connection.parent.id}-${connection.child.id}`}
+            origin={{ x: connection.parent.x, y: connection.parent.y }}
+            destination={{ x: connection.child.x, y: connection.child.y }}
+          />
+        )
       ))}
       {nodes && nodes.filter((x) => !!x).map((node: NodeType) => (
         <Node key={node.id} node={node} />

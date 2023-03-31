@@ -5,11 +5,11 @@ import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
 import { snapToGrid } from '@/automation-engine/utils'
 import { Node } from '@/automation-engine/models/node'
-import { addNodeTrigger, updateConnectionsTrigger, updateNodeTrigger } from '@/redux/slices/nodeSlice'
+import { addNodeTrigger, updateNodeTrigger } from '@/redux/slices/nodeSlice'
 import styles from './index.module.scss'
 
 /**
- * The hook uses the Redux store to manage the state of the nodes and connections in the diagram.
+ * The hook uses the Redux store to manage the state of the nodes in the diagram.
  * It dispatches actions to update the position of the dragged node and the connected elements during and after dragging.
  */
 const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, ref: any } | undefined = undefined) => {
@@ -25,7 +25,7 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
   nodesRef.current = nodes
 
   useEffect(() => {
-    const updateNodeAndConnections = (x: number, y: number, snap: boolean = false) => {
+    const updateNode = (x: number, y: number, snap: boolean = false) => {
       if (newNode?.parentId && !nodeRef.current) {
         dispatch(addNodeTrigger({
           id: nodeId,
@@ -43,7 +43,6 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
           },
         }))
       }
-      dispatch(updateConnectionsTrigger({ nodes: nodesRef.current, snapToGrid: snap }))
     }
     const element = select(elementRef.current)
     const dotElement = select(newNode?.ref?.current)
@@ -86,7 +85,7 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
               tap(() => {
                 const x = snapToGrid(parseFloat(element.attr('x')))
                 const y = snapToGrid(parseFloat(element.attr('y')))
-                updateNodeAndConnections(x, y, true)
+                updateNode(x, y, true)
                 element
                   .classed(styles.dragging, false)
                   .transition()
@@ -98,7 +97,7 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
             ),
           ),
         )),
-      ).subscribe(({ x, y }) => updateNodeAndConnections(x, y))
+      ).subscribe(({ x, y }) => updateNode(x, y))
 
     // eslint-disable-next-line consistent-return
     return () => {

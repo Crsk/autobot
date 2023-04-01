@@ -3,20 +3,32 @@ import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
 import { from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
-import { toCamel, SnakeCase } from '@/automation-engine/utils/type.utils'
 import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
 import { AddNodePayload, DeleteNodePayload, NodeActionTypes, RootState, UpdateNodePayload } from '../types'
 
 const nodeApi = {
   baseURL: 'http://localhost:3000/api/v1/nodes',
   fetch: async (): Promise<Node[]> => {
-    const response = (await axios.get<SnakeCase<Node>[]>(`${nodeApi.baseURL}`)).data
+    const { data: nodes } = await axios.get<Node[]>(`${nodeApi.baseURL}`)
 
-    return toCamel<Node>(response)
+    return nodes
   },
-  create: async (node: Node): Promise<Node> => (await axios.post<Node>(`${nodeApi.baseURL}`, node)).data,
-  update: async (id: string, propsToUpdate: Partial<Node>): Promise<Node> => (await axios.put<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data,
-  delete: async (id: string): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
+  create: async (newNode: Node): Promise<Node> => {
+    const { data: node } = await axios.post<Node>(`${nodeApi.baseURL}`, newNode)
+
+    return node
+  },
+  update: async (id: number, propsToUpdate: Partial<Node>): Promise<Node> => {
+    try {
+      const node = (await axios.patch<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
+
+      return node
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  delete: async (id: number): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
 }
 
 const DEBOUNCE_TIME = 300

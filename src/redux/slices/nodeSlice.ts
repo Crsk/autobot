@@ -12,9 +12,9 @@ const nodeSlice = createSlice({
   initialState,
   reducers: {
     fetchNodesTrigger: (state) => state,
-    addNodeTrigger: (state, _action: PayloadAction<{ id: string, name: string, parentId: string, x: number, y: number }>) => state,
-    updateNodeTrigger: (state, _action: PayloadAction<{ id: string, propsToUpdate: Partial<Node> }>) => state,
-    deleteNodeTrigger: (state, _action: PayloadAction<{ id: string }>) => state,
+    addNodeTrigger: (state, _action: PayloadAction<{ id?: number, name: string, parentId: number, x: number, y: number }>) => state,
+    updateNodeTrigger: (state, _action: PayloadAction<{ id: number, propsToUpdate: Partial<Node> }>) => state,
+    deleteNodeTrigger: (state, _action: PayloadAction<{ id: number }>) => state,
   },
   extraReducers: (builder) => {
     builder

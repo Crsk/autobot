@@ -1,6 +1,6 @@
 export interface Connection {
-  id: string
+  id: number
   name: string
-  parentId: string | null
-  childId: string | null
+  parentId: number | null
+  childId: number | null
 }

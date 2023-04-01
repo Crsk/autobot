@@ -1,4 +1,5 @@
 import { Node } from '@/automation-engine/models/node'
+import { Point } from '@/automation-engine/types'
 
 interface FetchNodesPayload {
   nodes: Node[]
@@ -27,7 +28,7 @@ interface DeleteNodePayload {
 }
 
 interface State {
-  nodesById: Record<string, Node>
+  nodesById: Record<string, Node & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
 }
 
 type RootState = State

@@ -15,6 +15,10 @@ const nodeSlice = createSlice({
     addNodeTrigger: (state, _action: PayloadAction<{ id?: number, name: string, parentId: number, x: number, y: number }>) => state,
     updateNodeTrigger: (state, _action: PayloadAction<{ id: number, propsToUpdate: Partial<Node> }>) => state,
     deleteNodeTrigger: (state, _action: PayloadAction<{ id: number }>) => state,
+    updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: number, x: number, y: number }>) => {
+      state.nodesById[id].newChild = { x, y }
+    },
+    clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: number }>) => { state.nodesById[parentId].newChild = undefined },
   },
   extraReducers: (builder) => {
     builder
@@ -40,9 +44,7 @@ const nodeSlice = createSlice({
       )
       .addMatcher(
         (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.DELETE,
-        (state, { payload: { id } }) => {
-          delete state.nodesById[id]
-        },
+        (state, { payload: { id } }) => { delete state.nodesById[id] }, // Deleting, this is only needed while dragging a new child node
       )
   },
 })
@@ -52,6 +54,8 @@ export const {
   addNodeTrigger,
   updateNodeTrigger,
   deleteNodeTrigger,
+  updateNewChild,
+  clearNewChild,
 } = nodeSlice.actions
 
 export default nodeSlice

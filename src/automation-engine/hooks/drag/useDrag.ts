@@ -2,50 +2,27 @@ import { useEffect, useRef } from 'react'
 import { select } from 'd3'
 import { fromEvent, Subject } from 'rxjs'
 import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { snapToGrid } from '@/automation-engine/utils'
-import { Node } from '@/automation-engine/models/node'
-import { addNodeTrigger, updateNodeTrigger } from '@/redux/slices/nodeSlice'
-import styles from './index.module.scss'
+import { updateNewChild, updateNodeTrigger } from '@/redux/slices/nodeSlice'
 
 /**
  * The hook uses the Redux store to manage the state of the nodes in the diagram.
  * It dispatches actions to update the position of the dragged node and the connected elements during and after dragging.
  */
-const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, ref: any } | undefined = undefined) => {
+const useDrag = (elementRef: any, nodeId: number, draggingNewChild: boolean = false) => {
   const dispatch = useDispatch()
   const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 
-  // Updating manually to avoid unnecessary re-renders and circular dependency
-  const node: Node | null = useSelector((state: any) => state.nodesById[nodeId])
-  const nodes = useSelector((state: any) => Object.values<Node>(state.nodesById))
-  const nodeRef = useRef(node)
-  const nodesRef = useRef(nodes)
-  nodeRef.current = node
-  nodesRef.current = nodes
-
   useEffect(() => {
+    const element = select(elementRef.current)
     const updateNode = (x: number, y: number, snap: boolean = false) => {
-      if (newNode?.parentId && !nodeRef.current) {
-        dispatch(addNodeTrigger({
-          id: nodeId,
-          name: '',
-          parentId: newNode?.parentId,
-          x,
-          y,
-        }))
+      if (draggingNewChild) {
+        dispatch(updateNewChild({ id: nodeId, x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y }))
       } else {
-        dispatch(updateNodeTrigger({
-          id: nodeId,
-          propsToUpdate: {
-            x: snap ? snapToGrid(x) : x,
-            y: snap ? snapToGrid(y) : y,
-          },
-        }))
+        dispatch(updateNodeTrigger({ id: nodeId, propsToUpdate: { x: snap ? snapToGrid(x) : x, y: snap ? snapToGrid(y) : y } }))
       }
     }
-    const element = select(elementRef.current)
-    const dotElement = select(newNode?.ref?.current)
 
     if (!element) return
     if (!elementRef.current) return
@@ -62,48 +39,23 @@ const useDrag = (elementRef: any, nodeId: string, newNode: { parentId: string, r
 
     const subscription = mousedown$
       .pipe(
-        map((event) => {
-          element.classed(styles.dragging, true)
-
-          return newNode?.ref && dotElement
-            ? {
-              offsetX: event.clientX - parseFloat(dotElement.attr('x')),
-              offsetY: event.clientY - parseFloat(dotElement.attr('y')),
-            }
-            : {
-              offsetX: event.clientX - parseFloat(element.attr('x')),
-              offsetY: event.clientY - parseFloat(element.attr('y')),
-            }
-        }),
+        map((event) => ({ offsetX: event.clientX - (+element.attr('x')), offsetY: event.clientY - (+element.attr('y')) })),
         switchMap((offset) => mousemove$.pipe(
-          map((event) => ({
-            x: event.clientX - offset.offsetX,
-            y: event.clientY - offset.offsetY,
-          })),
+          map((event) => ({ x: event.clientX - offset.offsetX, y: event.clientY - offset.offsetY })),
           takeUntil(
-            mouseup$.pipe(
-              tap(() => {
-                const x = snapToGrid(parseFloat(element.attr('x')))
-                const y = snapToGrid(parseFloat(element.attr('y')))
-                updateNode(x, y, true)
-                element
-                  .classed(styles.dragging, false)
-                  .transition()
-                  .duration(200)
-                  .attr('x', x)
-                  .attr('y', y)
-                mouseupSubject.next()
-              }),
-            ),
+            mouseup$.pipe(tap(() => {
+              updateNode(snapToGrid(+(element.attr('x'))), snapToGrid(+(element.attr('y'))), true) // Snap to grd on drop
+              mouseupSubject.next() // Notify drop
+            })),
           ),
         )),
-      ).subscribe(({ x, y }) => updateNode(x, y))
+      ).subscribe(({ x, y }) => updateNode(x, y)) // move the element without snap to grid so it goes smooth
 
     // eslint-disable-next-line consistent-return
     return () => {
       subscription.unsubscribe()
     }
-  }, [elementRef, dispatch, nodeId, mouseupSubject, newNode?.parentId, newNode?.ref])
+  }, [elementRef, dispatch, nodeId, mouseupSubject, draggingNewChild])
 
   return mouseupSubject
 }

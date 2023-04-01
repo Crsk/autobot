@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Grid from '@/automation-engine/components/Grid'
 import Node from '@/automation-engine/components/Node'
-import Line from '@/automation-engine/components/Line'
+import Connection from '@/automation-engine/components/Connection'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
@@ -24,7 +24,7 @@ function AutomationEngine() {
       <Grid />
       {connections.map((connection) => (
         connection.child && connection.parent && (
-          <Line
+          <Connection
             key={`${connection.parent.id}-${connection.child.id}`}
             origin={{ x: connection.parent.x, y: connection.parent.y }}
             destination={{ x: connection.child.x, y: connection.child.y }}

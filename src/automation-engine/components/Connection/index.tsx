@@ -1,16 +1,16 @@
 import { colors, getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
 import React from 'react'
 import { Point } from '@/automation-engine/types'
-import LineTextLabel from '../LineTextLabel'
+import ConnectionTextLabel from '../ConnectionTextLabel'
 
 function getCurve(origin: Point, destination: Point) {
   const { orientation } = getNodesOrientation(origin, destination)
-  const { originPoint: lineOrigin, destinationPoint: lineDest } = getConnectionPoints(origin, destination)
-  const { x1, y1, x2, y2 } = { x1: lineOrigin.x, y1: lineOrigin.y, x2: lineDest.x, y2: lineDest.y }
+  const { originPoint: connectionOrigin, destinationPoint: connectionDest } = getConnectionPoints(origin, destination)
+  const { x1, y1, x2, y2 } = { x1: connectionOrigin.x, y1: connectionOrigin.y, x2: connectionDest.x, y2: connectionDest.y }
   const tension = 0.5
   const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-  const { x: originX, y: originY } = lineOrigin
-  const { x: destX, y: destY } = lineDest
+  const { x: originX, y: originY } = connectionOrigin
+  const { x: destX, y: destY } = connectionDest
   const tensionDistance = tension * distance
   const horizontal = orientation === 'HORIZONTAL'
   const tensionX = originX < destX ? tensionDistance : -tensionDistance
@@ -24,22 +24,22 @@ function getCurve(origin: Point, destination: Point) {
   return {
     center: { x: (x1 + x2) / 2, y: (y1 + y2) / 2 },
     curve: pathD,
-    line: {
-      origin: lineOrigin,
-      destination: lineDest,
+    connection: {
+      origin: connectionOrigin,
+      destination: connectionDest,
     },
   }
 }
 
-function Line({ origin, destination }: { origin: Point, destination: Point }) {
+function Connection({ origin, destination }: { origin: Point, destination: Point }) {
   const { center, curve } = getCurve(origin, destination)
 
   return (
     <>
       <path d={curve} stroke={colors.primary} strokeWidth={1.5} fill="none" />
-      <LineTextLabel x={center.x} y={center.y} text="Yes" />
+      <ConnectionTextLabel x={center.x} y={center.y} text="Yes" />
     </>
   )
 }
 
-export default Line
+export default Connection

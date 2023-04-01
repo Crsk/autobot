@@ -2,7 +2,7 @@ import { colors } from '@/automation-engine/utils'
 import React from 'react'
 import styles from './text-label.module.scss'
 
-function LineTextLabel({ x, y, text }: { x: number, y: number, text: string }) {
+function ConnectionTextLabel({ x, y, text }: { x: number, y: number, text: string }) {
   return (
     <g className={styles['non-selectable']} textAnchor="middle">
       <rect
@@ -21,4 +21,4 @@ function LineTextLabel({ x, y, text }: { x: number, y: number, text: string }) {
   )
 }
 
-export default LineTextLabel
+export default ConnectionTextLabel

@@ -1,4 +1,3 @@
-import { colors } from '@/automation-engine/utils'
 import React from 'react'
 import styles from './text-label.module.scss'
 
@@ -12,9 +11,9 @@ function ConnectionTextLabel({ x, y, text }: { x: number, y: number, text: strin
         height={20}
         rx={5}
         ry={5}
-        fill="#14161b"
+        fill="#0f0f0f"
       />
-      <text x={x} y={y} fontSize={12} fill={colors.primary}>
+      <text x={x} y={y} fontSize={12} fill="darkcyan">
         {text}
       </text>
     </g>

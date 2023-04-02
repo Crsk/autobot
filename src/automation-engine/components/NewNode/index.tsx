@@ -2,14 +2,14 @@ import React, { useRef, useState, useEffect, memo } from 'react'
 import { Node } from '@/automation-engine/models/node'
 import { useDispatch, useSelector } from 'react-redux'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
-import { colors, defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
+import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
 import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import { addNodeTrigger, clearNewChild } from '@/redux/slices/nodeSlice'
 import styles from './new-node.module.scss'
 
-const dotWidth = 8
-const dotSeparation = 16
+const dotWidth = 4
+const dotSeparation = 8
 
 const getPosition = (newNode: Node | null, parent: Node): Point => ({
   x: newNode ? newNode.x : parent.x - dotWidth / 2 + defaultNodeWidth / 2,
@@ -54,11 +54,11 @@ function NewNode({ parentNode }: { parentNode: Node }) {
     >
       <rect
         ref={dotRef}
-        x="-12"
-        y="-12"
+        x="-8"
+        y="-4"
         rx={defaultNodeRadius}
-        width={isExpanded ? defaultNodeWidth + 32 : dotWidth + 32}
-        height={isExpanded ? defaultNodeHeight + 32 : dotWidth + 32}
+        width={isExpanded ? defaultNodeWidth : dotWidth}
+        height={isExpanded ? defaultNodeHeight : dotWidth}
         className={styles.container}
       />
       <rect

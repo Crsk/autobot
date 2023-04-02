@@ -1,10 +1,3 @@
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('./assets/Mona-Sans.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
   font-family: 'Mona Sans', sans-serif;
 }
@@ -18,7 +11,7 @@ body {
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #14161b;
-  background-color: rgb(17, 20, 23);
+  background-color: #0f0f0f;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

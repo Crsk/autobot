@@ -1,4 +1,4 @@
-import { colors, getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
+import { getConnectionPoints, getNodesOrientation } from '@/automation-engine/utils'
 import React from 'react'
 import { Point } from '@/automation-engine/types'
 import ConnectionTextLabel from '../ConnectionTextLabel'
@@ -36,7 +36,7 @@ function Connection({ origin, destination }: { origin: Point, destination: Point
 
   return (
     <>
-      <path d={curve} stroke={colors.primary} strokeWidth={1.5} fill="none" />
+      <path d={curve} stroke="darkcyan" strokeWidth={1.5} fill="none" />
       <ConnectionTextLabel x={center.x} y={center.y} text="Yes" />
     </>
   )

@@ -46,10 +46,21 @@ function Node({ node }: { node: NodeType }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill="#0d0f12"
+        fill="#0a0a0b"
+        filter="drop-shadow(0 0 8px rgba(0, 0, 0, 0.1))"
         className={styles.node}
         onDoubleClick={handleDoubleClick}
       />
+      <text
+        x={node.x + 7}
+        y={node.y - 8}
+        textAnchor="start"
+        dominantBaseline="central"
+        style={{ pointerEvents: 'none', fill: 'darkcyan', fontSize: '0.6em' }}
+        className={styles.nonSelectable}
+      >
+        Action
+      </text>
       {editMode
         ? (
           <foreignObject x={node.x} y={node.y} width={defaultNodeWidth} height={defaultNodeHeight}>
@@ -66,16 +77,27 @@ function Node({ node }: { node: NodeType }) {
         )
         : (
           <text
-            x={node.x + defaultNodeWidth / 2}
-            y={node.y + defaultNodeHeight / 2}
-            textAnchor="middle"
+            x={node.x + 14}
+            y={node.y + 24}
+            textAnchor="start"
             dominantBaseline="central"
-            style={{ pointerEvents: 'none', fill: 'white', fontSize: '0.8em' }}
+            style={{ pointerEvents: 'none', fill: '#dadada', fontSize: '0.8em', fontWeight: 'bold' }}
             className={styles.nonSelectable}
           >
-            {inputValue}
+            Do something
           </text>
         )}
+      <text
+        x={node.x + 14}
+        y={node.y + 46}
+        textAnchor="start"
+        dominantBaseline="central"
+        style={{ pointerEvents: 'none', fill: 'darkgray', fontSize: '0.7em' }}
+        className={styles.nonSelectable}
+      >
+        Description of do something...
+      </text>
+
       <NewNode parentNode={node} />
       {showPopover && <NodePopover node={node} />}
     </>

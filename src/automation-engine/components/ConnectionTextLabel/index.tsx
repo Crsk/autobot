@@ -12,9 +12,9 @@ function ConnectionTextLabel({ x, y, text }: { x: number, y: number, text: strin
         height={20}
         rx={5}
         ry={5}
-        fill={colors.background.light}
+        fill="#14161b"
       />
-      <text x={x} y={y} fontSize={12} fill="#058af0">
+      <text x={x} y={y} fontSize={12} fill={colors.primary}>
         {text}
       </text>
     </g>

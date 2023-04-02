@@ -46,7 +46,7 @@ function Node({ node }: { node: NodeType }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill={colors.primary}
+        fill="#0d0f12"
         className={styles.node}
         onDoubleClick={handleDoubleClick}
       />
@@ -70,7 +70,7 @@ function Node({ node }: { node: NodeType }) {
             y={node.y + defaultNodeHeight / 2}
             textAnchor="middle"
             dominantBaseline="central"
-            style={{ pointerEvents: 'none', fill: 'white', fontFamily: 'Roboto, sans-serif', fontSize: '1.1em' }}
+            style={{ pointerEvents: 'none', fill: 'white', fontFamily: 'Roboto, sans-serif', fontSize: '0.8em' }}
             className={styles.nonSelectable}
           >
             {inputValue}

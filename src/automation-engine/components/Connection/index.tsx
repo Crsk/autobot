@@ -4,7 +4,7 @@ import { Point } from '@/automation-engine/types'
 import ConnectionTextLabel from '../ConnectionTextLabel'
 
 function getCurve(origin: Point, destination: Point) {
-  const { orientation } = getNodesOrientation(origin, destination)
+  const { orientation, verticalDistance } = getNodesOrientation(origin, destination)
   const { originPoint: connectionOrigin, destinationPoint: connectionDest } = getConnectionPoints(origin, destination)
   const { x1, y1, x2, y2 } = { x1: connectionOrigin.x, y1: connectionOrigin.y, x2: connectionDest.x, y2: connectionDest.y }
   const tension = 0.5
@@ -28,16 +28,17 @@ function getCurve(origin: Point, destination: Point) {
       origin: connectionOrigin,
       destination: connectionDest,
     },
+    verticalDistance,
   }
 }
 
 function Connection({ origin, destination }: { origin: Point, destination: Point }) {
-  const { center, curve } = getCurve(origin, destination)
+  const { center, curve, verticalDistance } = getCurve(origin, destination)
 
   return (
     <>
       <path d={curve} stroke="darkcyan" strokeWidth={1.5} fill="none" />
-      <ConnectionTextLabel x={center.x} y={center.y} text="Yes" />
+      <ConnectionTextLabel x={center.x} y={center.y} text="Yes" verticalDistance={verticalDistance} />
     </>
   )
 }

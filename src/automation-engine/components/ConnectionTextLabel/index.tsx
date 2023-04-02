@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './text-label.module.scss'
 
-function ConnectionTextLabel({ x, y, text }: { x: number, y: number, text: string }) {
+function ConnectionTextLabel({ x, y, text, verticalDistance }: { x: number, y: number, text: string, verticalDistance: number }) {
   return (
     <g className={styles['non-selectable']} textAnchor="middle">
       <rect
@@ -13,7 +13,7 @@ function ConnectionTextLabel({ x, y, text }: { x: number, y: number, text: strin
         ry={5}
         fill="#0f0f0f"
       />
-      <text x={x} y={y} fontSize={12} fill="darkcyan">
+      <text x={x} y={y + (verticalDistance < 60 ? 4 : 0)} fontSize={12} fill="darkcyan">
         {text}
       </text>
     </g>

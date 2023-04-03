@@ -1,9 +1,9 @@
 import { Point } from '../types'
 
-export const defaultNodeWidth = 200
+export const defaultNodeWidth = 210
 export const defaultNodeHeight = 70
 export const defaultNodeRadius = 12
-export const snapValue = 40
+export const snapValue = 35
 const verticallyThreshold = 1 // the greater the value, the wider the range to change from vertical to horizontal
 export const colors = {
   background: {

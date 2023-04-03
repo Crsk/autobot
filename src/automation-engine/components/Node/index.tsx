@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius, colors } from '@/automation-engine/utils'
+import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from '@/automation-engine/utils'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Node } from '@/automation-engine/models/node'
-import { State, FetchNodesPayload, AddNodePayload, UpdateNodePayload, DeleteNodePayload, NodeActionTypes } from '../types'
+import { State, FetchNodesPayload, AddNodePayload, UpdateNodePayload, DeleteNodePayload, NodeActionTypes, DraggingDataPayload } from '../types'
 
 const initialState: State = {
   nodesById: {},
+  draggingData: { draggingNode: false },
 }
 
 const nodeSlice = createSlice({
@@ -19,6 +20,7 @@ const nodeSlice = createSlice({
       state.nodesById[id].newChild = { x, y }
     },
     clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: number }>) => { state.nodesById[parentId].newChild = undefined },
+    draggingData: (state, { payload: { draggingNode } }: PayloadAction<DraggingDataPayload>) => { state.draggingData.draggingNode = draggingNode },
   },
   extraReducers: (builder) => {
     builder
@@ -56,6 +58,7 @@ export const {
   deleteNodeTrigger,
   updateNewChild,
   clearNewChild,
+  draggingData,
 } = nodeSlice.actions
 
 export default nodeSlice

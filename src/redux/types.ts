@@ -27,8 +27,13 @@ interface DeleteNodePayload {
   id: number
 }
 
+interface DraggingDataPayload {
+  draggingNode: boolean
+}
+
 interface State {
   nodesById: Record<string, Node & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
+  draggingData: DraggingDataPayload
 }
 
 type RootState = State
@@ -48,4 +53,5 @@ export type {
   State,
   RootState,
   DeleteNodePayload,
+  DraggingDataPayload,
 }

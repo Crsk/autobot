@@ -6,6 +6,7 @@ import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automa
 import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import { addNodeTrigger, clearNewChild } from '@/redux/slices/nodeSlice'
+import { DraggingDataPayload } from '@/redux/types'
 import styles from './new-node.module.scss'
 
 const dotWidth = 4
@@ -26,6 +27,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const [coords, setCoords] = useState<Point>({ x: dotX, y: dotY })
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
+  const draggingData = useSelector((state: { draggingData: DraggingDataPayload }) => state.draggingData)
 
   /**
    * Enable dragging functionality for the node.
@@ -51,6 +53,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
       onMouseLeave={handleMouseLeave}
       x={coords.x} // Reset position (after drop)
       y={coords.y} // Reset position (after drop)
+      style={{ transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.8s ease-in-out' : 'none' }}
     >
       <rect
         ref={dotRef}

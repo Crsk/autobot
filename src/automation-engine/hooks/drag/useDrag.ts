@@ -4,7 +4,7 @@ import { fromEvent, Subject } from 'rxjs'
 import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch } from 'react-redux'
 import { snapToGrid } from '@/automation-engine/utils'
-import { updateNewChild, updateNodeTrigger } from '@/redux/slices/nodeSlice'
+import { draggingData, updateNewChild, updateNodeTrigger } from '@/redux/slices/nodeSlice'
 
 /**
  * The hook uses the Redux store to manage the state of the nodes in the diagram.
@@ -39,13 +39,20 @@ const useDrag = (elementRef: any, nodeId: number, draggingNewChild: boolean = fa
 
     const subscription = mousedown$
       .pipe(
-        map((event) => ({ offsetX: event.clientX - (+element.attr('x')), offsetY: event.clientY - (+element.attr('y')) })),
+        map((event) => {
+          dispatch(draggingData({ draggingNode: true }))
+
+          return {
+            offsetX: event.clientX - (+element.attr('x')), offsetY: event.clientY - (+element.attr('y')),
+          }
+        }),
         switchMap((offset) => mousemove$.pipe(
           map((event) => ({ x: event.clientX - offset.offsetX, y: event.clientY - offset.offsetY })),
           takeUntil(
             mouseup$.pipe(tap(() => {
               updateNode(snapToGrid(+(element.attr('x'))), snapToGrid(+(element.attr('y'))), true) // Snap to grd on drop
-              mouseupSubject.next() // Notify drop
+              dispatch(draggingData({ draggingNode: false }))
+              mouseupSubject.next()
             })),
           ),
         )),

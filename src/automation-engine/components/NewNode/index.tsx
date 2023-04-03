@@ -37,7 +37,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
    */
   useSubscribe(useDrag(dotRef, parentNode.id, true), () => {
     const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop
-    dispatch(addNodeTrigger({ name: '', parentId: parentNode.id, x, y }))
+    dispatch(addNodeTrigger({ name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
     dispatch(clearNewChild({ parentId: parentNode.id }))
   })
 

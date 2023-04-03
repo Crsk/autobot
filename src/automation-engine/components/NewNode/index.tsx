@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect, memo } from 'react'
+import React, { useRef, useState, memo } from 'react'
 import { Node } from '@/automation-engine/models/node'
 import { useDispatch, useSelector } from 'react-redux'
 import useDrag from '@/automation-engine/hooks/drag/useDrag'
-import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from '@/automation-engine/utils'
+import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth, snapToGrid } from '@/automation-engine/utils'
 import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import { addNodeTrigger, clearNewChild } from '@/redux/slices/nodeSlice'
@@ -24,7 +24,6 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const newNode = useSelector((state: any) => state.newNode)
   const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector((state: any) => state.nodesById[parentNode.id])
   const { x: dotX, y: dotY } = getPosition(newNode, parentNode)
-  const [coords, setCoords] = useState<Point>({ x: dotX, y: dotY })
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
   const draggingData = useSelector((state: { draggingData: DraggingDataPayload }) => state.draggingData)
@@ -41,18 +40,14 @@ function NewNode({ parentNode }: { parentNode: Node }) {
     dispatch(clearNewChild({ parentId: parentNode.id }))
   })
 
-  useEffect(() => {
-    setCoords({ x: dotX, y: dotY })
-  }, [dotX, dotY])
-
   return (
     <g
       ref={dotRef}
-      transform={`translate(${parentNodeStore.newChild?.x || coords.x}, ${parentNodeStore.newChild?.y || coords.y})`} // Drag position
+      transform={`translate(${parentNodeStore.newChild?.x || dotX}, ${parentNodeStore.newChild?.y || dotY})`} // Drag position
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      x={coords.x} // Reset position (after drop)
-      y={coords.y} // Reset position (after drop)
+      x={dotX}
+      y={dotY}
       style={{ transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.8s ease-in-out' : 'none' }}
     >
       <rect

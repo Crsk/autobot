@@ -32,7 +32,7 @@ function AutomationEngine() {
         )
       ))}
       {nodes && nodes.filter((x) => !!x).map((node: NodeType) => (
-        <Node key={`${node.id}`} node={node} />
+        <Node key={node.id} node={node} />
       ))}
     </svg>
   )

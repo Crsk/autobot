@@ -10,7 +10,7 @@ import { draggingData, updateNewChild, updateNodeTrigger } from '@/redux/slices/
  * The hook uses the Redux store to manage the state of the nodes in the diagram.
  * It dispatches actions to update the position of the dragged node and the connected elements during and after dragging.
  */
-const useDrag = (elementRef: any, nodeId: number, draggingNewChild: boolean = false) => {
+const useDrag = (elementRef: any, nodeId: string, draggingNewChild: boolean = false) => {
   const dispatch = useDispatch()
   const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
 

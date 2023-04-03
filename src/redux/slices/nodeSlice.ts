@@ -13,14 +13,16 @@ const nodeSlice = createSlice({
   initialState,
   reducers: {
     fetchNodesTrigger: (state) => state,
-    addNodeTrigger: (state, _action: PayloadAction<{ id?: number, name: string, parentId: number, x: number, y: number }>) => state,
-    updateNodeTrigger: (state, _action: PayloadAction<{ id: number, propsToUpdate: Partial<Node> }>) => state,
-    deleteNodeTrigger: (state, _action: PayloadAction<{ id: number }>) => state,
-    updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: number, x: number, y: number }>) => {
+    addNodeTrigger: (state, _action: PayloadAction<{ id?: string, name: string, parentId: string, x: number, y: number }>) => state,
+    updateNodeTrigger: (state, _action: PayloadAction<{ id: string, propsToUpdate: Partial<Node> }>) => state,
+    deleteNodeTrigger: (state, _action: PayloadAction<{ id: string }>) => state,
+    updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
       state.nodesById[id].newChild = { x, y }
     },
-    clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: number }>) => { state.nodesById[parentId].newChild = undefined },
-    draggingData: (state, { payload: { draggingNode } }: PayloadAction<DraggingDataPayload>) => { state.draggingData.draggingNode = draggingNode },
+
+    // Before a new child is created, a temporary node is created until the new node is dropped, after drop it is cleared
+    clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: string }>) => { state.nodesById[parentId].newChild = undefined },
+    draggingData: (state, { payload: { draggingNode } }: PayloadAction<{ draggingNode: boolean }>) => { state.draggingData.draggingNode = draggingNode },
   },
   extraReducers: (builder) => {
     builder
@@ -35,7 +37,7 @@ const nodeSlice = createSlice({
       .addMatcher(
         (action): action is PayloadAction<AddNodePayload> => action.type === NodeActionTypes.ADD,
         (state, { payload: { id, name, parentId, x, y } }) => {
-          state.nodesById[id] = { id, name, parentId, x, y }
+          if (id) state.nodesById[id] = { id, name, parentId, x, y }
         },
       )
       .addMatcher(

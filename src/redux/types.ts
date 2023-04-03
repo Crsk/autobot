@@ -6,15 +6,15 @@ interface FetchNodesPayload {
 }
 
 interface AddNodePayload {
-  id: number
+  id: string
   name: string
-  parentId: number | null
+  parentId: string | null
   x: number
   y: number
 }
 
 interface UpdateNodePayload {
-  id: number
+  id: string
   propsToUpdate: Partial<Node>
 }
 
@@ -24,7 +24,7 @@ interface UpdateConnectionsPayload {
 }
 
 interface DeleteNodePayload {
-  id: number
+  id: string
 }
 
 interface DraggingDataPayload {

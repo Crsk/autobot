@@ -1,7 +1,7 @@
 export interface Node {
-  id: number
+  id: string
   name: string
-  parentId: number | null
+  parentId: string | null
   x: number
   y: number
 }

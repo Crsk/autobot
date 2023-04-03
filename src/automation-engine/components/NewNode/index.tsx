@@ -7,6 +7,7 @@ import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import { addNodeTrigger, clearNewChild } from '@/redux/slices/nodeSlice'
 import { DraggingDataPayload } from '@/redux/types'
+import { v4 as uuid } from 'uuid'
 import styles from './new-node.module.scss'
 
 const dotWidth = 4
@@ -36,7 +37,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
    */
   useSubscribe(useDrag(dotRef, parentNode.id, true), () => {
     const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop
-    dispatch(addNodeTrigger({ name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
+    dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
     dispatch(clearNewChild({ parentId: parentNode.id }))
   })
 

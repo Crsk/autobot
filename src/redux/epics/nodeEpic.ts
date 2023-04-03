@@ -18,7 +18,7 @@ const nodeApi = {
 
     return node
   },
-  update: async (id: number, propsToUpdate: Partial<Node>): Promise<Node> => {
+  update: async (id: string, propsToUpdate: Partial<Node>): Promise<Node> => {
     try {
       const node = (await axios.patch<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
 
@@ -28,7 +28,7 @@ const nodeApi = {
       throw error
     }
   },
-  delete: async (id: number): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
+  delete: async (id: string): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
 }
 
 const DEBOUNCE_TIME = 300

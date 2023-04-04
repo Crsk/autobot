@@ -13,12 +13,12 @@ const nodeApi = {
 
     return nodes
   },
-  create: async (newNode: Node): Promise<Node> => {
+  create: async (newNode: AddNodePayload): Promise<Node> => {
     const { data: node } = await axios.post<Node>(`${nodeApi.baseURL}`, newNode)
 
     return node
   },
-  update: async (id: string, propsToUpdate: Partial<Node>): Promise<Node> => {
+  update: async ({ id, propsToUpdate }: UpdateNodePayload): Promise<Node> => {
     try {
       const node = (await axios.patch<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
 
@@ -28,7 +28,7 @@ const nodeApi = {
       throw error
     }
   },
-  delete: async (id: string): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
+  delete: async ({ id }: DeleteNodePayload): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
 }
 
 const DEBOUNCE_TIME = 300
@@ -43,7 +43,7 @@ const fetchNodesEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
 const addNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(addNodeTrigger.type),
   switchMap(({ payload }: { payload: AddNodePayload }) => from(nodeApi.create(payload)).pipe(
-    map((node) => ({ type: NodeActionTypes.ADD, payload: node })),
+    map(() => ({ type: NodeActionTypes.ADD, payload })),
     catchError(() => of(({ type: NodeActionTypes.ADD, payload }))),
   )),
 )
@@ -55,16 +55,16 @@ const updateNodeEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
 const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(updateNodeTrigger.type),
   debounceTime(DEBOUNCE_TIME),
-  switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update(id, propsToUpdate))
+  switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update({ id, propsToUpdate }))
     .pipe(
-      map((node) => ({ type: NodeActionTypes.UPDATE, payload: node })),
+      map(() => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
       catchError(() => of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
     )),
 )
 
 const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(deleteNodeTrigger.type),
-  switchMap(({ payload: { id } }: { payload: DeleteNodePayload }) => from(nodeApi.delete(id)).pipe(
+  switchMap(({ payload: { id } }: { payload: DeleteNodePayload }) => from(nodeApi.delete({ id })).pipe(
     map(() => ({ type: NodeActionTypes.DELETE, payload: { id } })),
     catchError(() => of({ type: NodeActionTypes.DELETE, payload: { id } })),
   )),

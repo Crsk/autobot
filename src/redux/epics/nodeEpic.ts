@@ -3,32 +3,43 @@ import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
 import { from, of } from 'rxjs'
 import { Node } from '@/automation-engine/models/node'
 import axios from 'axios'
-import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
-import { AddNodePayload, DeleteNodePayload, NodeActionTypes, RootState, UpdateNodePayload } from '../types'
+
+type Response = { success: boolean, message: string }
 
 const nodeApi = {
   baseURL: 'http://localhost:3000/api/v1/nodes',
-  fetch: async (): Promise<Node[]> => {
-    const { data: nodes } = await axios.get<Node[]>(`${nodeApi.baseURL}`)
-
-    return nodes
-  },
-  create: async (newNode: AddNodePayload): Promise<Node> => {
-    const { data: node } = await axios.post<Node>(`${nodeApi.baseURL}`, newNode)
-
-    return node
-  },
-  update: async ({ id, propsToUpdate }: UpdateNodePayload): Promise<Node> => {
+  fetch: async (): Promise<Response> => {
     try {
-      const node = (await axios.patch<Node>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
-
-      return node
+      return (await axios.get<Response>(`${nodeApi.baseURL}`)).data
     } catch (error) {
       console.log(error)
       throw error
     }
   },
-  delete: async ({ id }: DeleteNodePayload): Promise<void> => { await axios.delete<void>(`${nodeApi.baseURL}/${id}`) },
+  create: async (newNode: AddNodePayload): Promise<Response> => {
+    try {
+      return (await axios.post<Response>(`${nodeApi.baseURL}`, newNode)).data
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  update: async ({ id, propsToUpdate }: UpdateNodePayload): Promise<Response> => {
+    try {
+      return (await axios.patch<Response>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  delete: async ({ id }: DeleteNodePayload): Promise<Response> => {
+    try {
+      return (await axios.delete<Response>(`${nodeApi.baseURL}/${id}`)).data
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
 }
 
 const DEBOUNCE_TIME = 300

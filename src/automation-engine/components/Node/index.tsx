@@ -46,8 +46,7 @@ function Node({ node }: { node: NodeType }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill="#0a0a0b"
-        filter="drop-shadow(0 0 8px rgba(0, 0, 0, 0.1))"
+        fill="rgb(18, 18, 20)"
         className={styles.node}
         onDoubleClick={handleDoubleClick}
       />

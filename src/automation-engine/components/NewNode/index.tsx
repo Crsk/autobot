@@ -33,7 +33,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
    * Enable dragging functionality for the node.
    * Callback runs on drop event to:
    * 1. create a new node
-   * 2. move the dot to its initial point
+   * 2. call clearNewChild() to move the dot to its initial point
    */
   useSubscribe(useDrag(dotRef, parentNode.id, true), () => {
     const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop

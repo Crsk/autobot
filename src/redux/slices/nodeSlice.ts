@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Node } from '@/automation-engine/models/node'
-import { State, FetchNodesPayload, AddNodePayload, UpdateNodePayload, DeleteNodePayload, NodeActionTypes, DraggingDataPayload } from '../types'
+import { State, FetchNodesPayload, AddNodePayload, UpdateNodePayload, DeleteNodePayload, NodeActionTypes, DeleteFromQueue } from '../types'
 
 const initialState: State = {
   nodesById: {},
   draggingData: { draggingNode: false },
+  syncQueue: { NODE: { ADD: {}, UPDATE: {}, DELETE: {} } },
 }
 
 const nodeSlice = createSlice({
@@ -23,6 +24,7 @@ const nodeSlice = createSlice({
     // Before a new child is created, a temporary node is created until the new node is dropped, after drop it is cleared
     clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: string }>) => { state.nodesById[parentId].newChild = undefined },
     draggingData: (state, { payload: { draggingNode } }: PayloadAction<{ draggingNode: boolean }>) => { state.draggingData.draggingNode = draggingNode },
+    syncNodesTrigger: (state) => state,
   },
   extraReducers: (builder) => {
     builder
@@ -35,8 +37,11 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<AddNodePayload> => action.type === NodeActionTypes.ADD,
-        (state, { payload: { id, name, parentId, x, y } }) => {
+        (action): action is PayloadAction<AddNodePayload & { queueTimestamp: number }> => action.type === NodeActionTypes.ADD,
+        (state, { payload: { id, name, parentId, x, y, queueTimestamp } }) => {
+          if (queueTimestamp) {
+            state.syncQueue.NODE.ADD[id] = { id, name, parentId, x, y, timestamp: queueTimestamp }
+          }
           if (id) state.nodesById[id] = { id, name, parentId, x, y }
         },
       )
@@ -47,8 +52,11 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.DELETE,
-        (state, { payload: { id } }) => { delete state.nodesById[id] }, // Deleting, this is only needed while dragging a new child node
+      .addMatcher(
+        (action): action is PayloadAction<DeleteFromQueue> => action.type === NodeActionTypes.DELETE_FROM_QUEUE,
+        (state, { payload: { operation, id } }) => {
+          delete state.syncQueue.NODE[operation]?.[id]
+        },
       )
   },
 })
@@ -61,6 +69,7 @@ export const {
   updateNewChild,
   clearNewChild,
   draggingData,
+  syncNodesTrigger,
 } = nodeSlice.actions
 
 export default nodeSlice

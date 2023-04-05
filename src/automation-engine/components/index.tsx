@@ -4,7 +4,21 @@ import Node from '@/automation-engine/components/Node'
 import Connection from '@/automation-engine/components/Connection'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
-import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
+import { fetchNodesTrigger, syncNodesTrigger } from '@/redux/slices/nodeSlice'
+
+function Button() {
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    if (navigator.onLine) dispatch(syncNodesTrigger())
+  }
+
+  return (
+    <foreignObject x="0" y="0" width="100" height="100">
+      <button type="button" onClick={handleClick}>Sync</button>
+    </foreignObject>
+  )
+}
 
 function AutomationEngine() {
   const dispatch = useDispatch()
@@ -22,6 +36,7 @@ function AutomationEngine() {
   return (
     <svg width="100vw" height="100vh">
       <Grid />
+      <Button />
       {connections.map((connection) => (
         connection.child && connection.parent && (
           <Connection

@@ -1,8 +1,9 @@
 import { ofType, Epic, combineEpics } from 'redux-observable'
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
-import { from, of } from 'rxjs'
-import { Node } from '@/automation-engine/models/node'
+import { catchError, concatMap, debounceTime, groupBy, map, mergeMap, switchMap, toArray } from 'rxjs/operators'
+import { EMPTY, from, of } from 'rxjs'
 import axios from 'axios'
+import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, syncNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
+import { AddNodePayload, DeleteNodePayload, NodeActionTypes, QueueOperation, RootState, UpdateNodePayload } from '../types'
 
 type Response = { success: boolean, message: string }
 
@@ -40,6 +41,14 @@ const nodeApi = {
       throw error
     }
   },
+  bulkCreate: async (payloads: (AddNodePayload & { timestamp: number })[]): Promise<Response> => {
+    try {
+      return (await axios.post<Response>(`${nodeApi.baseURL}/bulk-create`, payloads)).data
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
 }
 
 const DEBOUNCE_TIME = 300
@@ -55,7 +64,7 @@ const addNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(addNodeTrigger.type),
   switchMap(({ payload }: { payload: AddNodePayload }) => from(nodeApi.create(payload)).pipe(
     map(() => ({ type: NodeActionTypes.ADD, payload })),
-    catchError(() => of(({ type: NodeActionTypes.ADD, payload }))),
+    catchError(() => of(({ type: NodeActionTypes.ADD, payload: { ...payload, queueTimestamp: Date.now() } }))),
   )),
 )
 
@@ -69,7 +78,7 @@ const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pip
   switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update({ id, propsToUpdate }))
     .pipe(
       map(() => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
-      catchError(() => of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
+      catchError(() => of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate, queueTimestamp: Date.now() } })),
     )),
 )
 
@@ -77,8 +86,39 @@ const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(deleteNodeTrigger.type),
   switchMap(({ payload: { id } }: { payload: DeleteNodePayload }) => from(nodeApi.delete({ id })).pipe(
     map(() => ({ type: NodeActionTypes.DELETE, payload: { id } })),
-    catchError(() => of({ type: NodeActionTypes.DELETE, payload: { id } })),
+    catchError(() => of({ type: NodeActionTypes.DELETE, payload: { id, queueTimestamp: Date.now() } })),
   )),
+)
+const syncNodesEpic: Epic<any, any, RootState> = (action$, state$) => action$.pipe(
+  ofType(syncNodesTrigger.type),
+  mergeMap(() => {
+    const { ADD, UPDATE, DELETE }: QueueOperation<AddNodePayload, UpdateNodePayload, DeleteNodePayload> = state$.value.syncQueue.NODE
+    const unsyncedNodes: { actionType: NodeActionTypes, payload: (AddNodePayload | UpdateNodePayload | DeleteNodePayload) & { timestamp: number } }[] = [
+      ...Object.values(ADD).map((payload) => ({ actionType: NodeActionTypes.ADD, payload })),
+      ...Object.values(UPDATE).map((payload) => ({ actionType: NodeActionTypes.UPDATE, payload })),
+      ...Object.values(DELETE).map((payload) => ({ actionType: NodeActionTypes.DELETE, payload })),
+    ]
+
+    return unsyncedNodes.length === 0
+      ? EMPTY
+      : from(unsyncedNodes).pipe(groupBy((node) => node.actionType), mergeMap((group) => group.pipe(toArray())), concatMap((actionGroup) => {
+        console.log(actionGroup)
+        const { actionType } = actionGroup[0]
+
+        switch (actionType) {
+          case NodeActionTypes.ADD:
+            return from(nodeApi.bulkCreate(actionGroup.map((action) => action.payload as AddNodePayload & { timestamp: number }))).pipe(
+              mergeMap(() => actionGroup.map((action) => ({
+                type: NodeActionTypes.DELETE_FROM_QUEUE,
+                payload: { operation: 'ADD', id: (action.payload as AddNodePayload).id },
+              }))),
+              catchError(() => EMPTY),
+            )
+          default:
+            return EMPTY
+        }
+      }))
+  }),
 )
 
 export default combineEpics(
@@ -87,4 +127,5 @@ export default combineEpics(
   updateNodeEpicUI,
   updateNodeEpicRemote,
   deleteNodeEpic,
+  syncNodesEpic,
 )

@@ -46,7 +46,7 @@ function Node({ node }: { node: NodeType }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill="rgb(18, 18, 20)"
+        fill="rgb(14, 16, 18)"
         className={styles.node}
         onDoubleClick={handleDoubleClick}
       />

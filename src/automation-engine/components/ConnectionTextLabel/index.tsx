@@ -11,7 +11,7 @@ function ConnectionTextLabel({ x, y, text, verticalDistance }: { x: number, y: n
         height={20}
         rx={5}
         ry={5}
-        fill="rgb(24, 26, 29)"
+        fill="rgb(20, 24, 30)"
       />
       <text x={x} y={y + (verticalDistance < 60 ? 4 : 0)} fontSize={12} fill="darkcyan">
         {text}

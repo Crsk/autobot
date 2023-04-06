@@ -3,8 +3,8 @@ import { select } from 'd3'
 import { snapValue } from '@/automation-engine/utils'
 
 const createGrid = (svg: any, width: number, height: number) => {
-  const dotRadius = 2.2
-  const dotColor = 'rgb(21, 22, 23)'
+  const dotRadius = 2
+  const dotColor = 'rgb(16, 18, 22)'
 
   for (let x = 0; x <= width; x += snapValue) {
     for (let y = 0; y <= height; y += snapValue) {

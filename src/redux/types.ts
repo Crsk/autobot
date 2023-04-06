@@ -37,7 +37,7 @@ interface DeleteFromQueue {
 }
 
 interface State {
-  nodesById: Record<string, Node & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
+  nodesById: Record<string, AddNodePayload & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
   draggingData: DraggingDataPayload,
   syncQueue: {
     NODE: QueueOperation<AddNodePayload, UpdateNodePayload, DeleteNodePayload>
@@ -45,9 +45,9 @@ interface State {
 }
 
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
-  ADD: Record<string, AddPayload & { timestamp: number }>,
-  UPDATE: Record<string, UpdatePayload & { timestamp: number }>,
-  DELETE: Record<string, DeletePayload & { timestamp: number }>,
+  ADD: Record<string, AddPayload>,
+  UPDATE: Record<string, UpdatePayload>,
+  DELETE: Record<string, DeletePayload>,
 }
 
 type RootState = State
@@ -59,6 +59,9 @@ export enum NodeActionTypes {
   DELETE = 'node/delete',
   SYNC = 'node/sync',
   DELETE_FROM_QUEUE = 'node/deleteFromQueue',
+  QUEUE_ADD = 'node/queueAdd',
+  QUEUE_UPDATE = 'node/queueUpdate',
+  QUEUE_DELETE = 'node/queueDelete',
 }
 
 export type {

@@ -37,11 +37,8 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<AddNodePayload & { queueTimestamp: number }> => action.type === NodeActionTypes.ADD,
-        (state, { payload: { id, name, parentId, x, y, queueTimestamp } }) => {
-          if (queueTimestamp) {
-            state.syncQueue.NODE.ADD[id] = { id, name, parentId, x, y, timestamp: queueTimestamp }
-          }
+        (action): action is PayloadAction<AddNodePayload> => action.type === NodeActionTypes.ADD,
+        (state, { payload: { id, name, parentId, x, y } }) => {
           if (id) state.nodesById[id] = { id, name, parentId, x, y }
         },
       )
@@ -52,6 +49,32 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
+        (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.DELETE,
+        (state, { payload: { id } }) => {
+          delete state.nodesById[id]
+        },
+      )
+      .addMatcher(
+        (action): action is PayloadAction<AddNodePayload> => action.type === NodeActionTypes.QUEUE_ADD,
+        (state, { payload: { id, name, parentId, x, y } }) => {
+          state.syncQueue.NODE.ADD[id] = { id, name, parentId, x, y } // Add later to the remote database
+          if (id) state.nodesById[id] = { id, name, parentId, x, y } // Update the UI
+        },
+      )
+      .addMatcher(
+        (action): action is PayloadAction<UpdateNodePayload> => action.type === NodeActionTypes.QUEUE_UPDATE,
+        (state, { payload: { id, propsToUpdate } }) => {
+          state.syncQueue.NODE.UPDATE[id] = { id, propsToUpdate } // Add later to the remote database
+          state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } // Update the UI
+        },
+      )
+      .addMatcher(
+        (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.QUEUE_DELETE,
+        (state, { payload: { id } }) => {
+          state.syncQueue.NODE.DELETE[id] = { id } // Add later to the remote database
+          delete state.nodesById[id] // Update the UI
+        },
+      )
       .addMatcher(
         (action): action is PayloadAction<DeleteFromQueue> => action.type === NodeActionTypes.DELETE_FROM_QUEUE,
         (state, { payload: { operation, id } }) => {

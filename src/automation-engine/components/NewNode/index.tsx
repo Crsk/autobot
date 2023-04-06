@@ -36,8 +36,14 @@ function NewNode({ parentNode }: { parentNode: Node }) {
    * 2. call clearNewChild() to move the dot to its initial point
    */
   useSubscribe(useDrag(dotRef, parentNode.id, true), () => {
-    const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop
-    dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
+    // No new child means user just clicked on the dot
+    if (!parentNodeStore.newChild) {
+      setIsExpanded(false)
+      dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(dotX), y: snapToGrid(dotY + defaultNodeHeight) }))
+    } else { // User dropped the node
+      const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop
+      dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
+    }
     dispatch(clearNewChild({ parentId: parentNode.id }))
   })
 

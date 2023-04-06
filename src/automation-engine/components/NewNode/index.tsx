@@ -13,8 +13,8 @@ import styles from './new-node.module.scss'
 const dotWidth = 4
 const dotSeparation = 8
 
-const getPosition = (newNode: Node | null, parent: Node): Point => ({
-  x: newNode ? newNode.x : parent.x - dotWidth / 2 + defaultNodeWidth / 2,
+const getPosition = (newNode: Node | null, parent: Node, isExpanded: boolean = false): Point => ({
+  x: newNode ? newNode.x : parent.x - dotWidth / 2 + defaultNodeWidth / 2 - (isExpanded ? defaultNodeWidth / 2 : 0),
   y: newNode ? newNode.y : parent.y + defaultNodeHeight + dotSeparation,
 })
 
@@ -24,7 +24,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const newNode = useSelector((state: any) => state.newNode)
   const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector((state: any) => state.nodesById[parentNode.id])
-  const { x: dotX, y: dotY } = getPosition(newNode, parentNode)
+  const { x: dotX, y: dotY } = getPosition(newNode, parentNode, isExpanded)
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
   const draggingData = useSelector((state: { draggingData: DraggingDataPayload }) => state.draggingData)
@@ -49,7 +49,7 @@ function NewNode({ parentNode }: { parentNode: Node }) {
       onMouseLeave={handleMouseLeave}
       x={dotX}
       y={dotY}
-      style={{ transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.8s ease-in-out' : 'none' }}
+      style={{ transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.4s ease-in-out' : 'none' }}
     >
       <rect
         ref={dotRef}

@@ -1,47 +1,19 @@
-import { Node } from '@/automation-engine/models/node'
+import { AddNodePayload, DeleteNodePayload, DraggingDataPayload, UpdateNodePayload } from '@/automation-engine/api/node/payloads'
 import { Point } from '@/automation-engine/types'
-
-interface FetchNodesPayload {
-  nodes: Node[]
-}
-
-interface AddNodePayload {
-  id: string
-  name: string
-  parentId: string | null
-  x: number
-  y: number
-}
-
-interface UpdateNodePayload {
-  id: string
-  propsToUpdate: Partial<Node>
-}
-
-interface UpdateConnectionsPayload {
-  nodes: Node[]
-  snapToGrid?: boolean
-}
-
-interface DeleteNodePayload {
-  id: string
-}
-
-interface DraggingDataPayload {
-  draggingNode: boolean
-}
+import { Node } from '@/automation-engine/models/node'
 
 interface DeleteFromQueue {
   operation: 'ADD' | 'UPDATE' | 'DELETE'
   id: string
 }
 
-interface State {
-  nodesById: Record<string, AddNodePayload & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
+interface NodeState {
+  nodesById: Record<string, Node & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
   draggingData: DraggingDataPayload,
-  syncQueue: {
-    NODE: QueueOperation<AddNodePayload, UpdateNodePayload, DeleteNodePayload>
-  }
+}
+
+interface QueueState {
+  NODE: QueueOperation<AddNodePayload, UpdateNodePayload, DeleteNodePayload>
 }
 
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
@@ -50,28 +22,29 @@ export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
   DELETE: Record<string, DeletePayload>,
 }
 
-type RootState = State
+type RootState = {
+  node: NodeState
+  queue: QueueState
+}
 
 export enum NodeActionTypes {
   FETCH = 'node/fetch',
   ADD = 'node/add',
   UPDATE = 'node/update',
   DELETE = 'node/delete',
-  SYNC = 'node/sync',
-  DELETE_FROM_QUEUE = 'node/deleteFromQueue',
-  QUEUE_ADD = 'node/queueAdd',
-  QUEUE_UPDATE = 'node/queueUpdate',
-  QUEUE_DELETE = 'node/queueDelete',
+}
+
+export enum QueueActionTypes {
+  SYNC = 'queue/sync',
+  DELETE_FROM_QUEUE = 'queue/deleteFromQueue',
+  ADD_NODE = 'queue/addNode',
+  UPDATE_NODE = 'queue/updateNode',
+  DELETE_NODE = 'queue/deleteNode',
 }
 
 export type {
-  FetchNodesPayload,
-  AddNodePayload,
-  UpdateNodePayload,
-  UpdateConnectionsPayload,
-  State,
+  NodeState,
+  QueueState,
   RootState,
-  DeleteNodePayload,
-  DraggingDataPayload,
   DeleteFromQueue,
 }

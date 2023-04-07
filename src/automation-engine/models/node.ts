@@ -1,5 +1,5 @@
 export interface Node {
-  createdAt: string
+  createdAt?: string
   id: string
   name: string
   parentId: string | null

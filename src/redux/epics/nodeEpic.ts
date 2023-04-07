@@ -1,73 +1,10 @@
 import { ofType, Epic, combineEpics } from 'redux-observable'
-import { catchError, concatMap, debounceTime, groupBy, map, mergeMap, switchMap, toArray } from 'rxjs/operators'
-import { EMPTY, from, of } from 'rxjs'
-import axios from 'axios'
-import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, syncNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
-import { AddNodePayload, DeleteNodePayload, NodeActionTypes, QueueOperation, RootState, UpdateNodePayload } from '../types'
-
-type Response = { success: boolean, message: string }
-
-const nodeApi = {
-  baseURL: 'http://localhost:3000/api/v1/nodes',
-  fetch: async (): Promise<Response> => {
-    try {
-      return (await axios.get<Response>(`${nodeApi.baseURL}`)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  create: async (newNode: AddNodePayload): Promise<Response> => {
-    try {
-      return (await axios.post<Response>(`${nodeApi.baseURL}`, newNode)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  update: async ({ id, propsToUpdate }: UpdateNodePayload): Promise<Response> => {
-    try {
-      return (await axios.patch<Response>(`${nodeApi.baseURL}/${id}`, propsToUpdate)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  delete: async ({ id }: DeleteNodePayload): Promise<Response> => {
-    try {
-      return (await axios.delete<Response>(`${nodeApi.baseURL}/${id}`)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  bulkCreate: async (payloads: (AddNodePayload)[]): Promise<Response> => {
-    try {
-      return (await axios.post<Response>(`${nodeApi.baseURL}/bulk-create`, payloads)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  bulkUpdate: async (payloads: UpdateNodePayload[]): Promise<Response> => {
-    try {
-      console.log(payloads.map((payload) => payload.id))
-
-      return (await axios.post<Response>(`${nodeApi.baseURL}/bulk-update`, payloads)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  bulkDelete: async (payloads: (DeleteNodePayload)[]): Promise<Response> => {
-    try {
-      return (await axios.post<Response>(`${nodeApi.baseURL}/bulk-delete`, payloads)).data
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-}
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
+import { concat, from, of } from 'rxjs'
+import nodeApi from '@/automation-engine/api/node/nodes.api'
+import { AddNodePayload, DeleteNodePayload, UpdateNodePayload } from '@/automation-engine/api/node/payloads'
+import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
+import { NodeActionTypes, QueueActionTypes, RootState } from '../types'
 
 const DEBOUNCE_TIME = 300
 
@@ -82,7 +19,10 @@ const addNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(addNodeTrigger.type),
   switchMap(({ payload }: { payload: AddNodePayload }) => from(nodeApi.create(payload)).pipe(
     map(() => ({ type: NodeActionTypes.ADD, payload })),
-    catchError(() => of(({ type: NodeActionTypes.QUEUE_ADD, payload }))),
+    catchError(() => concat(
+      of(({ type: QueueActionTypes.ADD_NODE, payload })),
+      of({ type: NodeActionTypes.ADD, payload }),
+    )),
   )),
 )
 
@@ -96,7 +36,10 @@ const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pip
   switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update({ id, propsToUpdate }))
     .pipe(
       map(() => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
-      catchError(() => of({ type: NodeActionTypes.QUEUE_UPDATE, payload: { id, propsToUpdate } })),
+      catchError(() => concat(
+        of({ type: QueueActionTypes.UPDATE_NODE, payload: { id, propsToUpdate } }),
+        of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } }),
+      )),
     )),
 )
 
@@ -104,54 +47,11 @@ const deleteNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(deleteNodeTrigger.type),
   switchMap(({ payload: { id } }: { payload: DeleteNodePayload }) => from(nodeApi.delete({ id })).pipe(
     map(() => ({ type: NodeActionTypes.DELETE, payload: { id } })),
-    catchError(() => of({ type: NodeActionTypes.QUEUE_DELETE, payload: { id } })),
+    catchError(() => concat(
+      of({ type: QueueActionTypes.DELETE_NODE, payload: { id } }),
+      of(({ type: NodeActionTypes.DELETE, payload: { id } })),
+    )),
   )),
-)
-const syncNodesEpic: Epic<any, any, RootState> = (action$, state$) => action$.pipe(
-  ofType(syncNodesTrigger.type),
-  mergeMap(() => {
-    const { ADD, UPDATE, DELETE }: QueueOperation<AddNodePayload, UpdateNodePayload, DeleteNodePayload> = state$.value.syncQueue.NODE
-    const unsyncedNodes: { actionType: NodeActionTypes, payload: (AddNodePayload | UpdateNodePayload | DeleteNodePayload) }[] = [
-      ...Object.values(ADD).map((payload) => ({ actionType: NodeActionTypes.ADD, payload })),
-      ...Object.values(UPDATE).map((payload) => ({ actionType: NodeActionTypes.UPDATE, payload })),
-      ...Object.values(DELETE).map((payload) => ({ actionType: NodeActionTypes.DELETE, payload })),
-    ]
-
-    return unsyncedNodes.length === 0
-      ? EMPTY
-      : from(unsyncedNodes).pipe(groupBy((node) => node.actionType), mergeMap((group) => group.pipe(toArray())), concatMap((actionGroup) => {
-        const { actionType } = actionGroup[0]
-
-        switch (actionType) {
-          case NodeActionTypes.ADD:
-            return from(nodeApi.bulkCreate(actionGroup.map((action) => action.payload as AddNodePayload))).pipe(
-              mergeMap(() => actionGroup.map((action) => ({
-                type: NodeActionTypes.DELETE_FROM_QUEUE,
-                payload: { operation: 'ADD', id: (action.payload as AddNodePayload).id },
-              }))),
-              catchError(() => EMPTY),
-            )
-          case NodeActionTypes.UPDATE:
-            return from(nodeApi.bulkUpdate(actionGroup.map((action) => action.payload as UpdateNodePayload))).pipe(
-              mergeMap(() => actionGroup.map((action) => ({
-                type: NodeActionTypes.DELETE_FROM_QUEUE,
-                payload: { operation: 'UPDATE', id: (action.payload as UpdateNodePayload).id },
-              }))),
-              catchError(() => EMPTY),
-            )
-          case NodeActionTypes.DELETE:
-            return from(nodeApi.bulkDelete(actionGroup.map((action) => action.payload as UpdateNodePayload))).pipe(
-              mergeMap(() => actionGroup.map((action) => ({
-                type: NodeActionTypes.DELETE_FROM_QUEUE,
-                payload: { operation: 'DELETE', id: (action.payload as DeleteNodePayload).id },
-              }))),
-              catchError(() => EMPTY),
-            )
-          default:
-            return EMPTY
-        }
-      }))
-  }),
 )
 
 export default combineEpics(
@@ -160,5 +60,4 @@ export default combineEpics(
   updateNodeEpicUI,
   updateNodeEpicRemote,
   deleteNodeEpic,
-  syncNodesEpic,
 )

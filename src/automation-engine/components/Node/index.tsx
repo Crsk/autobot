@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from '@/automation-engine/utils'
-import useDrag from '@/automation-engine/hooks/drag/useDrag'
+import useDrag from '@/automation-engine/hooks/useDrag'
 import { Node as NodeType } from '@/automation-engine/models/node'
 import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'
 import { select } from 'd3'
@@ -46,7 +46,7 @@ function Node({ node }: { node: NodeType }) {
         rx={defaultNodeRadius}
         width={defaultNodeWidth}
         height={defaultNodeHeight}
-        fill="#101316"
+        fill="#0c0f11"
         className={styles.node}
         onDoubleClick={handleDoubleClick}
       />

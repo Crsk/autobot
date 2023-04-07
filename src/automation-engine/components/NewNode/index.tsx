@@ -1,7 +1,7 @@
 import React, { useRef, useState, memo } from 'react'
 import { Node } from '@/automation-engine/models/node'
 import { useDispatch, useSelector } from 'react-redux'
-import useDrag from '@/automation-engine/hooks/drag/useDrag'
+import useDrag from '@/automation-engine/hooks/useDrag'
 import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth, snapToGrid } from '@/automation-engine/utils'
 import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'

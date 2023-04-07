@@ -4,7 +4,7 @@ import { snapValue } from '@/automation-engine/utils'
 
 const createGrid = (svg: any, width: number, height: number) => {
   const dotRadius = 1.8
-  const dotColor = '#13161c'
+  const dotColor = '#101216'
 
   for (let x = 0; x <= width; x += snapValue) {
     for (let y = 0; y <= height; y += snapValue) {

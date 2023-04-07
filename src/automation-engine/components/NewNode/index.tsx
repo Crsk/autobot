@@ -6,8 +6,8 @@ import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth, snapToGrid } fr
 import { Point } from '@/automation-engine/types'
 import useSubscribe from '@/automation-engine/hooks/useSubscribe'
 import { addNodeTrigger, clearNewChild } from '@/redux/slices/nodeSlice'
-import { DraggingDataPayload } from '@/redux/types'
 import { v4 as uuid } from 'uuid'
+import { RootState } from '@/redux/types'
 import styles from './new-node.module.scss'
 
 const dotWidth = 4
@@ -22,12 +22,11 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const dispatch = useDispatch()
   const dotRef = useRef<SVGRectElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const newNode = useSelector((state: any) => state.newNode)
-  const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector((state: any) => state.nodesById[parentNode.id])
-  const { x: dotX, y: dotY } = getPosition(newNode, parentNode, isExpanded)
+  const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector((state: RootState) => state.node.nodesById[parentNode.id])
+  const { x: dotX, y: dotY } = getPosition(null, parentNode, isExpanded)
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
-  const draggingData = useSelector((state: { draggingData: DraggingDataPayload }) => state.draggingData)
+  const draggingData = useSelector((state: RootState) => state.node.draggingData)
 
   /**
    * Enable dragging functionality for the node.

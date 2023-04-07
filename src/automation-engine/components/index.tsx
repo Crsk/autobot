@@ -4,7 +4,9 @@ import Node from '@/automation-engine/components/Node'
 import Connection from '@/automation-engine/components/Connection'
 import { useDispatch, useSelector } from 'react-redux'
 import { Node as NodeType } from '@/automation-engine/models/node'
-import { fetchNodesTrigger, syncNodesTrigger } from '@/redux/slices/nodeSlice'
+import { syncNodesTrigger } from '@/redux/slices/queueSlice'
+import { RootState } from '@/redux/types'
+import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
 
 function Button() {
   const dispatch = useDispatch()
@@ -22,7 +24,7 @@ function Button() {
 
 function AutomationEngine() {
   const dispatch = useDispatch()
-  const nodes: NodeType[] = useSelector((state: any) => Object.values(state.nodesById))
+  const nodes: NodeType[] = useSelector((state: RootState) => Object.values(state.node.nodesById))
   const connections = nodes.reduce((acc: { parent: NodeType, child: NodeType }[], node: NodeType) => {
     const parent: NodeType | undefined = nodes.find((n) => n.id === node.parentId)
 

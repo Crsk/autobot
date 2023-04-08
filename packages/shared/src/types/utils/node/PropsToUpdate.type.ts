@@ -1,3 +1,3 @@
 import { Node } from 'shared/types/models/Node.interface'
 
-export type CreateNodePayload = Omit<Node, 'createdAt'>
+export type UpdatedNodeProps = Omit<Partial<Node>, 'id'>

@@ -1,7 +1,7 @@
 import { ofType, Epic, combineEpics } from 'redux-observable'
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators'
 import { concat, from, of } from 'rxjs'
-import { AddNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 import nodeApi from '@/api/node/nodes.api'
 import { addNodeTrigger, deleteNodeTrigger, fetchNodesTrigger, updateNodeTrigger } from '../slices/nodeSlice'
 import { NodeActionTypes, QueueActionTypes, RootState } from '../types'
@@ -17,7 +17,7 @@ const fetchNodesEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
 )
 const addNodeEpic: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(addNodeTrigger.type),
-  switchMap(({ payload }: { payload: AddNodePayload }) => from(nodeApi.create(payload)).pipe(
+  switchMap(({ payload }: { payload: CreateNodePayload }) => from(nodeApi.create(payload)).pipe(
     map(() => ({ type: NodeActionTypes.ADD, payload })),
     catchError(() => concat(
       of(({ type: QueueActionTypes.ADD_NODE, payload })),

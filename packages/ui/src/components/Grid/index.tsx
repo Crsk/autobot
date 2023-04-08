@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { select } from 'd3'
-import { snapValue } from '@/utils'
+import { snapValue } from 'shared/src/utils'
 
 const createGrid = (svg: any, width: number, height: number) => {
   const dotRadius = 1.8

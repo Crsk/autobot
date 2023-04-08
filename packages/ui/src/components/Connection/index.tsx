@@ -1,6 +1,6 @@
 import React from 'react'
 import { Point } from 'shared/src/types/utils'
-import { getConnectionPoints, getNodesOrientation } from '@/utils'
+import { getConnectionPoints, getNodesOrientation } from 'shared/src/utils'
 import ConnectionTextLabel from '../ConnectionTextLabel'
 
 // Helper function to calculate a point on a Bezier curve at a specific time (t)

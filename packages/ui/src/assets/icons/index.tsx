@@ -1,5 +1,5 @@
 import React from 'react'
-import { colors } from '@/utils'
+import { colors } from 'shared/src/utils/theme'
 
 type Size = 'S' | 'M' | 'L' | 'XL'
 type Color = 'dark' | 'primary'

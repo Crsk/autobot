@@ -3,7 +3,7 @@ import { select } from 'd3'
 import { fromEvent, Subject } from 'rxjs'
 import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
 import { useDispatch } from 'react-redux'
-import { snapToGrid } from '@/utils'
+import { snapToGrid } from 'shared/src/utils'
 import { draggingData, updateNewChild, updateNodeTrigger } from '@/redux/slices/nodeSlice'
 
 /**

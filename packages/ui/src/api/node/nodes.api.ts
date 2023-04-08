@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AddNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 
 type Response = { success: boolean, message: string }
 
@@ -13,7 +13,7 @@ const nodeApi = {
       throw error
     }
   },
-  create: async (newNode: AddNodePayload): Promise<Response> => {
+  create: async (newNode: CreateNodePayload): Promise<Response> => {
     try {
       return (await axios.post<Response>(`${nodeApi.baseURL}`, newNode)).data
     } catch (error) {
@@ -37,7 +37,7 @@ const nodeApi = {
       throw error
     }
   },
-  bulkCreate: async (payloads: (AddNodePayload)[]): Promise<Response> => {
+  bulkCreate: async (payloads: (CreateNodePayload)[]): Promise<Response> => {
     try {
       return (await axios.post<Response>(`${nodeApi.baseURL}/bulk-create`, payloads)).data
     } catch (error) {

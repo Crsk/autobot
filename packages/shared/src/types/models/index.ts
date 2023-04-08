@@ -1,2 +1,2 @@
-export * from './Node.interface'
-export * from './Connection.interface'
+export { Node } from './Node.interface'
+export { default as Connection } from './Connection.interface'

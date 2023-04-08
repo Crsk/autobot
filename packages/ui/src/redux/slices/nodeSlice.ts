@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AddNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import { NodeState, NodeActionTypes } from '../types'
 
@@ -18,7 +18,7 @@ const nodeSlice = createSlice({
   initialState,
   reducers: {
     fetchNodesTrigger: (state) => state,
-    addNodeTrigger: (state, _action: PayloadAction<AddNodePayload>) => state,
+    addNodeTrigger: (state, _action: PayloadAction<CreateNodePayload>) => state,
     updateNodeTrigger: (state, _action: PayloadAction<UpdateNodePayload>) => state,
     deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodePayload>) => state,
     updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
@@ -40,7 +40,7 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<AddNodePayload> => action.type === NodeActionTypes.ADD,
+        (action): action is PayloadAction<CreateNodePayload> => action.type === NodeActionTypes.ADD,
         (state, { payload: { id, name, parentId, x, y } }) => {
           if (id) addNode(state, id, name, parentId, x, y)
         },

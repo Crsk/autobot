@@ -1,4 +1,4 @@
-export interface Connection {
+export default interface Connection {
   id: number
   name: string
   parentId: string | null

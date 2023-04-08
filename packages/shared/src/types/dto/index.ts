@@ -1,1 +1,3 @@
-export * from './createNode.dto'
+export * from './CreateNode.dto'
+export * from './DeleteNode.dto'
+export * from './UpdateNode.dto'

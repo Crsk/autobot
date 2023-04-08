@@ -7,13 +7,11 @@ import { Node as NodeType } from '@/automation-engine/models/node'
 import { syncNodesTrigger } from '@/redux/slices/queueSlice'
 import { RootState } from '@/redux/types'
 import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
+import ConnectivityBar from './Connectivity/Connectivity'
 
 function Button() {
   const dispatch = useDispatch()
-
-  const handleClick = () => {
-    if (navigator.onLine) dispatch(syncNodesTrigger())
-  }
+  const handleClick = () => navigator.onLine && dispatch(syncNodesTrigger())
 
   return (
     <foreignObject x="0" y="0" width="100" height="100">
@@ -36,22 +34,25 @@ function AutomationEngine() {
   }, [dispatch])
 
   return (
-    <svg width="100vw" height="100vh">
-      <Grid />
-      <Button />
-      {connections.map((connection) => (
-        connection.child && connection.parent && (
-          <Connection
-            key={`${connection.parent.id}-${connection.child.id}`}
-            origin={{ x: connection.parent.x, y: connection.parent.y }}
-            destination={{ x: connection.child.x, y: connection.child.y }}
-          />
-        )
-      ))}
-      {nodes && nodes.filter((x) => !!x).map((node: NodeType) => (
-        <Node key={node.id} node={node} />
-      ))}
-    </svg>
+    <>
+      <ConnectivityBar />
+      <svg width="100vw" height="100vh">
+        <Grid />
+        <Button />
+        {connections.map((connection) => (
+          connection.child && connection.parent && (
+            <Connection
+              key={`${connection.parent.id}-${connection.child.id}`}
+              origin={{ x: connection.parent.x, y: connection.parent.y }}
+              destination={{ x: connection.child.x, y: connection.child.y }}
+            />
+          )
+        ))}
+        {nodes && nodes.filter((x) => !!x).map((node: NodeType) => (
+          <Node key={node.id} node={node} />
+        ))}
+      </svg>
+    </>
   )
 }
 

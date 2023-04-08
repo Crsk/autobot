@@ -1,0 +1,26 @@
+.offline, .online {
+  padding: 4px;
+  font-size: 0.8em;
+  color: #000000;
+  text-align: center;
+  background-color: orange;
+  transition: max-height 0.5s, opacity 0.5s;
+  overflow: hidden;
+  max-height: 50px;
+  opacity: 1;
+}
+
+.offline {
+  background-color: orange;
+}
+
+.online {
+  background-color: lightseagreen;
+}
+
+.hide {
+  padding: 0px;
+  max-height: 0px;
+  opacity: 0;
+  transition: max-height 0.5s, opacity 0.5s, padding 0.2s;
+}

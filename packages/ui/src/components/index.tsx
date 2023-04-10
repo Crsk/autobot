@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Node as NodeType } from 'shared/src/types/models/Node.interface'
+import { Node as NodeType } from 'shared/src/types/models'
 import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@/components/Grid'
 import Node from '@/components/Node'

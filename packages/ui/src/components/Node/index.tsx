@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Node as NodeType } from 'shared/src/types/models/Node.interface'
+import { Node as NodeType } from 'shared/src/types/models'
 import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'
 import { select } from 'd3'
 import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from 'shared/src/utils'

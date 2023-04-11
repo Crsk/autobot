@@ -7,7 +7,7 @@ const config = {
   title: 'Not sure yet what is this about',
   tagline: '🍕  Topping the brainstorm pizza',
   favicon: 'img/favicon.ico',
-  url: 'https://github.com/Crsk/',
+  url: 'https://crsk.github.io',
   baseUrl: '/frow/',
   organizationName: 'Frow',
   projectName: 'frow',

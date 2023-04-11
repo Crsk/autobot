@@ -36,6 +36,13 @@ const config = {
         ],
         hideOnScroll: false,
       },
+      announcementBar: {
+        id: 'survey',
+        content: 'Help us <a target="_blank" rel="noopener noreferrer" href="https://forms.gle/f9eKg8yMQk8q8xUR7">improve</a> ❤️',
+        backgroundColor: '#00bfa6',
+        textColor: '#091E42',
+        isCloseable: true,
+      },
       prism: { theme: darkCodeTheme, darkTheme: darkCodeTheme },
       colorMode: { defaultMode: 'dark', disableSwitch: true, respectPrefersColorScheme: false },
     }),

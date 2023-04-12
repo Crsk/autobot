@@ -1,29 +1,19 @@
-import { catchError, concat, debounceTime, from, map, of, switchMap } from 'rxjs'
 import { Epic, ofType } from 'redux-observable'
 import { UpdateNodePayload } from 'shared/src/types/dto'
+import { map } from 'rxjs'
 import nodeApi from '@/api/node/nodes.api'
-import { NodeActionTypes, QueueActionTypes, RootState } from '@/redux/types'
+import { NodeActionTypes, RootState } from '@/redux/types'
 import { updateNodeTrigger } from '@/redux/slices/nodeSlice'
-import { DEBOUNCE_TIME } from '../constants'
+import { handleRemoteEpic } from '../handleRemote.epic'
 
 /**
- * Update the node in the UI immediately and synchronously, debouce the remote update
+ * Update the node in the UI immediately, no matter if the remote update is successful or not.
  */
 const updateNodeEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(updateNodeTrigger.type),
-  map(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
+  map(({ payload }: { payload: UpdateNodePayload }) => ({ type: NodeActionTypes.UPDATE, payload })),
 )
-const updateNodeEpicRemote: Epic<any, any, RootState> = (action$) => action$.pipe(
-  ofType(updateNodeTrigger.type),
-  debounceTime(DEBOUNCE_TIME),
-  switchMap(({ payload: { id, propsToUpdate } }: { payload: UpdateNodePayload }) => from(nodeApi.update({ id, propsToUpdate }))
-    .pipe(
-      map(() => ({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } })),
-      catchError(() => concat(
-        of({ type: QueueActionTypes.UPDATE_NODE, payload: { id, propsToUpdate } }),
-        of({ type: NodeActionTypes.UPDATE, payload: { id, propsToUpdate } }),
-      )),
-    )),
-)
+
+const updateNodeEpicRemote = handleRemoteEpic(updateNodeTrigger.type, nodeApi.update)
 
 export { updateNodeEpicUI, updateNodeEpicRemote }

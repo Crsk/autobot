@@ -26,7 +26,8 @@
     "no-param-reassign": 0,
     "jsx-a11y/no-autofocus": 0,
     "no-console": 0,
-    "import/extensions": 0
+    "import/extensions": 0,
+    "import/prefer-default-export": 0
   },
   "settings": {
     "import/resolver": {

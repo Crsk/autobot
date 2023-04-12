@@ -6,7 +6,7 @@ import nodeSlice from '../slices/nodeSlice'
 import nodesEpic from '../epics/node'
 import { RootState } from '../types'
 import { middlewareConfig, persistConfig } from './persistConfig'
-import queueEpic from '../epics/queue.epic'
+import queueEpic from '../epics/queueEpic'
 import queueSlice from '../slices/queueSlice'
 
 const rootReducer = combineReducers({

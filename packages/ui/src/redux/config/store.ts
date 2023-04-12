@@ -3,10 +3,10 @@ import { devToolsEnhancer } from 'redux-devtools-extension'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import { persistReducer, persistStore } from 'redux-persist'
 import nodeSlice from '../slices/nodeSlice'
-import nodesEpic from '../epics/nodeEpic'
+import nodesEpic from '../epics/node'
 import { RootState } from '../types'
 import { middlewareConfig, persistConfig } from './persistConfig'
-import queueEpic from '../epics/queueEpic'
+import queueEpic from '../epics/queue.epic'
 import queueSlice from '../slices/queueSlice'
 
 const rootReducer = combineReducers({

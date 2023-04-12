@@ -1,6 +1,6 @@
 import { combineEpics } from 'redux-observable'
 import fetchNodesEpic from './fetch.epic'
-import addNodeEpic from './add.apic'
+import addNodeEpic from './add.epic'
 import { updateNodeEpicRemote, updateNodeEpicUI } from './update.epic'
 import deleteNodeEpic from './delete.epic'
 

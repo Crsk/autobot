@@ -13,7 +13,7 @@ class NodeService {
     return nodes
   }
 
-  public static async getNode(id: number): Promise<SnakeCase<Node> | undefined> {
+  public static async getNode(id: string): Promise<SnakeCase<Node> | undefined> {
     const nodes: SnakeCase<Node>[] = await getRow<SnakeCase<Node>>('node', id)
 
     return nodes[0]

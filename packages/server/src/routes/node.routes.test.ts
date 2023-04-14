@@ -149,4 +149,53 @@ describe('Node Routes', () => {
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
+
+  describe('POST /bulk-create', () => {
+    it('should return status 201 and create new nodes', async () => {
+      const newNodes: any = [
+        { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 },
+        { id: 4, name: 'Node 4', x: 70, y: 80, parentId: 1 },
+      ]
+      mockedNodeService.bulkCreate.mockResolvedValue(2)
+      const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
+
+      expect(response.status).toBe(201)
+      expect(response.body).toEqual({ message: '2 Nodes created successfully', payload: newNodes, success: true })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing nodes to create', async () => {
+      const newNodes = undefined
+      const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing required fields', async () => {
+      const newNodes = [
+        { name: 'Node 3', x: 50, y: 60, parentId: 1 },
+        { name: 'Node 4', x: 70, y: 80, parentId: 1 },
+      ] // missing 'id'
+      const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when it fails', async () => {
+      const newNodes = [
+        { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 },
+        { id: 4, name: 'Node 4', x: 70, y: 80, parentId: 1 },
+      ]
+      mockedNodeService.bulkCreate.mockRejectedValue(new Error())
+      const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
 })

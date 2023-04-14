@@ -57,12 +57,12 @@ class NodeController {
 
   public static async bulkCreate(req: Request<{}, {}, SnakeCase<CreateNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {
     const nodesToInsert = req.body
-    console.log('nodesToInsert', nodesToInsert)
+    if (!nodesToInsert.length || nodesToInsert.some((node) => !node.id || !node.x || !node.y || !node.parent_id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
+
     const resultLength = await NodeService.bulkCreate(nodesToInsert)
+    if (!resultLength) throw new Error()
 
-    if (!resultLength) return res.status(500).json({ message: 'Failed to create node', success: false })
-
-    return res.status(StatusCode.CREATED).json({ message: `${resultLength} rows added`, success: true })
+    return res.status(StatusCode.CREATED).json({ message: `${resultLength} Nodes created successfully`, success: true, payload: nodesToInsert })
   }
 
   public static async bulkUpdate(req: Request<{}, {}, SnakeCase<Partial<UpdateNodePayload>>[]>, res: TypedResponse): Promise<TypedResponse> {

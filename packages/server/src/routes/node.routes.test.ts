@@ -47,6 +47,35 @@ describe('Node Routes', () => {
     })
   })
 
+  describe('GET /node', () => {
+    it('should return status 200 and a node', async () => {
+      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
+      const response = await request(testApp).get('/api/v1/nodes/1')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ message: 'Success', payload: mockNodesResponse[0], success: true })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 404 when node is not found', async () => {
+      mockedNodeService.getNode.mockResolvedValue(undefined)
+      const response = await request(testApp).get('/api/v1/nodes/1')
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ message: 'Node not found', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when it fails', async () => {
+      mockedNodeService.getNode.mockRejectedValue(new Error())
+      const response = await request(testApp).get('/api/v1/nodes/1')
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
+
   describe('POST /node', () => {
     it('should return status 201 and create a new node', async () => {
       const newNode: any = { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' }

@@ -14,6 +14,8 @@ class NodeController {
 
   public static async getNode(req: Request<{ id: string }>, res: TypedResponse): Promise<TypedResponse<Node>> {
     const { id } = req.params
+    if (!id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
+
     const node = await NodeService.getNode(id)
     if (!node) return res.status(StatusCode.NOT_FOUND).json({ message: 'Node not found', success: false })
 

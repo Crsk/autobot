@@ -198,4 +198,53 @@ describe('Node Routes', () => {
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
+
+  describe('POST /bulk-update', () => {
+    it('should return status 200 and update existing nodes', async () => {
+      const updateData = [
+        { id: 1, propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } },
+        { id: 2, propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
+      ]
+      mockedNodeService.bulkUpdate.mockResolvedValue(2)
+      const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ message: '2 Nodes updated successfully', payload: updateData, success: true })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing nodes to update', async () => {
+      const updateData = undefined
+      const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing required fields', async () => {
+      const updateData = [
+        { propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } }, // missing 'id'
+        { id: 2, propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
+      ]
+      const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when it fails', async () => {
+      const updateData = [
+        { id: 1, name: 'Updated Node 1', x: 20, y: 30 },
+        { id: 2, name: 'Updated Node 2', x: 40, y: 50 },
+      ]
+      mockedNodeService.bulkUpdate.mockRejectedValue(new Error())
+      const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
 })

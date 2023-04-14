@@ -66,12 +66,13 @@ class NodeController {
   }
 
   public static async bulkUpdate(req: Request<{}, {}, SnakeCase<Partial<UpdateNodePayload>>[]>, res: TypedResponse): Promise<TypedResponse> {
-    const nodesToUpdate = req.body
-    const resultLength = await NodeService.bulkUpdate(nodesToUpdate)
+    const updatePayloads = req.body
+    if (!updatePayloads.length || updatePayloads.some((node) => !node.id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 
-    if (!resultLength) return res.status(500).json({ message: 'Failed to update nodes', success: false })
+    const resultLength = await NodeService.bulkUpdate(updatePayloads)
+    if (!resultLength) throw new Error()
 
-    return res.status(StatusCode.OK).json({ message: `${resultLength} rows updated`, success: true })
+    return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes updated successfully`, success: true, payload: updatePayloads })
   }
 
   public static async bulkDelete(req: Request<{}, {}, SnakeCase<DeleteNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {

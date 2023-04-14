@@ -1,6 +1,7 @@
 import { Application } from 'express'
 import request from 'supertest'
 import { describe, it, afterEach, beforeAll } from '@jest/globals'
+import { DeleteNodePayload } from 'shared/src/types/dto'
 import app from '../app'
 import NodeService from '../services/node.service'
 
@@ -241,6 +242,38 @@ describe('Node Routes', () => {
       ]
       mockedNodeService.bulkUpdate.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
+
+  describe('POST /bulk-delete', () => {
+    it('should return status 200 and delete existing nodes', async () => {
+      const payloads: DeleteNodePayload[] = [{ id: '1' }, { id: '2' }]
+
+      mockedNodeService.bulkDelete.mockResolvedValue(2)
+      const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ message: '2 Nodes deleted successfully', success: true, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing required fields', async () => {
+      const payloads = undefined
+      const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when it fails', async () => {
+      const payloads: DeleteNodePayload[] = [{ id: '1' }, { id: '2' }]
+      mockedNodeService.bulkDelete.mockRejectedValue(new Error())
+      const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })

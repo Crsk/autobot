@@ -76,12 +76,14 @@ class NodeController {
   }
 
   public static async bulkDelete(req: Request<{}, {}, SnakeCase<DeleteNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {
-    const idsToDelete = req.body.map((payload) => payload.id)
+    const payloads = req.body
+    if (!payloads?.length) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
+
+    const idsToDelete = payloads.map((payload) => payload.id)
     const resultLength = await NodeService.bulkDelete(idsToDelete)
+    if (!resultLength) throw new Error()
 
-    if (!resultLength) return res.status(500).json({ message: 'Failed to delete nodes', success: false })
-
-    return res.status(StatusCode.OK).json({ message: `${resultLength} rows deleted`, success: true })
+    return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes deleted successfully`, success: true })
   }
 }
 

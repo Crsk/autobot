@@ -47,12 +47,12 @@ describe('Node Routes', () => {
   })
 
   describe('POST /node', () => {
-    it('should return status 200 and create a new node', async () => {
+    it('should return status 201 and create a new node', async () => {
       const newNode: any = { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 }
       mockedNodeService.createNode.mockResolvedValue(newNode)
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(201)
       expect(response.body).toEqual({ message: `Node id ${newNode.id} was created`, payload: newNode, success: true })
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })

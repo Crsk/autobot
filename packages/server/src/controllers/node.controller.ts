@@ -28,7 +28,7 @@ class NodeController {
     const createdNode = await NodeService.createNode(newNode)
     if (!createdNode) throw new Error()
 
-    return res.status(StatusCode.OK).json({ message: `Node id ${id} was created`, payload: createdNode, success: true })
+    return res.status(StatusCode.CREATED).json({ message: `Node id ${id} was created`, payload: createdNode, success: true })
   }
 
   public static async updateNode(req: Request<{ id: string }, {}, Partial<Omit<Node, 'id'>>>, res: TypedResponse): Promise<TypedResponse> {

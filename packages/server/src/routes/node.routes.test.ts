@@ -10,8 +10,8 @@ const mockedNodeService = jest.mocked(NodeService)
 let testApp: Application
 
 const mockNodesResponse: any = [
-  { id: 1, name: 'Node 1', x: 10, y: 20, parentId: null },
-  { id: 2, name: 'Node 2', x: 30, y: 40, parentId: 1 },
+  { id: '1', name: 'Node 1', x: 10, y: 20, parentId: null },
+  { id: '2', name: 'Node 2', x: 30, y: 40, parentId: '1' },
 ]
 
 describe('Node Routes', () => {
@@ -49,7 +49,7 @@ describe('Node Routes', () => {
 
   describe('POST /node', () => {
     it('should return status 201 and create a new node', async () => {
-      const newNode: any = { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 }
+      const newNode: any = { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' }
       mockedNodeService.createNode.mockResolvedValue(newNode)
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
@@ -59,7 +59,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 400 when missing required fields', async () => {
-      const newNode = { name: 'Node 3', x: 50, parentId: 1 } // missing 'y'
+      const newNode = { name: 'Node 3', x: 50, parentId: '1' } // missing 'y'
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
       expect(response.status).toBe(400)
@@ -68,7 +68,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 500 when it fails', async () => {
-      const newNode = { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 }
+      const newNode = { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' }
       mockedNodeService.createNode.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
@@ -154,8 +154,8 @@ describe('Node Routes', () => {
   describe('POST /bulk-create', () => {
     it('should return status 201 and create new nodes', async () => {
       const newNodes: any = [
-        { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 },
-        { id: 4, name: 'Node 4', x: 70, y: 80, parentId: 1 },
+        { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
+        { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
       mockedNodeService.bulkCreate.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
@@ -176,8 +176,8 @@ describe('Node Routes', () => {
 
     it('should return status 400 when missing required fields', async () => {
       const newNodes = [
-        { name: 'Node 3', x: 50, y: 60, parentId: 1 },
-        { name: 'Node 4', x: 70, y: 80, parentId: 1 },
+        { name: 'Node 3', x: 50, y: 60, parentId: '1' },
+        { name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ] // missing 'id'
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
@@ -188,8 +188,8 @@ describe('Node Routes', () => {
 
     it('should return status 500 when it fails', async () => {
       const newNodes = [
-        { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 },
-        { id: 4, name: 'Node 4', x: 70, y: 80, parentId: 1 },
+        { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
+        { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
       mockedNodeService.bulkCreate.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
@@ -203,8 +203,8 @@ describe('Node Routes', () => {
   describe('POST /bulk-update', () => {
     it('should return status 200 and update existing nodes', async () => {
       const updateData = [
-        { id: 1, propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } },
-        { id: 2, propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
+        { id: '1', propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } },
+        { id: '2', propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
       ]
       mockedNodeService.bulkUpdate.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
@@ -226,7 +226,7 @@ describe('Node Routes', () => {
     it('should return status 400 when missing required fields', async () => {
       const updateData = [
         { propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } }, // missing 'id'
-        { id: 2, propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
+        { id: '2', propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
       ]
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
@@ -237,8 +237,8 @@ describe('Node Routes', () => {
 
     it('should return status 500 when it fails', async () => {
       const updateData = [
-        { id: 1, name: 'Updated Node 1', x: 20, y: 30 },
-        { id: 2, name: 'Updated Node 2', x: 40, y: 50 },
+        { id: '1', name: 'Updated Node 1', x: 20, y: 30 },
+        { id: '2', name: 'Updated Node 2', x: 40, y: 50 },
       ]
       mockedNodeService.bulkUpdate.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)

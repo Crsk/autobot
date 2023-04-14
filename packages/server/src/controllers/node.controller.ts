@@ -28,7 +28,6 @@ class NodeController {
     const newNode: SnakeCase<CreateNodePayload> = { id, name, x, y, parent_id }
     if (!id || !x || !y || !parent_id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
     const createdNode = await NodeService.createNode(newNode)
-    if (!createdNode) throw new Error()
 
     return res.status(StatusCode.CREATED).json({ message: `Node id ${id} was created`, payload: createdNode, success: true })
   }
@@ -41,7 +40,6 @@ class NodeController {
     if (!await NodeService.getNode(id)) return res.status(StatusCode.NOT_FOUND).json({ message: 'Node not found', success: false })
 
     const node = await NodeService.updateNode(id, updatedNode)
-    if (!node) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: `Node ${id} updated successfully`, payload: node, success: true })
   }
@@ -51,8 +49,7 @@ class NodeController {
     if (!id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
     if (!await NodeService.getNode(id)) return res.status(StatusCode.NOT_FOUND).json({ message: 'Node not found', success: false })
 
-    const deleted = await NodeService.deleteNode(id)
-    if (!deleted) throw new Error()
+    await NodeService.deleteNode(id)
 
     return res.status(StatusCode.OK).json({ message: 'Node deleted successfully', success: true })
   }
@@ -62,7 +59,6 @@ class NodeController {
     if (!nodesToInsert.length || nodesToInsert.some((node) => !node.id || !node.x || !node.y || !node.parent_id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 
     const resultLength = await NodeService.bulkCreate(nodesToInsert)
-    if (!resultLength) throw new Error()
 
     return res.status(StatusCode.CREATED).json({ message: `${resultLength} Nodes created successfully`, success: true })
   }
@@ -72,7 +68,6 @@ class NodeController {
     if (!updatePayloads.length || updatePayloads.some((node) => !node.id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 
     const resultLength = await NodeService.bulkUpdate(updatePayloads)
-    if (!resultLength) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes updated successfully`, success: true })
   }
@@ -83,7 +78,6 @@ class NodeController {
 
     const idsToDelete = payloads.map((payload) => payload.id)
     const resultLength = await NodeService.bulkDelete(idsToDelete)
-    if (!resultLength) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes deleted successfully`, success: true })
   }

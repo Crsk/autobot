@@ -62,7 +62,7 @@ class NodeController {
     const resultLength = await NodeService.bulkCreate(nodesToInsert)
     if (!resultLength) throw new Error()
 
-    return res.status(StatusCode.CREATED).json({ message: `${resultLength} Nodes created successfully`, success: true, payload: nodesToInsert })
+    return res.status(StatusCode.CREATED).json({ message: `${resultLength} Nodes created successfully`, success: true })
   }
 
   public static async bulkUpdate(req: Request<{}, {}, SnakeCase<Partial<UpdateNodePayload>>[]>, res: TypedResponse): Promise<TypedResponse> {
@@ -72,7 +72,7 @@ class NodeController {
     const resultLength = await NodeService.bulkUpdate(updatePayloads)
     if (!resultLength) throw new Error()
 
-    return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes updated successfully`, success: true, payload: updatePayloads })
+    return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes updated successfully`, success: true })
   }
 
   public static async bulkDelete(req: Request<{}, {}, SnakeCase<DeleteNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {

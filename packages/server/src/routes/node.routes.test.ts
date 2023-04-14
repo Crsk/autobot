@@ -161,7 +161,7 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(201)
-      expect(response.body).toEqual({ message: '2 Nodes created successfully', payload: newNodes, success: true })
+      expect(response.body).toEqual({ message: '2 Nodes created successfully', success: true, payload: {} })
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
 
@@ -210,7 +210,7 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({ message: '2 Nodes updated successfully', payload: updateData, success: true })
+      expect(response.body).toEqual({ message: '2 Nodes updated successfully', success: true, payload: {} })
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
 

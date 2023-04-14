@@ -7,7 +7,7 @@ const { getNodes, getNode, createNode, updateNode, deleteNode, bulkCreate, bulkU
 
 router.get('/nodes', errorHandler(getNodes))
 router.get('/nodes/:id', errorHandler(getNode))
-router.post('/nodes', errorHandler(createNode))
+router.post('/node', errorHandler(createNode))
 router.patch('/nodes/:id', errorHandler(updateNode))
 router.delete('/nodes/:id', errorHandler(deleteNode))
 router.post('/nodes/bulk-create', errorHandler(bulkCreate))

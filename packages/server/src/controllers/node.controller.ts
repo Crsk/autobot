@@ -34,10 +34,12 @@ class NodeController {
   public static async updateNode(req: Request<{ id: string }, {}, Partial<Omit<Node, 'id'>>>, res: TypedResponse): Promise<TypedResponse> {
     const { id } = req.params
     const updatedNode = req.body
-    if (!id || !updatedNode) return res.status(404).json({ message: `Node ${id} not found`, success: false })
+    if (!id || !updatedNode) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
     if ((updatedNode as any).id) delete (updatedNode as any).id // remove id just in case, we don't want it to be updated
+    if (!await NodeService.getNode(id)) return res.status(StatusCode.NOT_FOUND).json({ message: 'Node not found', success: false })
 
     const node = await NodeService.updateNode(id, updatedNode)
+    if (!node) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: `Node ${id} updated successfully`, payload: node, success: true })
   }

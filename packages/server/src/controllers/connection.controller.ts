@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
 import { Connection } from 'shared/src/types/models'
-import tryCatch from '../utils/tryCatch'
 import ConnectionService from '../services/connection.service'
 
-@tryCatch
 class ConnectionController {
   public static async getConnections(_req: Request, res: Response): Promise<Response> {
     const connections = await ConnectionService.getConnections()

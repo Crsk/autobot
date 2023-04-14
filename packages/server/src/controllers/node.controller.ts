@@ -2,10 +2,8 @@ import { Request } from 'express'
 import { CreateNodePayload, UpdateNodePayload, DeleteNodePayload, TypedResponse, StatusCode } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import NodeService from '../services/node.service'
-import tryCatch from '../utils/tryCatch'
 import { SnakeCase } from '../utils/types'
 
-@tryCatch
 class NodeController {
   public static async getNodes(_req: Request, res: TypedResponse<SnakeCase<Node>[]>): Promise<TypedResponse<SnakeCase<Node>[]>> {
     const nodes = await NodeService.getNodes()

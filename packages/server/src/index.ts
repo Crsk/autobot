@@ -1,8 +1,7 @@
-import Server from './app'
+import server from './app'
 
-async function main() {
-  const server = new Server()
-  await server.start()
-}
+const port = process.env.PORT || '3000'
 
-main()
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`)
+})

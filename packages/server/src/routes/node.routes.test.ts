@@ -114,4 +114,39 @@ describe('Node Routes', () => {
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
+
+  describe('DELETE /nodes/:id', () => {
+    it('should return status 200 and delete existing node', async () => {
+      const nodeId = 1
+      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
+      mockedNodeService.deleteNode.mockResolvedValue(true)
+      const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ message: 'Node deleted successfully', payload: {}, success: true })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 404 when node not found', async () => {
+      const nodeId = 'INVALID_ID'
+      mockedNodeService.getNode.mockResolvedValue(undefined)
+      mockedNodeService.deleteNode.mockResolvedValue(false)
+      const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ message: 'Node not found', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when delete fails', async () => {
+      const nodeId = 1
+      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
+      mockedNodeService.deleteNode.mockRejectedValue(new Error())
+      const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
 })

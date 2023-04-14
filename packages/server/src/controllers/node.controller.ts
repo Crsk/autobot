@@ -46,9 +46,11 @@ class NodeController {
 
   public static async deleteNode(req: Request<{ id: string }>, res: TypedResponse<{ message: string }>): Promise<TypedResponse<{ message: string }>> {
     const { id } = req.params
+    if (!id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
+    if (!await NodeService.getNode(id)) return res.status(StatusCode.NOT_FOUND).json({ message: 'Node not found', success: false })
+
     const deleted = await NodeService.deleteNode(id)
-    if (!deleted) return res.status(404).json({ message: 'Node not found', success: false })
-    console.log(`Node ${id} deleted successfully`)
+    if (!deleted) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: 'Node deleted successfully', success: true })
   }

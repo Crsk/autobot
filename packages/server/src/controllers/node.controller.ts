@@ -24,8 +24,9 @@ class NodeController {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { id, name = '', x, y, parent_id } = req.body
     const newNode: SnakeCase<CreateNodePayload> = { id, name, x, y, parent_id }
+    if (!id || !x || !y || !parent_id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
     const createdNode = await NodeService.createNode(newNode)
-    if (!createdNode) return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Failed to create node', success: false })
+    if (!createdNode) throw new Error()
 
     return res.status(StatusCode.OK).json({ message: `Node id ${id} was created`, payload: createdNode, success: true })
   }

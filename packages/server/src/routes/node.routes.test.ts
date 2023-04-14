@@ -36,9 +36,40 @@ describe('Node Routes', () => {
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
 
-    it('should return status 500 when fails', async () => {
+    it('should return status 500 when it fails', async () => {
       mockedNodeService.getNodes.mockRejectedValue(new Error('Internal Server Error'))
       const response = await request(testApp).get('/api/v1/nodes')
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+  })
+
+  describe('POST /node', () => {
+    it('should create a new node and return status 200', async () => {
+      const newNode: any = { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 }
+      mockedNodeService.createNode.mockResolvedValue(newNode)
+      const response = await request(testApp).post('/api/v1/node').send(newNode)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ message: `Node id ${newNode.id} was created`, payload: newNode, success: true })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 400 when missing required fields', async () => {
+      const newNode = { name: 'Node 3', x: 50, parentId: 1 } // missing 'y'
+      const response = await request(testApp).post('/api/v1/node').send(newNode)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: 'Bad Request: Missing required fields', success: false, payload: {} })
+      expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
+    })
+
+    it('should return status 500 when it fails', async () => {
+      const newNode = { id: 3, name: 'Node 3', x: 50, y: 60, parentId: 1 }
+      mockedNodeService.createNode.mockRejectedValue(new Error('Internal Server Error'))
+      const response = await request(testApp).post('/api/v1/node').send(newNode)
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })

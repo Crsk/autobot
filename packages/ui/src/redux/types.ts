@@ -1,6 +1,5 @@
 import { Point } from 'shared/src/types/utils'
-import { Node } from 'shared/src/types/models'
-import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 
 interface DeleteFromQueue {
   operation: 'ADD' | 'UPDATE' | 'DELETE'
@@ -8,12 +7,12 @@ interface DeleteFromQueue {
 }
 
 interface NodeState {
-  nodesById: Record<string, Node & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
+  nodesById: Record<string, CreateNodeBody & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
   draggingData: DraggingDataPayload,
 }
 
 interface QueueState {
-  NODE: QueueOperation<CreateNodePayload, UpdateNodePayload, DeleteNodePayload>
+  NODE: QueueOperation<CreateNodeBody, UpdateNodePayload, DeleteNodePayload>
 }
 
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload, Response } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload, Response } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 
 const nodeApi = {
@@ -18,10 +18,10 @@ const nodeApi = {
     }
   },
   // Returns the created node if successful, otherwise undefined
-  create: async (newNode: CreateNodePayload): Promise<Node | undefined> => {
+  create: async (newNode: CreateNodeBody): Promise<Node | undefined> => {
     try {
-      const { message, success, payload } = (await axios.post<Response>(`${nodeApi.baseURL}/node`, newNode)).data
-      if (!success) throw new Error(message)
+      const { message, success, payload, issues } = (await axios.post<Response>(`${nodeApi.baseURL}/node`, newNode)).data
+      if (!success) throw new Error(issues?.join(' ') || message)
       else console.info(message)
 
       return payload
@@ -57,7 +57,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  bulkCreate: async (payloads: (CreateNodePayload)[]): Promise<boolean> => {
+  bulkCreate: async (payloads: (CreateNodeBody)[]): Promise<boolean> => {
     try {
       const { message, success } = (await axios.post<Response>(`${nodeApi.baseURL}/nodes/bulk-create`, payloads)).data
       if (!success) throw new Error(message)

@@ -25,8 +25,8 @@ export default (req: any, res: any, next: any) => {
       const parsedData = JSON.parse(data)
       if (parsedData) {
         if (Array.isArray(parsedData.payload)) {
-          data = { message: parsedData.message, payload: parsedData.payload.map((item: any) => toCamelCase(item)), success: parsedData.success }
-        } else data = { message: parsedData.message, payload: toCamelCase(parsedData.payload), success: parsedData.success }
+          data = { message: parsedData.message, payload: parsedData.payload.map((item: any) => toCamelCase(item)), success: parsedData.success, issues: parsedData.issues }
+        } else data = { message: parsedData.message, payload: toCamelCase(parsedData.payload), success: parsedData.success, issues: parsedData.issues }
 
         oldSend.apply(res, [JSON.stringify(data)])
       }

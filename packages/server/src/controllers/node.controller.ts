@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { CreateNodePayload, UpdateNodePayload, DeleteNodePayload, TypedResponse, StatusCode } from 'shared/src/types/dto'
+import { CreateNodeBody, UpdateNodePayload, DeleteNodePayload, TypedResponse, StatusCode } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import NodeService from '../services/node.service'
 import { SnakeCase } from '../utils/types'
@@ -22,10 +22,10 @@ class NodeController {
     return res.status(StatusCode.OK).json({ message: 'Success', payload: node, success: true })
   }
 
-  public static async createNode(req: Request<{}, {}, SnakeCase<CreateNodePayload>>, res: TypedResponse<SnakeCase<Node>>): Promise<TypedResponse<SnakeCase<Node>>> {
+  public static async createNode(req: Request<{}, {}, SnakeCase<CreateNodeBody>>, res: TypedResponse<SnakeCase<Node>>): Promise<TypedResponse<SnakeCase<Node>>> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { id, name = '', x, y, parent_id } = req.body
-    const newNode: SnakeCase<CreateNodePayload> = { id, name, x, y, parent_id }
+    const newNode: SnakeCase<CreateNodeBody> = { id, name, x, y, parent_id }
     if (!id || !x || !y || !parent_id) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
     const createdNode = await NodeService.createNode(newNode)
 
@@ -54,7 +54,7 @@ class NodeController {
     return res.status(StatusCode.OK).json({ message: 'Node deleted successfully', success: true })
   }
 
-  public static async bulkCreate(req: Request<{}, {}, SnakeCase<CreateNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {
+  public static async bulkCreate(req: Request<{}, {}, SnakeCase<CreateNodeBody>[]>, res: TypedResponse): Promise<TypedResponse> {
     const nodesToInsert = req.body
     if (!nodesToInsert.length || nodesToInsert.some((node) => !node.id || !node.x || !node.y || !node.parent_id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 

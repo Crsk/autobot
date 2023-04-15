@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import { NodeState, NodeActionTypes } from '../types'
 
@@ -9,7 +9,7 @@ const initialState: NodeState = {
   draggingData: { draggingNode: false },
 }
 
-export const addNode = (state: NodeState, id: string, name: string, parentId: string | null, x: number, y: number) => {
+export const addNode = (state: NodeState, { id, name, parentId, x, y }: CreateNodeBody) => {
   state.nodesById[id] = { id, name, parentId, x, y }
 }
 
@@ -18,7 +18,7 @@ const nodeSlice = createSlice({
   initialState,
   reducers: {
     fetchNodesTrigger: (state) => state,
-    addNodeTrigger: (state, _action: PayloadAction<CreateNodePayload>) => state,
+    addNodeTrigger: (state, _action: PayloadAction<CreateNodeBody>) => state,
     updateNodeTrigger: (state, _action: PayloadAction<UpdateNodePayload>) => state,
     deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodePayload>) => state,
     updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
@@ -40,14 +40,14 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<CreateNodePayload> => action.type === NodeActionTypes.ADD,
+        (action): action is PayloadAction<CreateNodeBody> => action.type === NodeActionTypes.ADD,
         (state, { payload: { id, name, parentId, x, y } }) => {
-          if (id) addNode(state, id, name, parentId, x, y)
+          if (id) addNode(state, { id, name, parentId, x, y })
         },
       )
       .addMatcher(
         (action): action is PayloadAction<UpdateNodePayload> => action.type === NodeActionTypes.UPDATE,
-        (state, { payload: { id, propsToUpdate } }) => { state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } },
+        (state, { payload: { id, propsToUpdate } }) => { state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } as CreateNodeBody },
       )
       .addMatcher(
         (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.DELETE,

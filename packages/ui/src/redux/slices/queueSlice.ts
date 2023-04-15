@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CreateNodePayload, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
 import { QueueState, DeleteFromQueue, QueueActionTypes } from '../types'
 
 const initialState: QueueState = {
@@ -15,7 +15,7 @@ const queueSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addMatcher(
-        (action): action is PayloadAction<CreateNodePayload> => action.type === QueueActionTypes.ADD_NODE,
+        (action): action is PayloadAction<CreateNodeBody> => action.type === QueueActionTypes.ADD_NODE,
         (state, { payload: { id, name, parentId, x, y } }) => { state.NODE.ADD[id] = { id, name, parentId, x, y } },
       )
       .addMatcher(

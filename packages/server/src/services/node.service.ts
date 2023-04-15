@@ -1,5 +1,5 @@
 import { ResultSetHeader } from 'mysql2'
-import { CreateNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, UpdateNodePayload } from 'shared/src/types/dto'
 import generateSetClauseAndValues from 'shared/src/utils/backend/generateSetClauseAndValues'
 import { Node } from 'shared/src/types/models'
 import { SnakeCase } from '../utils/types'
@@ -19,7 +19,7 @@ class NodeService {
     return nodes[0]
   }
 
-  public static async createNode(newNode: SnakeCase<CreateNodePayload>): Promise<SnakeCase<Node> | undefined> {
+  public static async createNode(newNode: SnakeCase<CreateNodeBody>): Promise<SnakeCase<Node> | undefined> {
     const affectedRows: number = await insertRow('node', newNode)
     if (!affectedRows) return undefined
 
@@ -41,7 +41,7 @@ class NodeService {
     return !!affectedRows
   }
 
-  public static async bulkCreate(newNodes: SnakeCase<Node>[]): Promise<number | undefined> {
+  public static async bulkCreate(newNodes: SnakeCase<CreateNodeBody>[]): Promise<number | undefined> {
     let transactionQueries: { query: string, params: any[] }[] = []
     const queryResult: ResultSetHeader[] = []
 

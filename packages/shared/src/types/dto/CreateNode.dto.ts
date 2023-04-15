@@ -1,3 +1,4 @@
-import Node from '../models/Node.interface'
+import { z } from 'zod'
+import { CreateNodeSchema } from '../schemas'
 
-export type CreateNodePayload = Omit<Node, 'createdAt'>
+export type CreateNodeBody = z.infer<typeof CreateNodeSchema>

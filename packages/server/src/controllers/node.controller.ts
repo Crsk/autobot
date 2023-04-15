@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { CreateNodeBody, UpdateNodeBody, DeleteNodePayload, TypedResponse, StatusCode, UpdateNodeParams } from 'shared/src/types/dto'
+import { CreateNodeBody, UpdateNodeBody, DeleteNodeBody, TypedResponse, StatusCode, UpdateNodeParams } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import NodeService from '../services/node.service'
 import { SnakeCase } from '../utils/types'
@@ -72,7 +72,7 @@ class NodeController {
     return res.status(StatusCode.OK).json({ message: `${resultLength} Nodes updated successfully`, success: true })
   }
 
-  public static async bulkDelete(req: Request<{}, {}, SnakeCase<DeleteNodePayload>[]>, res: TypedResponse): Promise<TypedResponse> {
+  public static async bulkDelete(req: Request<{}, {}, SnakeCase<DeleteNodeBody>[]>, res: TypedResponse): Promise<TypedResponse> {
     const payloads = req.body
     if (!payloads?.length) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 

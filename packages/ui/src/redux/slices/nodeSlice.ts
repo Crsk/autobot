@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodeParams, UpdateNodeBody } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import { NodeState, NodeActionTypes } from '../types'
 
@@ -20,7 +20,7 @@ const nodeSlice = createSlice({
     fetchNodesTrigger: (state) => state,
     addNodeTrigger: (state, _action: PayloadAction<CreateNodeBody>) => state,
     updateNodeTrigger: (state, _action: PayloadAction<UpdateNodeBody>) => state,
-    deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodePayload>) => state,
+    deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodeParams>) => state,
     updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
       state.nodesById[id].newChild = { x, y }
     },
@@ -50,7 +50,7 @@ const nodeSlice = createSlice({
         (state, { payload: { id, propsToUpdate } }) => { state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } as CreateNodeBody },
       )
       .addMatcher(
-        (action): action is PayloadAction<DeleteNodePayload> => action.type === NodeActionTypes.DELETE,
+        (action): action is PayloadAction<DeleteNodeParams> => action.type === NodeActionTypes.DELETE,
         (state, { payload: { id } }) => {
           delete state.nodesById[id]
         },

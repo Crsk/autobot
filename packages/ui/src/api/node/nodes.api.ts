@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody, Response } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodeParams, DeleteNodeBody, UpdateNodeBody, Response } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 
 const nodeApi = {
@@ -44,7 +44,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  delete: async ({ id }: DeleteNodePayload): Promise<boolean> => {
+  delete: async ({ id }: DeleteNodeParams): Promise<boolean> => {
     try {
       const { message, success } = (await axios.delete<Response>(`${nodeApi.baseURL}/nodes/${id}`)).data
       if (!success) throw new Error(message)
@@ -83,7 +83,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  bulkDelete: async (payloads: (DeleteNodePayload)[]): Promise<boolean> => {
+  bulkDelete: async (payloads: (DeleteNodeBody)[]): Promise<boolean> => {
     try {
       const { message, success } = (await axios.post<Response>(`${nodeApi.baseURL}/nodes/bulk-delete`, payloads)).data
       if (!success) throw new Error(message)

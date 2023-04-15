@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import request from 'supertest'
 import { describe, it, afterEach, beforeAll } from '@jest/globals'
-import { DeleteNodePayload } from 'shared/src/types/dto'
+import { DeleteNodeBody } from 'shared/src/types/dto'
 import app from '../app'
 import NodeService from '../services/node.service'
 
@@ -280,7 +280,7 @@ describe('Node Routes', () => {
 
   describe('POST /bulk-delete', () => {
     it('should return status 200 and delete existing nodes', async () => {
-      const payloads: DeleteNodePayload[] = [{ id: '1' }, { id: '2' }]
+      const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
 
       mockedNodeService.bulkDelete.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
@@ -300,7 +300,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 500 when it fails', async () => {
-      const payloads: DeleteNodePayload[] = [{ id: '1' }, { id: '2' }]
+      const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
       mockedNodeService.bulkDelete.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 

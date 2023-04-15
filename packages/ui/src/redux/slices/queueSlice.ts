@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody } from 'shared/src/types/dto'
 import { QueueState, DeleteFromQueue, QueueActionTypes } from '../types'
 
 const initialState: QueueState = {
@@ -19,7 +19,7 @@ const queueSlice = createSlice({
         (state, { payload: { id, name, parentId, x, y } }) => { state.NODE.ADD[id] = { id, name, parentId, x, y } },
       )
       .addMatcher(
-        (action): action is PayloadAction<UpdateNodePayload> => action.type === QueueActionTypes.UPDATE_NODE,
+        (action): action is PayloadAction<UpdateNodeBody> => action.type === QueueActionTypes.UPDATE_NODE,
         (state, { payload: { id, propsToUpdate } }) => { state.NODE.UPDATE[id] = { id, propsToUpdate } },
       )
       .addMatcher(

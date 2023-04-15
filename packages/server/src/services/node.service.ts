@@ -1,5 +1,5 @@
 import { ResultSetHeader } from 'mysql2'
-import { CreateNodeBody, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, UpdateNodeBody } from 'shared/src/types/dto'
 import generateSetClauseAndValues from 'shared/src/utils/backend/generateSetClauseAndValues'
 import { Node } from 'shared/src/types/models'
 import { SnakeCase } from '../utils/types'
@@ -69,7 +69,7 @@ class NodeService {
     return queryResult.length
   }
 
-  public static async bulkUpdate(updatePayloads: Partial<SnakeCase<UpdateNodePayload>>[]): Promise<number | undefined> {
+  public static async bulkUpdate(updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]): Promise<number | undefined> {
     const transactionQueries: { query: string, params: any[] }[] = updatePayloads.map((payload) => {
       const { id } = payload
       const propsToUpdate = payload.props_to_update!

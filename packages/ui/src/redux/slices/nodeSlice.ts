@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import { NodeState, NodeActionTypes } from '../types'
 
@@ -19,7 +19,7 @@ const nodeSlice = createSlice({
   reducers: {
     fetchNodesTrigger: (state) => state,
     addNodeTrigger: (state, _action: PayloadAction<CreateNodeBody>) => state,
-    updateNodeTrigger: (state, _action: PayloadAction<UpdateNodePayload>) => state,
+    updateNodeTrigger: (state, _action: PayloadAction<UpdateNodeBody>) => state,
     deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodePayload>) => state,
     updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
       state.nodesById[id].newChild = { x, y }
@@ -46,7 +46,7 @@ const nodeSlice = createSlice({
         },
       )
       .addMatcher(
-        (action): action is PayloadAction<UpdateNodePayload> => action.type === NodeActionTypes.UPDATE,
+        (action): action is PayloadAction<UpdateNodeBody> => action.type === NodeActionTypes.UPDATE,
         (state, { payload: { id, propsToUpdate } }) => { state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } as CreateNodeBody },
       )
       .addMatcher(

@@ -1,5 +1,5 @@
 import { Point } from 'shared/src/types/utils'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody } from 'shared/src/types/dto'
 
 interface DeleteFromQueue {
   operation: 'ADD' | 'UPDATE' | 'DELETE'
@@ -12,7 +12,7 @@ interface NodeState {
 }
 
 interface QueueState {
-  NODE: QueueOperation<CreateNodeBody, UpdateNodePayload, DeleteNodePayload>
+  NODE: QueueOperation<CreateNodeBody, UpdateNodeBody, DeleteNodePayload>
 }
 
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {

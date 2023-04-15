@@ -1,7 +1,7 @@
 import { ofType, Epic } from 'redux-observable'
 import { catchError, concatMap, groupBy, mergeMap, toArray } from 'rxjs/operators'
 import { EMPTY, from } from 'rxjs'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody } from 'shared/src/types/dto'
 import nodeApi from '@/api/node/nodes.api'
 import { QueueActionTypes, QueueOperation, RootState } from '../types'
 import { syncNodesTrigger } from '../slices/queueSlice'
@@ -9,8 +9,8 @@ import { syncNodesTrigger } from '../slices/queueSlice'
 const queueEpic: Epic<any, any, RootState> = (action$, state$) => action$.pipe(
   ofType(syncNodesTrigger.type),
   mergeMap(() => {
-    const { ADD, UPDATE, DELETE }: QueueOperation<CreateNodeBody, UpdateNodePayload, DeleteNodePayload> = state$.value.queue.NODE
-    const unsyncedNodes: { actionType: QueueActionTypes, payload: (CreateNodeBody | UpdateNodePayload | DeleteNodePayload) }[] = [
+    const { ADD, UPDATE, DELETE }: QueueOperation<CreateNodeBody, UpdateNodeBody, DeleteNodePayload> = state$.value.queue.NODE
+    const unsyncedNodes: { actionType: QueueActionTypes, payload: (CreateNodeBody | UpdateNodeBody | DeleteNodePayload) }[] = [
       ...Object.values(ADD).map((payload) => ({ actionType: QueueActionTypes.ADD_NODE, payload })),
       ...Object.values(UPDATE).map((payload) => ({ actionType: QueueActionTypes.UPDATE_NODE, payload })),
       ...Object.values(DELETE).map((payload) => ({ actionType: QueueActionTypes.DELETE_NODE, payload })),
@@ -31,15 +31,15 @@ const queueEpic: Epic<any, any, RootState> = (action$, state$) => action$.pipe(
               catchError(() => EMPTY),
             )
           case QueueActionTypes.UPDATE_NODE:
-            return from(nodeApi.bulkUpdate(actionGroup.map((action) => action.payload as UpdateNodePayload))).pipe(
+            return from(nodeApi.bulkUpdate(actionGroup.map((action) => action.payload as UpdateNodeBody))).pipe(
               mergeMap(() => actionGroup.map((action) => ({
                 type: QueueActionTypes.DELETE_FROM_QUEUE,
-                payload: { operation: 'UPDATE', id: (action.payload as UpdateNodePayload).id },
+                payload: { operation: 'UPDATE', id: (action.payload as UpdateNodeBody).id },
               }))),
               catchError(() => EMPTY),
             )
           case QueueActionTypes.DELETE_NODE:
-            return from(nodeApi.bulkDelete(actionGroup.map((action) => action.payload as UpdateNodePayload))).pipe(
+            return from(nodeApi.bulkDelete(actionGroup.map((action) => action.payload as UpdateNodeBody))).pipe(
               mergeMap(() => actionGroup.map((action) => ({
                 type: QueueActionTypes.DELETE_FROM_QUEUE,
                 payload: { operation: 'DELETE', id: (action.payload as DeleteNodePayload).id },

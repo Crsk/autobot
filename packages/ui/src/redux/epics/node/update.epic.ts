@@ -1,5 +1,5 @@
 import { Epic, ofType } from 'redux-observable'
-import { UpdateNodePayload } from 'shared/src/types/dto'
+import { UpdateNodeBody } from 'shared/src/types/dto'
 import { map } from 'rxjs'
 import nodeApi from '@/api/node/nodes.api'
 import { NodeActionTypes, RootState } from '@/redux/types'
@@ -11,7 +11,7 @@ import { handleRemoteEpic } from '../handleRemote.epic'
  */
 const updateNodeEpicUI: Epic<any, any, RootState> = (action$) => action$.pipe(
   ofType(updateNodeTrigger.type),
-  map(({ payload }: { payload: UpdateNodePayload }) => ({ type: NodeActionTypes.UPDATE, payload })),
+  map(({ payload }: { payload: UpdateNodeBody }) => ({ type: NodeActionTypes.UPDATE, payload })),
 )
 
 const updateNodeEpicRemote = handleRemoteEpic(updateNodeTrigger.type, nodeApi.update)

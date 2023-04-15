@@ -1,3 +1,5 @@
-import { UpdatedNodeProps } from '../utils/node/PropsToUpdate.type'
+import { z } from 'zod'
+import { UpdateNodeBodySchema, UpdateNodeParamsSchema } from '../schemas'
 
-export type UpdateNodePayload = { id: string, propsToUpdate: UpdatedNodeProps }
+export type UpdateNodeBody = z.infer<typeof UpdateNodeBodySchema>
+export type UpdateNodeParams = z.infer<typeof UpdateNodeParamsSchema>

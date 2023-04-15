@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateNodeBody, DeleteNodePayload, UpdateNodePayload, Response } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodePayload, UpdateNodeBody, Response } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 
 const nodeApi = {
@@ -31,7 +31,7 @@ const nodeApi = {
     }
   },
   // Returns the updated node if successful, otherwise undefined
-  update: async ({ id, propsToUpdate }: UpdateNodePayload): Promise<Node | undefined> => {
+  update: async ({ id, propsToUpdate }: UpdateNodeBody): Promise<Node | undefined> => {
     try {
       const { message, success, payload } = (await axios.patch<Response>(`${nodeApi.baseURL}/nodes/${id}`, propsToUpdate)).data
       if (!success) throw new Error(message)
@@ -70,7 +70,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  bulkUpdate: async (payloads: UpdateNodePayload[]): Promise<boolean> => {
+  bulkUpdate: async (payloads: UpdateNodeBody[]): Promise<boolean> => {
     try {
       const { message, success } = (await axios.post<Response>(`${nodeApi.baseURL}/nodes/bulk-update`, payloads)).data
       if (!success) throw new Error(message)

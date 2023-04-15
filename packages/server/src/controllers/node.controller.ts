@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { CreateNodeBody, UpdateNodePayload, DeleteNodePayload, TypedResponse, StatusCode } from 'shared/src/types/dto'
+import { CreateNodeBody, UpdateNodeBody, DeleteNodePayload, TypedResponse, StatusCode, UpdateNodeParams } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 import NodeService from '../services/node.service'
 import { SnakeCase } from '../utils/types'
@@ -32,7 +32,7 @@ class NodeController {
     return res.status(StatusCode.CREATED).json({ message: `Node id ${id} was created`, payload: createdNode, success: true })
   }
 
-  public static async updateNode(req: Request<{ id: string }, {}, Partial<Omit<Node, 'id'>>>, res: TypedResponse): Promise<TypedResponse> {
+  public static async updateNode(req: Request<UpdateNodeParams, {}, Partial<Omit<Node, 'id'>>>, res: TypedResponse): Promise<TypedResponse> {
     const { id } = req.params
     const updatedNode = req.body
     if (!id || !updatedNode) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
@@ -63,7 +63,7 @@ class NodeController {
     return res.status(StatusCode.CREATED).json({ message: `${resultLength} Nodes created successfully`, success: true })
   }
 
-  public static async bulkUpdate(req: Request<{}, {}, SnakeCase<Partial<UpdateNodePayload>>[]>, res: TypedResponse): Promise<TypedResponse> {
+  public static async bulkUpdate(req: Request<{}, {}, SnakeCase<Partial<UpdateNodeBody>>[]>, res: TypedResponse): Promise<TypedResponse> {
     const updatePayloads = req.body
     if (!updatePayloads.length || updatePayloads.some((node) => !node.id)) return res.status(StatusCode.BAD_REQUEST).json({ message: 'Bad Request: Missing required fields', success: false })
 

@@ -1,4 +1,4 @@
-import { Point } from 'shared/types/utils/Point.type'
+import { Point } from '../types/utils'
 import { defaultNodeHeight, defaultNodeWidth, verticallyThreshold } from './helper'
 
 export default (node1: Point, node2: Point): {

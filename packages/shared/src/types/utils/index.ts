@@ -1,4 +1,3 @@
-export * from './node/PropsToUpdate.type'
 export * from './CamelCase.type'
 export * from './Connection.type'
 export * from './ConnectionNode.type'

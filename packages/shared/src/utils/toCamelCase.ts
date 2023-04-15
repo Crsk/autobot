@@ -1,4 +1,4 @@
-import { SnakeCase, CamelCase } from 'shared/types/utils/index'
+import { CamelCase, SnakeCase } from '../types/utils'
 
 function snakeToCamelCase<T>(obj: SnakeCase<T>): CamelCase<T> {
   const newObj: any = {}

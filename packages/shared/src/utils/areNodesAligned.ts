@@ -1,4 +1,4 @@
-import { Point } from 'shared/types/utils/Point.type'
+import { Point } from '../types/utils'
 import { alignmentThreshold } from './helper'
 
 // Check if the nodes are aligned vertically or horizontally

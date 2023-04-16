@@ -17,15 +17,21 @@ const QueueActionEnumMap: Record<string, QueueActionTypes> = {
   [deleteNodeTrigger.type]: QueueActionTypes.DELETE_NODE,
 }
 
-const handleRemoteEpic = (actionType: string, apiMethod: (payload: any) => Promise<any>): Epic<any, any, RootState> => (action$) => action$.pipe(
+const storeLocalHandler = (actionType: string, payload: any) => concat(
+  of({ type: QueueActionEnumMap[actionType], payload }),
+  of({ type: ActionEnumMap[actionType], payload }),
+)
+
+const handleRemoteEpic = (actionType: string, apiMethod: (payload: any) => Promise<any>): Epic<any, any, RootState> => (action$, state$) => action$.pipe(
   ofType(actionType),
   debounceTime(DEBOUNCE_TIME),
-  switchMap(({ payload }: { payload: any }) => from(apiMethod(payload)).pipe(
-    map(() => ({ type: ActionEnumMap[actionType], payload })),
-    catchError(() => concat(
-      of({ type: QueueActionEnumMap[actionType], payload }),
-      of({ type: ActionEnumMap[actionType], payload }),
-    )),
+  switchMap(({ payload }: { payload: any }) => (
+    state$.value.login.user
+      ? from(apiMethod(payload)).pipe(
+        map(() => ({ type: ActionEnumMap[actionType], payload })),
+        catchError(() => storeLocalHandler(actionType, payload)),
+      )
+      : storeLocalHandler(actionType, payload) // no user, nothing to save in the backend
   )),
 )
 

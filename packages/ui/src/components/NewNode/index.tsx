@@ -58,8 +58,8 @@ function NewNode({ parentNode }: { parentNode: Node }) {
     >
       <rect
         ref={dotRef}
-        x="-8"
-        y="-4"
+        x="-10"
+        y="-8"
         rx={defaultNodeRadius}
         width={isExpanded ? defaultNodeWidth : dotWidth}
         height={isExpanded ? defaultNodeHeight : dotWidth}

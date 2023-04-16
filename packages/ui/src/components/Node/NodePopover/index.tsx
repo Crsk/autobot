@@ -10,7 +10,7 @@ function NodePopover({ node: { id, x, y, parentId } }: { node: Node }) {
   const dispatch = useDispatch()
   const handleDelete = () => dispatch(deleteNodeTrigger({ id }))
   const actionButtons = [
-    <ActionButton type="DELETE" onPress={handleDelete} disabled={!parentId} />,
+    <ActionButton key={id} type="DELETE" onPress={handleDelete} disabled={!parentId} />,
   ]
   const buttonsCount = actionButtons.length + 1
 

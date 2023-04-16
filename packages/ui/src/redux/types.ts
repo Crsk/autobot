@@ -1,5 +1,6 @@
 import { Point } from 'shared/src/types/utils'
 import { CreateNodeBody, DeleteNodeParams, UpdateNodeBody } from 'shared/src/types/dto'
+import { User } from 'shared/src/types/models'
 
 interface DeleteFromQueue {
   operation: 'ADD' | 'UPDATE' | 'DELETE'
@@ -15,6 +16,10 @@ interface QueueState {
   NODE: QueueOperation<CreateNodeBody, UpdateNodeBody, DeleteNodeParams>
 }
 
+interface LoginState {
+  user: User | null
+}
+
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
   ADD: Record<string, AddPayload>,
   UPDATE: Record<string, UpdatePayload>,
@@ -24,6 +29,7 @@ export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
 type RootState = {
   node: NodeState
   queue: QueueState
+  login: LoginState
 }
 
 export enum NodeActionTypes {
@@ -46,6 +52,7 @@ type DraggingDataPayload = { draggingNode: boolean }
 export type {
   NodeState,
   QueueState,
+  LoginState,
   RootState,
   DeleteFromQueue,
 }

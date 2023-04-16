@@ -8,10 +8,12 @@ import { RootState } from '../types'
 import { middlewareConfig, persistConfig } from './persistConfig'
 import queueEpic from '../epics/queueEpic'
 import queueSlice from '../slices/queueSlice'
+import loginSlice from '../slices/loginSlice'
 
 const rootReducer = combineReducers({
   node: nodeSlice.reducer,
   queue: queueSlice.reducer,
+  login: loginSlice.reducer,
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 const epicMiddleware = createEpicMiddleware<any, any, RootState>()

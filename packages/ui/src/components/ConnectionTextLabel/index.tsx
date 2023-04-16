@@ -13,7 +13,7 @@ function ConnectionTextLabel({ x, y, text, verticalDistance }: { x: number, y: n
         ry={5}
         fill="#14161b"
       />
-      <text x={x} y={y + (verticalDistance < 60 ? 4 : 0)} fontSize={12} fill="darkcyan">
+      <text x={x} y={y + (verticalDistance < 60 ? 4 : 0)} fontSize={12} fill="#0080ff">
         {text}
       </text>
     </g>

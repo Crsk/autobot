@@ -55,7 +55,7 @@ function Node({ node }: { node: NodeType }) {
         y={node.y - 8}
         textAnchor="start"
         dominantBaseline="central"
-        style={{ pointerEvents: 'none', fill: 'darkcyan', fontSize: '0.6em' }}
+        style={{ pointerEvents: 'none', fill: '#0080ff', fontSize: '0.6em' }}
         className={styles.nonSelectable}
       >
         Action

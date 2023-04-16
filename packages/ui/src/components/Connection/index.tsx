@@ -50,8 +50,8 @@ function Connection({ origin, destination }: { origin: Point, destination: Point
 
   return (
     <>
-      <path d={curve} stroke="darkcyan" strokeWidth={1.5} fill="none" />
-      <circle cx={point.x} cy={point.y} r={3} fill="darkcyan" />
+      <path d={curve} stroke="#0080ff" strokeWidth={1.5} fill="none" />
+      <circle cx={point.x} cy={point.y} r={3} fill="#0080ff" />
       <ConnectionTextLabel x={point.x} y={point.y} text="Yes" verticalDistance={verticalDistance} />
     </>
   )

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { Node as NodeType } from 'shared/src/types/models'
 import { useDispatch, useSelector } from 'react-redux'
+import { defaultNodeWidth, snapToGrid } from 'shared/src/utils'
 import Grid from '@/components/Grid'
 import Node from '@/components/Node'
 import Connection from '@/components/Connection'
 import { RootState } from '@/redux/types'
-import { fetchNodesTrigger } from '@/redux/slices/nodeSlice'
+import { addNodeTrigger, fetchNodesTrigger } from '@/redux/slices/nodeSlice'
 
 function AutomationEngine() {
   const dispatch = useDispatch()
@@ -17,8 +18,13 @@ function AutomationEngine() {
   }, [])
 
   useEffect(() => {
+    if (!nodes.length) {
+      const center = window.innerWidth / 2 - defaultNodeWidth / 2
+      dispatch(addNodeTrigger({ id: 'start', name: '', parentId: null, x: snapToGrid(center), y: snapToGrid(100) }))
+    }
+
     dispatch(fetchNodesTrigger())
-  }, [dispatch])
+  }, [dispatch, nodes.length])
 
   return (
     <svg width="100vw" height="100vh">

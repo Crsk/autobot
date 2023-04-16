@@ -13,5 +13,6 @@ export default z.object({
     .positive('Y coordinate must be positive')
     .min(0, 'Y coordinate must be greater than 0'),
   parentId: z.string()
-    .length(36, 'Parent ID must be 36 characters long'),
+    .length(36, 'Parent ID must be 36 characters long')
+    .nullable(),
 })

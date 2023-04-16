@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@adobe/react-spectrum": "^3.25.1",
     "@react-native-async-storage/async-storage": "^1.18.0",
     "@reduxjs/toolkit": "^1.9.3",
     "@types/d3": "^7.4.0",

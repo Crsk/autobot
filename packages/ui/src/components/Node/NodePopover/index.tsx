@@ -1,9 +1,8 @@
 import React from 'react'
-import { ActionButton, View } from '@adobe/react-spectrum'
 import { Node } from 'shared/src/types/models'
 import { useDispatch } from 'react-redux'
-import { Delete } from '@/assets/icons'
 import { deleteNodeTrigger } from '@/redux/slices/nodeSlice'
+import ActionButton from '@/design-system/buttons/ActionButton'
 import styles from './node-popover.module.scss'
 
 function NodePopover({ node }: { node: Node }) {
@@ -12,9 +11,7 @@ function NodePopover({ node }: { node: Node }) {
   const dispatch = useDispatch()
   const handleDelete = () => dispatch(deleteNodeTrigger({ id: node.id }))
   const actionButtons = [
-    <ActionButton key="delete" isQuiet onPress={handleDelete}>
-      <Delete />
-    </ActionButton>,
+    <ActionButton type="DELETE" onPress={handleDelete} />,
   ]
   const buttonsCount = actionButtons.length + 1
 
@@ -26,9 +23,7 @@ function NodePopover({ node }: { node: Node }) {
       height={50}
     >
       <div className={styles.popover}>
-        <View>
-          {actionButtons.map((Button) => Button)}
-        </View>
+        {actionButtons.map((Button) => Button)}
       </div>
     </foreignObject>
   )

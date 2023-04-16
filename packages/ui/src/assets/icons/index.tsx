@@ -2,10 +2,10 @@ import React from 'react'
 import { colors } from 'shared/src/utils/theme'
 
 type Size = 'S' | 'M' | 'L' | 'XL'
-type Color = 'dark' | 'primary'
+type Color = 'dark' | 'primary' | 'disabled'
 const sizeMap = { S: 16, M: 24, L: 32, XL: 40 }
 const paddingMap = { default: 0, S: 4, M: 8, L: 12, XL: 16 }
-const colorMap = { dark: colors.strong, primary: colors.primary }
+const colorMap = { dark: colors.strong, primary: colors.primary, disabled: colors.disabled }
 
 // eslint-disable-next-line react/require-default-props
 function Delete({ color, size, paddingLeft }: { color?: Color, size?: Size, paddingLeft?: Size }) {

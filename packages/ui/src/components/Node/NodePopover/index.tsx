@@ -5,13 +5,12 @@ import { deleteNodeTrigger } from '@/redux/slices/nodeSlice'
 import ActionButton from '@/design-system/buttons/ActionButton'
 import styles from './node-popover.module.scss'
 
-function NodePopover({ node }: { node: Node }) {
-  const { x, y } = node
+function NodePopover({ node: { id, x, y, parentId } }: { node: Node }) {
   const actionButtonWidth = 32
   const dispatch = useDispatch()
-  const handleDelete = () => dispatch(deleteNodeTrigger({ id: node.id }))
+  const handleDelete = () => dispatch(deleteNodeTrigger({ id }))
   const actionButtons = [
-    <ActionButton type="DELETE" onPress={handleDelete} />,
+    <ActionButton type="DELETE" onPress={handleDelete} disabled={!parentId} />,
   ]
   const buttonsCount = actionButtons.length + 1
 

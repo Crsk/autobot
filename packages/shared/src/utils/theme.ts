@@ -5,6 +5,7 @@ const colors = {
   },
   primary: '#00378e',
   strong: '#232830',
+  disabled: '#b8b8b8',
 }
 
 // eslint-disable-next-line import/prefer-default-export

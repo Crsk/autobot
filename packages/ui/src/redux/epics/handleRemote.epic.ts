@@ -26,7 +26,7 @@ const handleRemoteEpic = (actionType: string, apiMethod: (payload: any) => Promi
   ofType(actionType),
   debounceTime(DEBOUNCE_TIME),
   switchMap(({ payload }: { payload: any }) => (
-    state$.value.login.user
+    state$.value.login?.user
       ? from(apiMethod(payload)).pipe(
         map(() => ({ type: ActionEnumMap[actionType], payload })),
         catchError(() => storeLocalHandler(actionType, payload)),

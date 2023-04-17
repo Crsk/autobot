@@ -11,7 +11,7 @@ function Node({ node }: { node: NodeType }) {
   const ref = React.useRef<SVGRectElement>(null)
   const [editMode, setEditMode] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const handleDoubleClick = () => setEditMode(!editMode)
+  // const handleDoubleClick = () => setEditMode(!editMode)
   const handleInputToLabel = () => setEditMode(false)
   const [showPopover, setShowPopover] = useState<boolean>(false)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -33,7 +33,7 @@ function Node({ node }: { node: NodeType }) {
         height={defaultNodeHeight}
         fill="#0c0f11"
         className={styles.node}
-        onDoubleClick={handleDoubleClick}
+        // onDoubleClick={handleDoubleClick}
       />
       <text
         x={node.x + 7}

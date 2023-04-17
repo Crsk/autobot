@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Subject } from 'rxjs'
 
-const useSubscribe = <T>(observable: Subject<T>, callback: () => void) => {
+const useSubscribe = <T>(observable: Subject<T>, callback: (event: any) => void) => {
   useEffect(() => {
     const subscription = observable.subscribe(callback)
 

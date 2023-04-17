@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { select } from 'd3'
 import { fromEvent, Subject } from 'rxjs'
-import { map, takeUntil, switchMap, tap, share } from 'rxjs/operators'
+import { map, takeUntil, switchMap, tap } from 'rxjs/operators'
 import { useDispatch } from 'react-redux'
 import { snapToGrid } from 'shared/src/utils'
 import { draggingData, updateNewChild, updateNodeTrigger } from '@/redux/slices/nodeSlice'
+
+type Distance = { dx: number; dy: number }
 
 /**
  * The hook uses the Redux store to manage the state of the nodes in the diagram.
@@ -12,7 +14,7 @@ import { draggingData, updateNewChild, updateNodeTrigger } from '@/redux/slices/
  */
 const useDrag = (elementRef: any, nodeId: string, draggingNewChild: boolean = false) => {
   const dispatch = useDispatch()
-  const mouseupSubject = useRef<Subject<void>>(new Subject<void>()).current
+  const mouseupSubject = useRef<Subject<Distance>>(new Subject<Distance>()).current
 
   useEffect(() => {
     const element = select(elementRef.current)
@@ -33,30 +35,28 @@ const useDrag = (elementRef: any, nodeId: string, draggingNewChild: boolean = fa
     })
 
     const mousedown$ = fromEvent<MouseEvent>(element.node(), 'mousedown')
+    const mouseup$ = fromEvent<MouseEvent>(element.node(), 'mouseup')
     const mousemove$ = fromEvent<MouseEvent>(svg.node(), 'mousemove')
-    const mouseup$ = fromEvent<MouseEvent>(svg.node(), 'mouseup')
-      .pipe(share()) // Avoid separate chain of observables executed independently for each subscriber
 
-    const subscription = mousedown$
-      .pipe(
-        map((event) => {
-          dispatch(draggingData({ draggingNode: true }))
-
-          return {
-            offsetX: event.clientX - (+element.attr('x')), offsetY: event.clientY - (+element.attr('y')),
-          }
-        }),
-        switchMap((offset) => mousemove$.pipe(
-          map((event) => ({ x: event.clientX - offset.offsetX, y: event.clientY - offset.offsetY })),
-          takeUntil(
-            mouseup$.pipe(tap(() => {
-              updateNode(snapToGrid(+(element.attr('x'))), snapToGrid(+(element.attr('y'))), true) // Snap to grd on drop
-              dispatch(draggingData({ draggingNode: false }))
-              mouseupSubject.next()
-            })),
-          ),
+    const subscription = mousedown$.pipe(
+      tap(() => dispatch(draggingData({ draggingNode: true }))),
+      map(({ clientX, clientY }) => ({
+        offsetX: clientX - (+element.attr('x')),
+        offsetY: clientY - (+element.attr('y')),
+        initialX: +element.attr('x'),
+        initialY: +element.attr('y'),
+      })),
+      switchMap(({ offsetX, offsetY, initialX, initialY }) => mousemove$.pipe(
+        map(({ clientX, clientY }) => ({ x: clientX - offsetX, y: clientY - offsetY })),
+        takeUntil(mouseup$.pipe(
+          tap(() => {
+            updateNode(snapToGrid(+element.attr('x')), snapToGrid(+element.attr('y')), true) // Snap to grid on drop
+            dispatch(draggingData({ draggingNode: false }))
+            mouseupSubject.next({ dx: Math.abs(+element.attr('x') - initialX), dy: Math.abs(+element.attr('y') - initialY) })
+          }),
         )),
-      ).subscribe(({ x, y }) => updateNode(x, y)) // move the element without snap to grid so it goes smooth
+      )),
+    ).subscribe(({ x, y }) => updateNode(x, y)) // move the element without snap to grid so it goes smooth
 
     // eslint-disable-next-line consistent-return
     return () => {

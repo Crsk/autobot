@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Node as NodeType } from 'shared/src/types/models'
-import { filter, fromEvent, tap, timestamp, withLatestFrom } from 'rxjs'
-import { select } from 'd3'
 import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from 'shared/src/utils'
 import useDrag from '@/hooks/useDrag'
 import NewNode from '../NewNode'
 import styles from './node.module.scss'
 import NodePopover from './NodePopover'
+import useSubscribe from '@/hooks/useSubscribe'
 
 function Node({ node }: { node: NodeType }) {
   const ref = React.useRef<SVGRectElement>(null)
@@ -18,24 +17,10 @@ function Node({ node }: { node: NodeType }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleInputToLabel()
   }
-  useDrag(ref, node.id)
-
-  useEffect(() => {
-    const element = select(ref.current)
-    if (!element) return undefined
-    if (!ref.current) return undefined
-
-    const mousedown$ = fromEvent<MouseEvent>(element.node()!, 'mousedown').pipe(timestamp())
-    const mouseup$ = fromEvent<MouseEvent>(element.node()!, 'mouseup').pipe(timestamp())
-    const noDragMouseup$ = mouseup$.pipe(
-      withLatestFrom(mousedown$),
-      filter(([mouseup, mousedown]) => mouseup.timestamp - mousedown.timestamp <= 200),
-      tap(() => setShowPopover(!showPopover)),
-    )
-    const subscribe = noDragMouseup$.subscribe()
-
-    return () => subscribe.unsubscribe()
-  }, [showPopover])
+  useSubscribe(useDrag(ref, node.id), ({ dx, dy }) => {
+    const isTap = dx === 0 && dy === 0
+    if (isTap) setShowPopover(!showPopover)
+  })
 
   return (
     <>

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Node } from 'shared/src/types/models'
 import { useDispatch } from 'react-redux'
+import { ActionButton } from 'design-system/src/components/buttons'
 import { deleteNodeTrigger } from '@/redux/slices/nodeSlice'
-import ActionButton from '@/design-system/buttons/ActionButton'
 import styles from './node-popover.module.scss'
 
 function NodePopover({ node: { id, x, y, parentId } }: { node: Node }) {

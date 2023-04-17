@@ -1,5 +1,5 @@
 import React from 'react'
-import { colors } from 'shared/src/utils/theme'
+import { defaultColors as colors } from '../../theme'
 
 type Size = 'S' | 'M' | 'L' | 'XL'
 type Color = 'dark' | 'primary' | 'disabled'
@@ -8,7 +8,7 @@ const paddingMap = { default: 0, S: 4, M: 8, L: 12, XL: 16 }
 const colorMap = { dark: colors.strong, primary: colors.primary, disabled: colors.disabled }
 
 // eslint-disable-next-line react/require-default-props
-function Delete({ color, size, paddingLeft }: { color?: Color, size?: Size, paddingLeft?: Size }) {
+export function DeleteIcon({ color, size, paddingLeft }: { color?: Color, size?: Size, paddingLeft?: Size }) {
   const sizeValue = !size ? sizeMap.M : sizeMap[size]
   const paddingLeftValue = !paddingLeft ? paddingMap.default : paddingMap[paddingLeft]
   const colorValue = !color ? colorMap.dark : colorMap[color]
@@ -27,6 +27,3 @@ function Delete({ color, size, paddingLeft }: { color?: Color, size?: Size, padd
     </svg>
   )
 }
-
-// eslint-disable-next-line import/prefer-default-export
-export { Delete }

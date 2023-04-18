@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { CreateNodeSchema, UpdateNodeBodySchema, DeleteNodeBodySchema, DeleteNodeParamsSchema } from 'shared/src/types/schemas'
-import NodeController from '../controllers/node.controller'
 import { errorHandler } from '../utils/errorHandler'
 import schemaValidator from '../middlewares/schemaValidator.middleware'
+import { nodeController } from '../controllers/node.controller'
 
 const router = Router()
-const { getNodes, getNode, createNode, updateNode, deleteNode, bulkCreate, bulkUpdate, bulkDelete } = NodeController
+const { getNodes, getNode, createNode, updateNode, deleteNode, bulkCreate, bulkUpdate, bulkDelete } = nodeController
 
 router.get('/nodes', errorHandler(getNodes))
 router.get('/nodes/:id', errorHandler(getNode))

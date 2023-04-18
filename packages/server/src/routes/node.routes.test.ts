@@ -1,13 +1,14 @@
 import { Application } from 'express'
 import request from 'supertest'
-import { describe, it, afterEach, beforeAll } from '@jest/globals'
+import { describe, it, afterEach } from '@jest/globals'
 import { DeleteNodeBody } from 'shared/src/types/dto'
 import app from '../app'
-import NodeService from '../services/node.service'
+import { nodeService } from '../services/node.service'
 
 jest.mock('../services/node.service')
-const mockedNodeService = jest.mocked(NodeService)
-let testApp: Application
+const mockedNodeService = jest.mocked(nodeService)
+const { getNodes, getNode, createNode, updateNode, deleteNode, bulkCreate, bulkUpdate, bulkDelete } = mockedNodeService
+const testApp: Application = app
 
 const mockNodesResponse: any = [
   { id: '1', name: 'Node 1', x: 10, y: 20, parentId: null },
@@ -15,12 +16,11 @@ const mockNodesResponse: any = [
 ]
 
 describe('Node Routes', () => {
-  beforeAll(() => { testApp = app })
   afterEach(() => { jest.clearAllMocks() })
 
   describe('GET /nodes', () => {
     it('should return status 200 and a list of nodes', async () => {
-      mockedNodeService.getNodes.mockResolvedValue(mockNodesResponse)
+      getNodes.mockResolvedValue(mockNodesResponse)
       const response = await request(testApp).get('/api/v1/nodes')
 
       expect(response.status).toBe(200)
@@ -29,7 +29,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 404 when nodes are not found', async () => {
-      mockedNodeService.getNodes.mockResolvedValue([])
+      getNodes.mockResolvedValue([])
       const response = await request(testApp).get('/api/v1/nodes')
 
       expect(response.status).toBe(404)
@@ -38,7 +38,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 500 when it fails', async () => {
-      mockedNodeService.getNodes.mockRejectedValue(new Error())
+      getNodes.mockRejectedValue(new Error())
       const response = await request(testApp).get('/api/v1/nodes')
 
       expect(response.status).toBe(500)
@@ -49,7 +49,7 @@ describe('Node Routes', () => {
 
   describe('GET /node', () => {
     it('should return status 200 and a node', async () => {
-      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
+      getNode.mockResolvedValue(mockNodesResponse[0])
       const response = await request(testApp).get('/api/v1/nodes/1')
 
       expect(response.status).toBe(200)
@@ -58,7 +58,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 404 when node is not found', async () => {
-      mockedNodeService.getNode.mockResolvedValue(undefined)
+      getNode.mockResolvedValue(undefined)
       const response = await request(testApp).get('/api/v1/nodes/1')
 
       expect(response.status).toBe(404)
@@ -67,7 +67,7 @@ describe('Node Routes', () => {
     })
 
     it('should return status 500 when it fails', async () => {
-      mockedNodeService.getNode.mockRejectedValue(new Error())
+      getNode.mockRejectedValue(new Error())
       const response = await request(testApp).get('/api/v1/nodes/1')
 
       expect(response.status).toBe(500)
@@ -79,7 +79,7 @@ describe('Node Routes', () => {
   describe('POST /node', () => {
     it('should return status 201 and create a new node', async () => {
       const newNode: any = { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' }
-      mockedNodeService.createNode.mockResolvedValue(newNode)
+      createNode.mockResolvedValue(newNode)
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
       expect(response.status).toBe(201)
@@ -98,7 +98,7 @@ describe('Node Routes', () => {
 
     it('should return status 500 when it fails', async () => {
       const newNode = { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' }
-      mockedNodeService.createNode.mockRejectedValue(new Error())
+      createNode.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
       expect(response.status).toBe(500)
@@ -112,8 +112,8 @@ describe('Node Routes', () => {
       const nodeId = 1
       const updateData = { name: 'Updated Node', x: 20, y: 30 }
       const updatedNode = { ...mockNodesResponse[0], ...updateData }
-      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
-      mockedNodeService.updateNode.mockResolvedValue(updatedNode)
+      getNode.mockResolvedValue(mockNodesResponse[0])
+      updateNode.mockResolvedValue(updatedNode)
       const response = await request(testApp).patch(`/api/v1/nodes/${nodeId}`).send(updateData)
 
       expect(response.status).toBe(200)
@@ -123,8 +123,8 @@ describe('Node Routes', () => {
 
     it('should return status 404 when node not found', async () => {
       const nodeId = 'INVALID_ID'
-      mockedNodeService.getNode.mockResolvedValue(undefined)
-      mockedNodeService.updateNode.mockResolvedValue(undefined)
+      getNode.mockResolvedValue(undefined)
+      updateNode.mockResolvedValue(undefined)
       const response = await request(testApp).patch(`/api/v1/nodes/${nodeId}`).send({ id: nodeId })
 
       expect(response.status).toBe(404)
@@ -135,8 +135,8 @@ describe('Node Routes', () => {
     it('should return status 500 when update fails', async () => {
       const nodeId = 1
       const updateData = { name: 'Updated Node', x: 20, y: 30 }
-      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
-      mockedNodeService.updateNode.mockRejectedValue(new Error())
+      getNode.mockResolvedValue(mockNodesResponse[0])
+      updateNode.mockRejectedValue(new Error())
       const response = await request(testApp).patch(`/api/v1/nodes/${nodeId}`).send(updateData)
 
       expect(response.status).toBe(500)
@@ -148,8 +148,8 @@ describe('Node Routes', () => {
   describe('DELETE /nodes/:id', () => {
     it('should return status 200 and delete existing node', async () => {
       const nodeId = 1
-      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
-      mockedNodeService.deleteNode.mockResolvedValue(true)
+      getNode.mockResolvedValue(mockNodesResponse[0])
+      deleteNode.mockResolvedValue(true)
       const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
 
       expect(response.status).toBe(200)
@@ -159,8 +159,8 @@ describe('Node Routes', () => {
 
     it('should return status 404 when node not found', async () => {
       const nodeId = 'INVALID_ID'
-      mockedNodeService.getNode.mockResolvedValue(undefined)
-      mockedNodeService.deleteNode.mockResolvedValue(false)
+      getNode.mockResolvedValue(undefined)
+      deleteNode.mockResolvedValue(false)
       const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
 
       expect(response.status).toBe(404)
@@ -170,8 +170,8 @@ describe('Node Routes', () => {
 
     it('should return status 500 when delete fails', async () => {
       const nodeId = 1
-      mockedNodeService.getNode.mockResolvedValue(mockNodesResponse[0])
-      mockedNodeService.deleteNode.mockRejectedValue(new Error())
+      getNode.mockResolvedValue(mockNodesResponse[0])
+      deleteNode.mockRejectedValue(new Error())
       const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
 
       expect(response.status).toBe(500)
@@ -186,7 +186,7 @@ describe('Node Routes', () => {
         { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
         { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
-      mockedNodeService.bulkCreate.mockResolvedValue(2)
+      bulkCreate.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(201)
@@ -220,7 +220,7 @@ describe('Node Routes', () => {
         { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
         { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
-      mockedNodeService.bulkCreate.mockRejectedValue(new Error())
+      bulkCreate.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(500)
@@ -235,7 +235,7 @@ describe('Node Routes', () => {
         { id: '1', propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } },
         { id: '2', propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
       ]
-      mockedNodeService.bulkUpdate.mockResolvedValue(2)
+      bulkUpdate.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(200)
@@ -269,7 +269,7 @@ describe('Node Routes', () => {
         { id: '1', name: 'Updated Node 1', x: 20, y: 30 },
         { id: '2', name: 'Updated Node 2', x: 40, y: 50 },
       ]
-      mockedNodeService.bulkUpdate.mockRejectedValue(new Error())
+      bulkUpdate.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(500)
@@ -282,7 +282,7 @@ describe('Node Routes', () => {
     it('should return status 200 and delete existing nodes', async () => {
       const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
 
-      mockedNodeService.bulkDelete.mockResolvedValue(2)
+      bulkDelete.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(200)
@@ -301,7 +301,7 @@ describe('Node Routes', () => {
 
     it('should return status 500 when it fails', async () => {
       const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
-      mockedNodeService.bulkDelete.mockRejectedValue(new Error())
+      bulkDelete.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(500)

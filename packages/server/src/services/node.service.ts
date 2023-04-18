@@ -6,42 +6,37 @@ import { SnakeCase } from '../utils/types'
 import runTransaction from '../database/runTransaction'
 import { deleteRow, getRow, getRows, insertRow, updateRow } from '../database'
 
-class NodeService {
-  public static async getNodes(): Promise<SnakeCase<Node>[] | undefined> {
+export const nodeService = {
+  getNodes: async (): Promise<SnakeCase<Node>[] | undefined> => {
     const nodes: SnakeCase<Node>[] = await getRows<SnakeCase<Node>>('node')
 
     return nodes
-  }
-
-  public static async getNode(id: string): Promise<SnakeCase<Node> | undefined> {
+  },
+  getNode: async (id: string): Promise<SnakeCase<Node> | undefined> => {
     const nodes: SnakeCase<Node>[] = await getRow<SnakeCase<Node>>('node', id)
 
     return nodes[0]
-  }
-
-  public static async createNode(newNode: SnakeCase<CreateNodeBody>): Promise<SnakeCase<Node> | undefined> {
+  },
+  createNode: async (newNode: SnakeCase<CreateNodeBody>): Promise<SnakeCase<Node> | undefined> => {
     const affectedRows: number = await insertRow('node', newNode)
     if (!affectedRows) return undefined
 
     const nodes: SnakeCase<Node>[] = await getRow<SnakeCase<Node>>('node', newNode.id)
 
     return nodes[0]
-  }
-
-  public static async updateNode(id: string, updatedNode: Partial<SnakeCase<Node>>): Promise<SnakeCase<Node> | undefined> {
+  },
+  updateNode: async (id: string, updatedNode: Partial<SnakeCase<Node>>): Promise<SnakeCase<Node> | undefined> => {
     await updateRow('node', id, updatedNode)
     const nodes: SnakeCase<Node>[] = await getRow<SnakeCase<Node>>('node', id)
 
     return nodes[0]
-  }
-
-  public static async deleteNode(id: string): Promise<boolean> {
+  },
+  deleteNode: async (id: string): Promise<boolean> => {
     const affectedRows = await deleteRow('node', id)
 
     return !!affectedRows
-  }
-
-  public static async bulkCreate(newNodes: SnakeCase<CreateNodeBody>[]): Promise<number | undefined> {
+  },
+  bulkCreate: async (newNodes: SnakeCase<CreateNodeBody>[]): Promise<number | undefined> => {
     let transactionQueries: { query: string, params: any[] }[] = []
     const queryResult: ResultSetHeader[] = []
 
@@ -67,9 +62,8 @@ class NodeService {
     await commitTransaction()
 
     return queryResult.length
-  }
-
-  public static async bulkUpdate(updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]): Promise<number | undefined> {
+  },
+  bulkUpdate: async (updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]): Promise<number | undefined> => {
     const transactionQueries: { query: string, params: any[] }[] = updatePayloads.map((payload) => {
       const { id } = payload
       const propsToUpdate = payload.props_to_update!
@@ -82,9 +76,8 @@ class NodeService {
     const results = await runTransaction(transactionQueries)
 
     return results.length
-  }
-
-  public static async bulkDelete(idsToDelete: string[]): Promise<number | undefined> {
+  },
+  bulkDelete: async (idsToDelete: string[]): Promise<number | undefined> => {
     const transactionQueries: { query: string, params: any[] }[] = idsToDelete.map((idToDelete) => ({
       query: 'DELETE FROM node WHERE id = ?',
       params: [idToDelete],
@@ -92,7 +85,5 @@ class NodeService {
     const results = await runTransaction(transactionQueries)
 
     return results.length
-  }
+  },
 }
-
-export default NodeService

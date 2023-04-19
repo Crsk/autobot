@@ -1,12 +1,18 @@
 import { Application, Router } from 'express'
-import { errorHandler } from '../../utils/errorHandler'
 import { nodeService } from '../../services'
 import { nodeController } from '../../controllers'
+import { route } from '../route'
 
 const { getNodes } = nodeService
 const { getNodesController } = nodeController
 
-export const getNodesRoute = (app: Application, baseUrl: string, router: Router) => app.use(
-  baseUrl,
-  router.get('/nodes', errorHandler(getNodesController(getNodes))),
+export const getNodesRoute = (app: Application, baseUrl: string, router: Router) => (
+  route({
+    app,
+    baseUrl,
+    router,
+    path: '/nodes',
+    method: 'get',
+    controller: getNodesController(getNodes),
+  })
 )

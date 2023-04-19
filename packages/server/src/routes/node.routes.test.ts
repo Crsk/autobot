@@ -3,11 +3,11 @@ import request from 'supertest'
 import { describe, it, afterEach } from '@jest/globals'
 import { DeleteNodeBody } from 'shared/src/types/dto'
 import app from '../app'
-import { nodeService } from '../services/node.service'
+import { nodeService } from '../services'
 
-jest.mock('../services/node.service')
+jest.mock('../services')
 const mockedNodeService = jest.mocked(nodeService)
-const { getNodes, getNode, createNode, updateNode, deleteNode, bulkCreate, bulkUpdate, bulkDelete } = mockedNodeService
+const { getNodes, getNode, createNode, updateNode, deleteNode, createNodes, updateNodes, deleteNodes } = mockedNodeService
 const testApp: Application = app
 
 const mockNodesResponse: any = [
@@ -186,7 +186,7 @@ describe('Node Routes', () => {
         { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
         { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
-      bulkCreate.mockResolvedValue(2)
+      createNodes.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(201)
@@ -220,7 +220,7 @@ describe('Node Routes', () => {
         { id: '3', name: 'Node 3', x: 50, y: 60, parentId: '1' },
         { id: '4', name: 'Node 4', x: 70, y: 80, parentId: '1' },
       ]
-      bulkCreate.mockRejectedValue(new Error())
+      createNodes.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(500)
@@ -235,7 +235,7 @@ describe('Node Routes', () => {
         { id: '1', propsToUpdate: { name: 'Updated Node 1', x: 20, y: 30 } },
         { id: '2', propsToUpdate: { name: 'Updated Node 2', x: 40, y: 50 } },
       ]
-      bulkUpdate.mockResolvedValue(2)
+      updateNodes.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(200)
@@ -269,7 +269,7 @@ describe('Node Routes', () => {
         { id: '1', name: 'Updated Node 1', x: 20, y: 30 },
         { id: '2', name: 'Updated Node 2', x: 40, y: 50 },
       ]
-      bulkUpdate.mockRejectedValue(new Error())
+      updateNodes.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(500)
@@ -282,7 +282,7 @@ describe('Node Routes', () => {
     it('should return status 200 and delete existing nodes', async () => {
       const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
 
-      bulkDelete.mockResolvedValue(2)
+      deleteNodes.mockResolvedValue(2)
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(200)
@@ -301,7 +301,7 @@ describe('Node Routes', () => {
 
     it('should return status 500 when it fails', async () => {
       const payloads: DeleteNodeBody[] = [{ id: '1' }, { id: '2' }]
-      bulkDelete.mockRejectedValue(new Error())
+      deleteNodes.mockRejectedValue(new Error())
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(500)

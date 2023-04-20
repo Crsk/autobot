@@ -1,13 +1,13 @@
 import { Application, Router } from 'express'
 import { nodeService } from '../../../services'
 import { nodeController } from '../../../controllers'
-import { route } from '../../route'
+import { routeFactory } from '../../route.factory'
 
 const { deleteNodes } = nodeService
 const { deleteNodesController } = nodeController
 
 export const deleteNodesRoute = (app: Application, baseUrl: string, router: Router) => (
-  route({
+  routeFactory({
     app,
     baseUrl,
     router,

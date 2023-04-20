@@ -15,7 +15,7 @@ type RouteProps = {
   middleware?: Middleware,
 }
 
-export const route = ({ app, baseUrl, path, router, method, controller, middleware }: RouteProps) => (
+export const routeFactory = ({ app, baseUrl, path, router, method, controller, middleware }: RouteProps) => (
   middleware
     ? app.use(baseUrl, router[method](path, middleware, errorHandler(controller)))
     : app.use(baseUrl, router[method](path, errorHandler(controller)))

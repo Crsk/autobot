@@ -3,13 +3,13 @@ import { UpdateNodeParamsSchema } from 'shared/src/types/schemas'
 import { nodeController } from '../../controllers'
 import { nodeService } from '../../services'
 import schemaValidator from '../../middlewares/schemaValidator.middleware'
-import { route } from '../route'
+import { routeFactory } from '../route.factory'
 
 const { getNode, updateNode } = nodeService
 const { updateNodeController } = nodeController
 
 export const updateNodeRoute = (app: Application, baseUrl: string, router: Router) => (
-  route({
+  routeFactory({
     app,
     baseUrl,
     router,

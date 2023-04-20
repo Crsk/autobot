@@ -1,13 +1,13 @@
 import { Application, Router } from 'express'
 import { nodeService } from '../../../services'
 import { nodeController } from '../../../controllers'
-import { route } from '../../route'
+import { routeFactory } from '../../route.factory'
 
 const { createNodes } = nodeService
 const { createNodesController } = nodeController
 
 export const createNodesRoute = (app: Application, baseUrl: string, router: Router) => (
-  route({
+  routeFactory({
     app,
     baseUrl,
     router,

@@ -1,5 +1,5 @@
 import { Application, Router } from 'express'
-import { DeleteNodeBodySchema } from 'shared/src/types/schemas'
+import { UpdateNodeBodySchema } from 'shared/src/types/schemas'
 import { nodeService } from '../../../services'
 import { nodeController } from '../../../controllers'
 import { routeFactory } from '../../route.factory'
@@ -15,7 +15,7 @@ export const updateNodesRoute = (app: Application, baseUrl: string, router: Rout
     router,
     path: '/nodes/bulk-update',
     method: 'post',
-    middleware: schemaValidator(DeleteNodeBodySchema),
+    middleware: schemaValidator(UpdateNodeBodySchema),
     controller: updateNodesController(updateNodes),
   })
 )

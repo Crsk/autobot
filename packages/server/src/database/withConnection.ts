@@ -1,11 +1,15 @@
-import { PoolConnection } from 'mysql2/promise'
+import { PoolClient } from 'pg'
 import getPool from './getPool'
 
-export default async <T>(callback: (conn: PoolConnection) => Promise<T>): Promise<T> => {
-  const conn = await getPool().getConnection()
+export default async <T>(callback: (client: PoolClient) => Promise<T>): Promise<T> => {
+  const client = await getPool().connect()
+  const schema = process.env.DB_SCHEMA
+
   try {
-    return await callback(conn)
+    await client.query(`SET search_path TO ${schema}`, (err) => err && console.log('err', err))
+
+    return await callback(client)
   } finally {
-    conn.release()
+    client.release()
   }
 }

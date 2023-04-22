@@ -1,21 +1,17 @@
-import { ResultSetHeader } from 'mysql2/promise'
-import getPool from './getPool'
+import { PoolClient, QueryResult } from 'pg'
+import withConnection from './withConnection'
 
-export default async <T extends ResultSetHeader>(queries: Array<{ query: string, params: any[] }>): Promise<T[]> => {
-  const conn = await getPool().getConnection()
-
+export default async <T extends QueryResult>(queries: Array<{ query: string, id: string }>): Promise<T[]> => withConnection(async (client: PoolClient) => {
   try {
-    conn.beginTransaction()
-    const results = await Promise.all(queries.map(async ({ query, params }) => await conn.query<T>(query, params) as unknown as T[]))
-    await conn.commit()
-    const flattenedResults: T[] = ([] as T[]).concat(...results)
+    await client.query('BEGIN')
+    const results = await Promise.all(queries.map(({ query }) => client.query<T>(query)))
+    console.log('results', results)
+    await client.query('COMMIT')
 
-    return flattenedResults
+    return results as T[]
   } catch (err) {
     console.error('Transaction error:', err)
-    await conn.rollback()
+    await client.query('ROLLBACK')
     throw err
-  } finally {
-    conn.release()
   }
-}
+})

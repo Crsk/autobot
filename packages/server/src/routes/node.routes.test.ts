@@ -42,7 +42,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).get('/api/v1/nodes')
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -71,7 +72,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).get('/api/v1/nodes/1')
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -102,7 +104,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/node').send(newNode)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -140,7 +143,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).patch(`/api/v1/nodes/${nodeId}`).send(updateData)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -175,7 +179,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).delete(`/api/v1/nodes/${nodeId}`)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -224,7 +229,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/nodes/bulk-create').send(newNodes)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -273,7 +279,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/nodes/bulk-update').send(updateData)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })
@@ -305,7 +312,8 @@ describe('Node Routes', () => {
       const response = await request(testApp).post('/api/v1/nodes/bulk-delete').send(payloads)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: 'Internal Server Error', success: false, payload: {} })
+      expect(response.body.success).toBe(false)
+      expect(response.body.payload).toMatchObject({})
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
   })

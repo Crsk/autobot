@@ -27,7 +27,7 @@ export interface NodeService {
   getNodes: GetNodes,
   getNode: GetNode,
   updateNode: UpdateNode,
-  updateNodes: CreateNodes,
-  createNodes: DeleteNodes,
-  deleteNodes: UpdateNodes,
+  updateNodes: UpdateNodes,
+  createNodes: CreateNodes,
+  deleteNodes: DeleteNodes,
 }

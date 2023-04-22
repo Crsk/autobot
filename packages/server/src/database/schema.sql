@@ -1,3 +1,5 @@
+CREATE DATABASE frow;
+\c frow;
 CREATE SCHEMA frow;
 SET search_path TO frow;
 

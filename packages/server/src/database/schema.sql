@@ -1,5 +1,7 @@
-CREATE SCHEMA `frow` DEFAULT CHARACTER SET utf8 ;
-USE frow;
+CREATE DATABASE frow;
+\c frow;
+CREATE SCHEMA frow;
+SET search_path TO frow;
 
 CREATE TABLE node (
   id VARCHAR(38) NOT NULL PRIMARY KEY,
@@ -12,7 +14,7 @@ CREATE TABLE node (
 );
 
 CREATE TABLE connection (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   parent_id VARCHAR(38),
   child_id VARCHAR(38),
   FOREIGN KEY (parent_id) REFERENCES node(id) ON DELETE CASCADE,

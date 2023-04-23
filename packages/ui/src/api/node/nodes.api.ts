@@ -3,7 +3,7 @@ import { CreateNodeBody, DeleteNodeParams, DeleteNodeBody, UpdateNodeBody, Respo
 import { Node } from 'shared/src/types/models'
 
 const nodeApi = {
-  baseURL: 'http://localhost:3000/api/v1/',
+  baseURL: 'http://localhost:3000/api/v1',
   fetch: async (): Promise<Node[] | undefined> => {
     // Returns the fetched nodes if successful, otherwise undefined
     try {

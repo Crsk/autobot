@@ -17,6 +17,8 @@ const UpdateNodeBodySchema = z.object({
     parentId: z.string()
       .length(36, 'Parent ID must be 36 characters long')
       .optional(),
+    description: z.string().optional(),
+    code: z.string().optional(),
   }),
 })
 

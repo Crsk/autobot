@@ -1,10 +1,14 @@
 CREATE DATABASE frow;
-\c frow;
 CREATE SCHEMA frow;
 SET search_path TO frow;
 
+CREATE EXTENSION vector;
+
 CREATE TABLE node (
   id VARCHAR(38) NOT NULL PRIMARY KEY,
+  code TEXT NULL,
+  description VARCHAR(256) NULL,
+  embbeddings vector(1536),
   name VARCHAR(100) NOT NULL,
   x FLOAT NOT NULL,
   y FLOAT NOT NULL,

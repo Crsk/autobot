@@ -21,9 +21,17 @@ const config = {
     [
       'classic', /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: { sidebarPath: require.resolve('./sidebars.js'), editUrl: repoUrl },
-        blog: { showReadingTime: true, editUrl: repoUrl },
-        theme: { customCss: require.resolve('./src/css/custom.css') },
+        docs: {
+          sidebarPath: require.resolve('./sidebars.js'),
+          editUrl: repoUrl,
+        },
+        blog: {
+          showReadingTime: true,
+          editUrl: repoUrl,
+        },
+        theme: {
+          customCss: require.resolve('./src/css/custom.css'),
+        },
       }),
     ],
   ],
@@ -34,7 +42,12 @@ const config = {
       navbar: {
         logo: { alt: 'Frow Logo', src: 'img/logo.svg' },
         items: [
-          { href: 'https://github.com/Crsk/frow', label: 'GitHub', position: 'right' },
+          { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            href: 'https://github.com/Crsk/frow',
+            label: 'GitHub',
+            position: 'right',
+          },
         ],
         hideOnScroll: false,
       },

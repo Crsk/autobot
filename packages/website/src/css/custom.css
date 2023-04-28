@@ -16,3 +16,10 @@ header {
 .navbar {
   background-color: #0c0f11;
 }
+
+.caption {
+  font-style: italic;
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 36px;
+}

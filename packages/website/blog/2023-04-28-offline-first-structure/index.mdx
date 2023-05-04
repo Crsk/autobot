@@ -10,15 +10,23 @@ tags: []
 ---
 
 ## Objective
-The idea in this article is to deal with a local approach where the user uses its own device to run the app (create, move, connect nodes and give them instructions) until they feel comfortable to create an account. Yep! No previous login as Tiktok does. You install it, you play it until you're addicted, then create an account to store, like, comment, and share these amazing kittens.
+The idea in this article is to document the process of dealing with a local approach where the user uses its own device to run the app (create, move, connect nodes and give them instructions) until they feel comfortable to create an account. Yep! No previous login as Tiktok does. You install it, you play it until you're addicted, then create an account to store, like, comment, and share these amazing kittens.
 
-When I started this project, I had no idea (still) what I'm doing here. But, since it is important to have a solid structure, I just decided to proceed with a Redux offline-first approach. It would take a little longer but would keep working even if the user has a bad or suddenly no internet connection or the server goes down for any reason. But the best part is that it would be more resistant to bugs, easy to debug, and there would also be an improvement in user experience.
+## Why
+Since it is important to have a solid structure, I decided to proceed with a Redux offline-first approach. It would take a little longer now but it would be architecture solid, resistant to bugs, easy to debug, and there would also be an improvement in user experience.
 
-Talking about experience, I once worked on a project where we implemented offline support in a fast-paced environment where we didn't take enough time to think about the implementation. And since this is so interconnected with pretty much all the system, it ended up hindering the app development progress, similar to the following logarithmic curve:
+Talking about experience, I once worked on a project where we implemented a state management and offline persistence module in a fast-paced environment, we didn't take enough time to think about the architecture implementation, and since this is so interconnected with pretty much all the system, it ended up hindering the app development progress, just like what is shown in the following illustrations
 
+### The cost of repair on technical debt
+![Image](./cost-repair.png)
+<div className="caption">
+  Development costs: https://martinfowler.com/bliki/Yagni.html
+</div>
+
+### Scenario comparison
 ![Image](./curve.png)
 <div className="caption">
-  Implementation/Progress trade-off over time escenario
+  Software development: normal vs worst-case efficiency
 </div>
 
 ## Technical considerations

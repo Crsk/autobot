@@ -2,7 +2,7 @@
   "parserOptions": {
     "project": "tsconfig.json"
   },
-  "extends": ["react-app", "airbnb", "airbnb/hooks", "airbnb-typescript"],
+  "extends": ["react-app", "airbnb", "airbnb/hooks", "airbnb-typescript", "prettier"],
   "rules": {
     "react/jsx-props-no-spreading": 0,
     "@typescript-eslint/semi": 0,

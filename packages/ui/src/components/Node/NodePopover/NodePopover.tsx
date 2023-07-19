@@ -9,9 +9,7 @@ function NodePopover({ node: { id, x, y, parentId } }: { node: Node }) {
   const actionButtonWidth = 32
   const dispatch = useDispatch()
   const handleDelete = () => dispatch(deleteNodeTrigger({ id }))
-  const actionButtons = [
-    <ActionButton key={id} type="DELETE" onPress={handleDelete} disabled={!parentId} />,
-  ]
+  const actionButtons = [<ActionButton key={id} type="DELETE" onPress={handleDelete} disabled={!parentId} />]
   const buttonsCount = actionButtons.length + 1
 
   return (
@@ -21,9 +19,7 @@ function NodePopover({ node: { id, x, y, parentId } }: { node: Node }) {
       width={buttonsCount * actionButtonWidth}
       height={50}
     >
-      <div className={styles.popover}>
-        {actionButtons.map((Button) => Button)}
-      </div>
+      <div className={styles.popover}>{actionButtons.map(Button => Button)}</div>
     </foreignObject>
   )
 }

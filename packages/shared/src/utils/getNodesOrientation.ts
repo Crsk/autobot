@@ -1,12 +1,15 @@
 import { Point } from '../types/utils'
 import { defaultNodeHeight, defaultNodeWidth, verticallyThreshold } from './helper'
 
-export default (node1: Point, node2: Point): {
-  orientation: 'HORIZONTAL' | 'VERTICAL',
-  alignmentDistance: number,
-  horizontalDistance: number,
-  verticalDistance: number,
-  nodeCenter1: Point,
+export default (
+  node1: Point,
+  node2: Point
+): {
+  orientation: 'HORIZONTAL' | 'VERTICAL'
+  alignmentDistance: number
+  horizontalDistance: number
+  verticalDistance: number
+  nodeCenter1: Point
   nodeCenter2: Point
 } => {
   const nodeCenter1 = { x: node1.x + defaultNodeWidth / 2, y: node1.y + defaultNodeHeight / 2 }

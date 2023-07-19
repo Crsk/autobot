@@ -9,7 +9,7 @@ interface DeleteFromQueue {
 
 interface NodeState {
   nodesById: Record<string, CreateNodeBody & Partial<{ newChild: Point }>> // newChild is pretty temporal, it exists only while dragging a new child
-  draggingData: DraggingDataPayload,
+  draggingData: DraggingDataPayload
 }
 
 interface QueueState {
@@ -21,9 +21,9 @@ interface LoginState {
 }
 
 export type QueueOperation<AddPayload, UpdatePayload, DeletePayload> = {
-  ADD: Record<string, AddPayload>,
-  UPDATE: Record<string, UpdatePayload>,
-  DELETE: Record<string, DeletePayload>,
+  ADD: Record<string, AddPayload>
+  UPDATE: Record<string, UpdatePayload>
+  DELETE: Record<string, DeletePayload>
 }
 
 type RootState = {
@@ -49,10 +49,4 @@ export enum QueueActionTypes {
 
 type DraggingDataPayload = { draggingNode: boolean }
 
-export type {
-  NodeState,
-  QueueState,
-  LoginState,
-  RootState,
-  DeleteFromQueue,
-}
+export type { NodeState, QueueState, LoginState, RootState, DeleteFromQueue }

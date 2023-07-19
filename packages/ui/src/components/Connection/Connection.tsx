@@ -1,7 +1,7 @@
 import React from 'react'
 import { Point } from 'shared/src/types/utils'
 import { getConnectionPoints, getNodesOrientation } from 'shared/src/utils'
-import ConnectionTextLabel from '../ConnectionTextLabel'
+import ConnectionTextLabel from '../ConnectionTextLabel/ConnectionTextLabel'
 
 // Helper function to calculate a point on a Bezier curve at a specific time (t)
 function bezierPoint(p0: number, p1: number, p2: number, p3: number, t: number) {
@@ -13,7 +13,12 @@ function bezierPoint(p0: number, p1: number, p2: number, p3: number, t: number) 
 function getCurve(origin: Point, destination: Point, targetPercentage: number = 0.8) {
   const { orientation, verticalDistance } = getNodesOrientation(origin, destination)
   const { originPoint: connectionOrigin, destinationPoint: connectionDest } = getConnectionPoints(origin, destination)
-  const { x1, y1, x2, y2 } = { x1: connectionOrigin.x, y1: connectionOrigin.y, x2: connectionDest.x, y2: connectionDest.y }
+  const { x1, y1, x2, y2 } = {
+    x1: connectionOrigin.x,
+    y1: connectionOrigin.y,
+    x2: connectionDest.x,
+    y2: connectionDest.y,
+  }
   const tension = 0.5
   const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
   const { x: originX, y: originY } = connectionOrigin
@@ -45,7 +50,7 @@ function getCurve(origin: Point, destination: Point, targetPercentage: number = 
   }
 }
 
-function Connection({ origin, destination }: { origin: Point, destination: Point }) {
+function Connection({ origin, destination }: { origin: Point; destination: Point }) {
   const { point, curve, verticalDistance } = getCurve(origin, destination)
 
   return (

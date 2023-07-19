@@ -1,8 +1,8 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import AutomationEngine from '@/components'
+import Flow from '@/components/Flow'
 import { persistor, store } from './redux/config/store'
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <Routes>
-              <Route path="/flow" element={<AutomationEngine />} />
+              <Route path="/flow" element={<Flow />} />
             </Routes>
           </BrowserRouter>
         </PersistGate>

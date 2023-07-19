@@ -5,7 +5,7 @@ function snakeToCamelCase<T>(obj: SnakeCase<T>): CamelCase<T> {
 
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const key in obj) {
-    const newKey = key.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''))
+    const newKey = key.replace(/([-_][a-z])/g, group => group.toUpperCase().replace('-', '').replace('_', ''))
     newObj[newKey] = obj[key]
   }
 

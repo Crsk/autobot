@@ -1,13 +1,14 @@
 import { Application } from 'express'
 import request from 'supertest'
-import { describe, it, afterEach } from '@jest/globals'
+import { afterEach, describe, it } from '@jest/globals'
 import { DeleteNodeBody } from 'shared/src/types/dto'
 import app from '../app'
 import { nodeService } from '../services'
 
 jest.mock('../services')
 const mockedNodeService = jest.mocked(nodeService)
-const { getNodes, getNode, createNode, updateNode, deleteNode, createNodes, updateNodes, deleteNodes } = mockedNodeService
+const { getNodes, getNode, createNode, updateNode, deleteNode, createNodes, updateNodes, deleteNodes } =
+  mockedNodeService
 const testApp: Application = app
 
 const mockNodesResponse: any = [
@@ -16,7 +17,9 @@ const mockNodesResponse: any = [
 ]
 
 describe('Node Routes', () => {
-  afterEach(() => { jest.clearAllMocks() })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 
   describe('GET /nodes', () => {
     it('should return status 200 and a list of nodes', async () => {
@@ -120,7 +123,11 @@ describe('Node Routes', () => {
       const response = await request(testApp).patch(`/api/v1/nodes/${nodeId}`).send(updateData)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({ message: `Node ${nodeId} updated successfully`, payload: updatedNode, success: true })
+      expect(response.body).toEqual({
+        message: `Node ${nodeId} updated successfully`,
+        payload: updatedNode,
+        success: true,
+      })
       expect(response.headers['content-type']).toEqual(expect.stringContaining('json'))
     })
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, memo } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { Point } from 'shared/src/types/utils'
 import { Node } from 'shared/src/types/models'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +22,9 @@ function NewNode({ parentNode }: { parentNode: Node }) {
   const dispatch = useDispatch()
   const dotRef = useRef<SVGRectElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector((state: RootState) => state.node.nodesById[parentNode.id])
+  const parentNodeStore: Node & Partial<{ newChild: Point }> = useSelector(
+    (state: RootState) => state.node.nodesById[parentNode.id]
+  )
   const { x: dotX, y: dotY } = getPosition(null, parentNode, isExpanded)
   const handleMouseEnter = () => setIsExpanded(true)
   const handleMouseLeave = () => setIsExpanded(false)
@@ -38,8 +40,17 @@ function NewNode({ parentNode }: { parentNode: Node }) {
     // No new child means user just clicked on the dot
     if (!parentNodeStore.newChild) {
       setIsExpanded(false)
-      dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(dotX), y: snapToGrid(dotY + defaultNodeHeight) }))
-    } else { // User dropped the node
+      dispatch(
+        addNodeTrigger({
+          id: uuid(),
+          name: '',
+          parentId: parentNode.id,
+          x: snapToGrid(dotX),
+          y: snapToGrid(dotY + defaultNodeHeight),
+        })
+      )
+    } else {
+      // User dropped the node
       const { x, y } = parentNodeStore.newChild! // newChild exists temporary only before new node drop
       dispatch(addNodeTrigger({ id: uuid(), name: '', parentId: parentNode.id, x: snapToGrid(x), y: snapToGrid(y) }))
     }
@@ -54,7 +65,9 @@ function NewNode({ parentNode }: { parentNode: Node }) {
       onMouseLeave={handleMouseLeave}
       x={dotX}
       y={dotY}
-      style={{ transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.4s ease-in-out' : 'none' }}
+      style={{
+        transition: !parentNodeStore.newChild && !draggingData.draggingNode ? 'transform 0.4s ease-in-out' : 'none',
+      }}
     >
       <rect
         ref={dotRef}

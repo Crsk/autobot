@@ -19,15 +19,23 @@ export type UpdateNode = (id: string, node: Partial<SnakeCase<Node>>) => Promise
 export type CreateNodes = (newNodes: SnakeCase<CreateNodeBody>[]) => Promise<number | undefined>
 export type DeleteNodes = (idsToDelete: string[]) => Promise<number | undefined>
 export type UpdateNodes = (updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]) => Promise<number | undefined>
-export type ServiceMethod = CreateNode | DeleteNode | GetNodes | GetNode | UpdateNode | CreateNodes | DeleteNodes | UpdateNodes
+export type ServiceMethod =
+  | CreateNode
+  | DeleteNode
+  | GetNodes
+  | GetNode
+  | UpdateNode
+  | CreateNodes
+  | DeleteNodes
+  | UpdateNodes
 
 export interface NodeService {
-  createNode: CreateNode,
-  deleteNode: DeleteNode,
-  getNodes: GetNodes,
-  getNode: GetNode,
-  updateNode: UpdateNode,
-  updateNodes: UpdateNodes,
-  createNodes: CreateNodes,
-  deleteNodes: DeleteNodes,
+  createNode: CreateNode
+  deleteNode: DeleteNode
+  getNodes: GetNodes
+  getNode: GetNode
+  updateNode: UpdateNode
+  updateNodes: UpdateNodes
+  createNodes: CreateNodes
+  deleteNodes: DeleteNodes
 }

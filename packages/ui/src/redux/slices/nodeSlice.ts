@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { CreateNodeBody, DeleteNodeParams, UpdateNodeBody } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
-import { NodeState, NodeActionTypes } from '../types'
+import { NodeActionTypes, NodeState } from '../types'
 
 const initialState: NodeState = {
   nodesById: {},
@@ -17,19 +17,23 @@ const nodeSlice = createSlice({
   name: 'node',
   initialState,
   reducers: {
-    fetchNodesTrigger: (state) => state,
+    fetchNodesTrigger: state => state,
     addNodeTrigger: (state, _action: PayloadAction<CreateNodeBody>) => state,
     updateNodeTrigger: (state, _action: PayloadAction<UpdateNodeBody>) => state,
     deleteNodeTrigger: (state, _action: PayloadAction<DeleteNodeParams>) => state,
-    updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string, x: number, y: number }>) => {
+    updateNewChild: (state, { payload: { id, x, y } }: PayloadAction<{ id: string; x: number; y: number }>) => {
       state.nodesById[id].newChild = { x, y }
     },
 
     // Before a new child is created, a temporary node is created until the new node is dropped, after drop it is cleared
-    clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: string }>) => { state.nodesById[parentId].newChild = undefined },
-    draggingData: (state, { payload: { draggingNode } }: PayloadAction<{ draggingNode: boolean }>) => { state.draggingData.draggingNode = draggingNode },
+    clearNewChild: (state, { payload: { parentId } }: PayloadAction<{ parentId: string }>) => {
+      state.nodesById[parentId].newChild = undefined
+    },
+    draggingData: (state, { payload: { draggingNode } }: PayloadAction<{ draggingNode: boolean }>) => {
+      state.draggingData.draggingNode = draggingNode
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addMatcher(
         (action): action is PayloadAction<{ nodes: Node[] }> => action.type === NodeActionTypes.FETCH,
@@ -37,23 +41,25 @@ const nodeSlice = createSlice({
           state.nodesById = payload?.nodes
             ? payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {})
             : state.nodesById
-        },
+        }
       )
       .addMatcher(
         (action): action is PayloadAction<CreateNodeBody> => action.type === NodeActionTypes.ADD,
         (state, { payload: { id, name, parentId, x, y } }) => {
           if (id) addNode(state, { id, name, parentId, x, y })
-        },
+        }
       )
       .addMatcher(
         (action): action is PayloadAction<UpdateNodeBody> => action.type === NodeActionTypes.UPDATE,
-        (state, { payload: { id, propsToUpdate } }) => { state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } as CreateNodeBody },
+        (state, { payload: { id, propsToUpdate } }) => {
+          state.nodesById[id] = { ...state.nodesById[id], ...propsToUpdate } as CreateNodeBody
+        }
       )
       .addMatcher(
         (action): action is PayloadAction<DeleteNodeParams> => action.type === NodeActionTypes.DELETE,
         (state, { payload: { id } }) => {
           delete state.nodesById[id]
-        },
+        }
       )
   },
 })

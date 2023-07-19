@@ -14,6 +14,9 @@ export enum StatusCode {
   SERVICE_UNAVAILABLE = 503,
 }
 // This is the type response that the client receives
-export type Response<T = any> = { message: string, payload?: T, success: boolean, issues?: ZodIssue[] }
+export type Response<T = any> = { message: string; payload?: T; success: boolean; issues?: ZodIssue[] }
 // This is the type response that server creates
-export type TypedResponse<T = any> = { json: Send<Response<T>, TypedResponse<T>>, status: (code: StatusCode) => TypedResponse<T> } & Express.Response
+export type TypedResponse<T = any> = {
+  json: Send<Response<T>, TypedResponse<T>>
+  status: (code: StatusCode) => TypedResponse<T>
+} & Express.Response

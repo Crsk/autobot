@@ -17,8 +17,8 @@ export default (origin: Point, destination: Point) => {
   }
 
   // Calculate the horizontal and vertical distances between the center points of the two nodes
-  const horizontalDistance = Math.abs((origin.x + defaultNodeWidth / 2) - (destination.x + defaultNodeWidth / 2))
-  const verticalDistance = Math.abs((origin.y + defaultNodeHeight / 2) - (destination.y + defaultNodeHeight / 2))
+  const horizontalDistance = Math.abs(origin.x + defaultNodeWidth / 2 - (destination.x + defaultNodeWidth / 2))
+  const verticalDistance = Math.abs(origin.y + defaultNodeHeight / 2 - (destination.y + defaultNodeHeight / 2))
 
   let sourceConnection: Point = { x: 0, y: 0 }
   let destinationConnection: Point = { x: 0, y: 0 }

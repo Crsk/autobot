@@ -1,5 +1,14 @@
 import { Application, Router } from 'express'
-import { createNodeRoute, deleteNodeRoute, updateNodeRoute, getNodesRoute, getNodeRoute, createNodesRoute, deleteNodesRoute, updateNodesRoute } from '.'
+import {
+  createNodeRoute,
+  createNodesRoute,
+  deleteNodeRoute,
+  deleteNodesRoute,
+  getNodeRoute,
+  getNodesRoute,
+  updateNodeRoute,
+  updateNodesRoute,
+} from '.'
 
 export const nodeRoutes = (app: Application, router: Router, baseUrl: string) => {
   getNodeRoute(app, baseUrl, router)

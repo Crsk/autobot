@@ -6,7 +6,7 @@ import { routeFactory } from '../route.factory'
 const { getNodes } = nodeService
 const { getNodesController } = nodeController
 
-export const getNodesRoute = (app: Application, baseUrl: string, router: Router) => (
+export const getNodesRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -15,4 +15,3 @@ export const getNodesRoute = (app: Application, baseUrl: string, router: Router)
     method: 'get',
     controller: getNodesController(getNodes),
   })
-)

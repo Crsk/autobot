@@ -8,7 +8,7 @@ import { routeFactory } from '../route.factory'
 const { getNode, deleteNode } = nodeService
 const { deleteNodeController } = nodeController
 
-export const deleteNodeRoute = (app: Application, baseUrl: string, router: Router) => (
+export const deleteNodeRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -18,4 +18,3 @@ export const deleteNodeRoute = (app: Application, baseUrl: string, router: Route
     middleware: schemaValidator(DeleteNodeParamsSchema),
     controller: deleteNodeController(getNode, deleteNode),
   })
-)

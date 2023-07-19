@@ -8,7 +8,7 @@ import { routeFactory } from '../route.factory'
 const { getNode, updateNode } = nodeService
 const { updateNodeController } = nodeController
 
-export const updateNodeRoute = (app: Application, baseUrl: string, router: Router) => (
+export const updateNodeRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -18,4 +18,3 @@ export const updateNodeRoute = (app: Application, baseUrl: string, router: Route
     middleware: schemaValidator(UpdateNodeParamsSchema),
     controller: updateNodeController(getNode, updateNode),
   })
-)

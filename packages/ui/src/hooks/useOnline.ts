@@ -8,7 +8,7 @@ const useOnline = () => {
   const [online, setOnline] = useState<boolean>(true)
 
   useEffect(() => {
-    const subscription = status$.subscribe((isConnected) => setOnline(isConnected))
+    const subscription = status$.subscribe(isConnected => setOnline(isConnected))
 
     return () => subscription.unsubscribe()
   }, [status$])

@@ -6,7 +6,7 @@ import { routeFactory } from '../../route.factory'
 const { deleteNodes } = nodeService
 const { deleteNodesController } = nodeController
 
-export const deleteNodesRoute = (app: Application, baseUrl: string, router: Router) => (
+export const deleteNodesRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -15,4 +15,3 @@ export const deleteNodesRoute = (app: Application, baseUrl: string, router: Rout
     method: 'post',
     controller: deleteNodesController(deleteNodes),
   })
-)

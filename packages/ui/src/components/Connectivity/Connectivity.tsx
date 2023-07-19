@@ -12,7 +12,10 @@ function ConnectivityBar() {
       class: `${styles.show} ${online ? styles.online : styles.offline}`,
     })
 
-    if (online) setTimeout(() => { setConnectivityBar({ message: '', class: `${styles.online} ${styles.hide}` }) }, 5000)
+    if (online)
+      setTimeout(() => {
+        setConnectivityBar({ message: '', class: `${styles.online} ${styles.hide}` })
+      }, 5000)
   }, [online])
 
   return <div className={connectivityBar.class}>{connectivityBar.message}</div>

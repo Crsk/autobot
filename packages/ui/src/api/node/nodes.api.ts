@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateNodeBody, DeleteNodeParams, DeleteNodeBody, UpdateNodeBody, Response } from 'shared/src/types/dto'
+import { CreateNodeBody, DeleteNodeBody, DeleteNodeParams, Response, UpdateNodeBody } from 'shared/src/types/dto'
 import { Node } from 'shared/src/types/models'
 
 const nodeApi = {
@@ -20,7 +20,8 @@ const nodeApi = {
   // Returns the created node if successful, otherwise undefined
   create: async (newNode: CreateNodeBody): Promise<Node | undefined> => {
     try {
-      const { message, success, payload, issues } = (await axios.post<Response>(`${nodeApi.baseURL}/node`, newNode)).data
+      const { message, success, payload, issues } = (await axios.post<Response>(`${nodeApi.baseURL}/node`, newNode))
+        .data
       if (!success) throw new Error(issues?.join(' ') || message)
       else console.info(message)
 
@@ -33,7 +34,9 @@ const nodeApi = {
   // Returns the updated node if successful, otherwise undefined
   update: async ({ id, propsToUpdate }: UpdateNodeBody): Promise<Node | undefined> => {
     try {
-      const { message, success, payload } = (await axios.patch<Response>(`${nodeApi.baseURL}/nodes/${id}`, propsToUpdate)).data
+      const { message, success, payload } = (
+        await axios.patch<Response>(`${nodeApi.baseURL}/nodes/${id}`, propsToUpdate)
+      ).data
       if (!success) throw new Error(message)
       else console.info(message)
 
@@ -57,7 +60,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  bulkCreate: async (payloads: (CreateNodeBody)[]): Promise<boolean> => {
+  bulkCreate: async (payloads: CreateNodeBody[]): Promise<boolean> => {
     try {
       const { message, success } = (await axios.post<Response>(`${nodeApi.baseURL}/nodes/bulk-create`, payloads)).data
       if (!success) throw new Error(message)
@@ -83,7 +86,7 @@ const nodeApi = {
     }
   },
   // Returns true if successful, otherwise false
-  bulkDelete: async (payloads: (DeleteNodeBody)[]): Promise<boolean> => {
+  bulkDelete: async (payloads: DeleteNodeBody[]): Promise<boolean> => {
     try {
       const { message, success } = (await axios.post<Response>(`${nodeApi.baseURL}/nodes/bulk-delete`, payloads)).data
       if (!success) throw new Error(message)

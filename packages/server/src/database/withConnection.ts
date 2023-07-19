@@ -6,7 +6,7 @@ export default async <T>(callback: (client: PoolClient) => Promise<T>): Promise<
   const schema = process.env.DB_SCHEMA
 
   try {
-    await client.query(`SET search_path TO ${schema}`, (err) => err && console.log('err', err))
+    await client.query(`SET search_path TO ${schema}`, err => err && console.log('err', err))
 
     return await callback(client)
   } finally {

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FLUSH, PAUSE, PERSIST, PersistConfig, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
+import { FLUSH, PAUSE, PERSIST, PURGE, PersistConfig, REGISTER, REHYDRATE } from 'redux-persist'
 import { RootState } from '../types'
 
 const persistConfig: PersistConfig<RootState> = {

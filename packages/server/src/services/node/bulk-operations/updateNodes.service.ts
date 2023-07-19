@@ -4,8 +4,10 @@ import format from 'pg-format'
 import { SnakeCase } from '../../../utils/types'
 import runTransaction from '../../../database/runTransaction'
 
-export const updateNodes = async (updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]): Promise<number | undefined> => {
-  const transactionQueries: { query: string, id: string }[] = updatePayloads.map((payload) => {
+export const updateNodes = async (
+  updatePayloads: Partial<SnakeCase<UpdateNodeBody>>[]
+): Promise<number | undefined> => {
+  const transactionQueries: { query: string; id: string }[] = updatePayloads.map(payload => {
     const { id } = payload
     if (!id) throw new Error('Missing id')
 

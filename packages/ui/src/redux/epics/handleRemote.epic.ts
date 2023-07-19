@@ -17,22 +17,24 @@ const QueueActionEnumMap: Record<string, QueueActionTypes> = {
   [deleteNodeTrigger.type]: QueueActionTypes.DELETE_NODE,
 }
 
-const storeLocalHandler = (actionType: string, payload: any) => concat(
-  of({ type: QueueActionEnumMap[actionType], payload }),
-  of({ type: ActionEnumMap[actionType], payload }),
-)
+const storeLocalHandler = (actionType: string, payload: any) =>
+  concat(of({ type: QueueActionEnumMap[actionType], payload }), of({ type: ActionEnumMap[actionType], payload }))
 
-const handleRemoteEpic = (actionType: string, apiMethod: (payload: any) => Promise<any>): Epic<any, any, RootState> => (action$, state$) => action$.pipe(
-  ofType(actionType),
-  debounceTime(DEBOUNCE_TIME),
-  switchMap(({ payload }: { payload: any }) => (
-    state$.value.login?.user
-      ? from(apiMethod(payload)).pipe(
-        map(() => ({ type: ActionEnumMap[actionType], payload })),
-        catchError(() => storeLocalHandler(actionType, payload)),
+const handleRemoteEpic =
+  (actionType: string, apiMethod: (payload: any) => Promise<any>): Epic<any, any, RootState> =>
+  (action$, state$) =>
+    action$.pipe(
+      ofType(actionType),
+      debounceTime(DEBOUNCE_TIME),
+      switchMap(
+        ({ payload }: { payload: any }) =>
+          state$.value.login?.user
+            ? from(apiMethod(payload)).pipe(
+                map(() => ({ type: ActionEnumMap[actionType], payload })),
+                catchError(() => storeLocalHandler(actionType, payload))
+              )
+            : storeLocalHandler(actionType, payload) // no user, nothing to save in the backend
       )
-      : storeLocalHandler(actionType, payload) // no user, nothing to save in the backend
-  )),
-)
+    )
 
 export { handleRemoteEpic }

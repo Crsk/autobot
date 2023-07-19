@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Node as NodeType } from 'shared/src/types/models'
-import { defaultNodeWidth, defaultNodeHeight, defaultNodeRadius } from 'shared/src/utils'
+import { defaultNodeHeight, defaultNodeRadius, defaultNodeWidth } from 'shared/src/utils'
 import useDrag from '@/hooks/useDrag'
-import NewNode from '../NewNode'
+import NewNode from '../NewNode/NewNode'
 import styles from './node.module.scss'
-import NodePopover from './NodePopover'
+import NodePopover from './NodePopover/NodePopover'
 import useSubscribe from '@/hooks/useSubscribe'
 
 function Node({ node }: { node: NodeType }) {
@@ -45,32 +45,30 @@ function Node({ node }: { node: NodeType }) {
       >
         Action
       </text>
-      {editMode
-        ? (
-          <foreignObject x={node.x} y={node.y} width={defaultNodeWidth} height={defaultNodeHeight}>
-            <input
-              autoFocus
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onBlur={handleInputToLabel}
-              onKeyDown={handleKeyDown}
-              className={styles.blinkingCursor}
-            />
-          </foreignObject>
-        )
-        : (
-          <text
-            x={node.x + 14}
-            y={node.y + 24}
-            textAnchor="start"
-            dominantBaseline="central"
-            style={{ pointerEvents: 'none', fill: '#dadada', fontSize: '0.8em', fontWeight: 'bold' }}
-            className={styles.nonSelectable}
-          >
-            Do something
-          </text>
-        )}
+      {editMode ? (
+        <foreignObject x={node.x} y={node.y} width={defaultNodeWidth} height={defaultNodeHeight}>
+          <input
+            autoFocus
+            type="text"
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
+            onBlur={handleInputToLabel}
+            onKeyDown={handleKeyDown}
+            className={styles.blinkingCursor}
+          />
+        </foreignObject>
+      ) : (
+        <text
+          x={node.x + 14}
+          y={node.y + 24}
+          textAnchor="start"
+          dominantBaseline="central"
+          style={{ pointerEvents: 'none', fill: '#dadada', fontSize: '0.8em', fontWeight: 'bold' }}
+          className={styles.nonSelectable}
+        >
+          Do something
+        </text>
+      )}
       <text
         x={node.x + 14}
         y={node.y + 46}

@@ -6,7 +6,7 @@ import { routeFactory } from '../../route.factory'
 const { createNodes } = nodeService
 const { createNodesController } = nodeController
 
-export const createNodesRoute = (app: Application, baseUrl: string, router: Router) => (
+export const createNodesRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -15,4 +15,3 @@ export const createNodesRoute = (app: Application, baseUrl: string, router: Rout
     method: 'post',
     controller: createNodesController(createNodes),
   })
-)

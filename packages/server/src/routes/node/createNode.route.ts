@@ -8,7 +8,7 @@ import schemaValidator from '../../middlewares/schemaValidator.middleware'
 const { createNode } = nodeService
 const { createNodeController } = nodeController
 
-export const createNodeRoute = (app: Application, baseUrl: string, router: Router) => (
+export const createNodeRoute = (app: Application, baseUrl: string, router: Router) =>
   routeFactory({
     app,
     baseUrl,
@@ -18,4 +18,3 @@ export const createNodeRoute = (app: Application, baseUrl: string, router: Route
     middleware: schemaValidator(CreateNodeSchema),
     controller: createNodeController(createNode),
   })
-)

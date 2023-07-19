@@ -15,29 +15,17 @@ const FeatureList: FeatureItem[] = [
   {
     title: 'Drag & Drop',
     Svg: require('@site/static/img/node.svg').default,
-    description: (
-      <>
-        Move the boxes according to your needs
-      </>
-    ),
+    description: <>Move the boxes according to your needs</>,
   },
   {
     title: 'Talk to the IA',
     Svg: require('@site/static/img/chat_ia.svg').default,
-    description: (
-      <>
-        Tell us what each box is about
-      </>
-    ),
+    description: <>Tell us what each box is about</>,
   },
   {
     title: 'Build',
     Svg: require('@site/static/img/rocket.svg').default,
-    description: (
-      <>
-        Deploy, we're ready to rock!
-      </>
-    ),
+    description: <>Deploy, we're ready to rock!</>,
   },
 ]
 
@@ -60,7 +48,7 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {FeatureList.map((props) => (
+          {FeatureList.map(props => (
             <Feature key={props.title} {...props} />
           ))}
         </div>

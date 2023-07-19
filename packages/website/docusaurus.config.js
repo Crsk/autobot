@@ -19,7 +19,8 @@ const config = {
 
   presets: [
     [
-      'classic', /** @type {import('@docusaurus/preset-classic').Options} */
+      'classic',
+      /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
@@ -53,7 +54,8 @@ const config = {
       },
       announcementBar: {
         id: 'survey',
-        content: 'Help us <a target="_blank" rel="noopener noreferrer" href="https://forms.gle/f9eKg8yMQk8q8xUR7">improve</a> ❤️',
+        content:
+          'Help us <a target="_blank" rel="noopener noreferrer" href="https://forms.gle/f9eKg8yMQk8q8xUR7">improve</a> ❤️',
         backgroundColor: '#0080ff',
         textColor: '#091E42',
         isCloseable: true,

@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, DevToolsEnhancerOptions } from '@reduxjs/toolkit'
+import { DevToolsEnhancerOptions, combineReducers, configureStore } from '@reduxjs/toolkit'
 import { devToolsEnhancer } from 'redux-devtools-extension'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import { persistReducer, persistStore } from 'redux-persist'
@@ -19,7 +19,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 const epicMiddleware = createEpicMiddleware<any, any, RootState>()
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => {
+  middleware: getDefaultMiddleware => {
     const middleware = getDefaultMiddleware(middlewareConfig).concat(epicMiddleware)
 
     return middleware

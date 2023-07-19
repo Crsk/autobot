@@ -8,7 +8,7 @@ const paddingMap = { default: 0, S: 4, M: 8, L: 12, XL: 16 }
 const colorMap = { dark: colors.strong, primary: colors.primary, disabled: colors.disabled }
 
 // eslint-disable-next-line react/require-default-props
-export function DeleteIcon({ color, size, paddingLeft }: { color?: Color, size?: Size, paddingLeft?: Size }) {
+export function DeleteIcon({ color, size, paddingLeft }: { color?: Color; size?: Size; paddingLeft?: Size }) {
   const sizeValue = !size ? sizeMap.M : sizeMap[size]
   const paddingLeftValue = !paddingLeft ? paddingMap.default : paddingMap[paddingLeft]
   const colorValue = !color ? colorMap.dark : colorMap[color]

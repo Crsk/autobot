@@ -8,8 +8,7 @@ const createGrid = (svg: any, width: number, height: number) => {
 
   for (let x = 0; x <= width; x += snapValue) {
     for (let y = 0; y <= height; y += snapValue) {
-      svg.append('circle').attr('cx', x).attr('cy', y).attr('r', dotRadius)
-        .attr('fill', dotColor)
+      svg.append('circle').attr('cx', x).attr('cy', y).attr('r', dotRadius).attr('fill', dotColor)
     }
   }
 }

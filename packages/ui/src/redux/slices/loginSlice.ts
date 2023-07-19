@@ -13,12 +13,10 @@ const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    loginTrigger: (state) => state,
+    loginTrigger: state => state,
   },
 })
 
-export const {
-  loginTrigger,
-} = loginSlice.actions
+export const { loginTrigger } = loginSlice.actions
 
 export default loginSlice

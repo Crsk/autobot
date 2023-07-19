@@ -5,7 +5,7 @@ function camelToSnakeCase<T>(obj: CamelCase<T>): SnakeCase<T> {
 
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const key in obj) {
-    const newKey = key.replace(/([A-Z])/g, (group) => `_${group.toLowerCase()}`)
+    const newKey = key.replace(/([A-Z])/g, group => `_${group.toLowerCase()}`)
     newObj[newKey] = obj[key]
   }
 

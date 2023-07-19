@@ -4,10 +4,4 @@ import addNodeEpic from './add.epic'
 import { updateNodeEpicRemote, updateNodeEpicUI } from './update.epic'
 import deleteNodeEpic from './delete.epic'
 
-export default combineEpics(
-  fetchNodesEpic,
-  addNodeEpic,
-  updateNodeEpicUI,
-  updateNodeEpicRemote,
-  deleteNodeEpic,
-)
+export default combineEpics(fetchNodesEpic, addNodeEpic, updateNodeEpicUI, updateNodeEpicRemote, deleteNodeEpic)

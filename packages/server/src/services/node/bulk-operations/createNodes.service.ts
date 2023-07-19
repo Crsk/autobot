@@ -4,7 +4,7 @@ import { SnakeCase } from '../../../utils/types'
 import runTransaction from '../../../database/runTransaction'
 
 export const createNodes = async (newNodes: SnakeCase<CreateNodeBody>[]): Promise<number | undefined> => {
-  let transactionQueries: { query: string, id: string }[] = []
+  let transactionQueries: { query: string; id: string }[] = []
   const queryResult = []
 
   const commitTransaction = async () => {
@@ -17,7 +17,7 @@ export const createNodes = async (newNodes: SnakeCase<CreateNodeBody>[]): Promis
 
   // eslint-disable-next-line no-restricted-syntax
   for (const node of newNodes) {
-    const isParentInTransaction = transactionQueries.some((q) => q.id === node.parent_id)
+    const isParentInTransaction = transactionQueries.some(q => q.id === node.parent_id)
     // eslint-disable-next-line no-await-in-loop
     if (isParentInTransaction) await commitTransaction()
 

@@ -1,14 +1,14 @@
 @font-face {
-  font-family: 'Mona Sans';
+  font-family: 'Circular Std';
   src:
-    url('/src/assets/Mona-Sans.woff2') format('woff2 supports variations'),
-    url('/src/assets/Mona-Sans.woff2') format('woff2-variations');
+    url('/src/assets/CircularStd-Medium.woff2') format('woff2 supports variations'),
+    url('/src/assets/CircularStd-Book.woff2') format('woff2-variations');
   font-weight: 200 900;
   font-stretch: 75% 125%;
 }
 
 body {
-  font-family: 'Mona Sans', sans-serif;
+  font-family: 'Circular', sans-serif;
 }
 
 :root {
@@ -18,7 +18,7 @@ body {
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #14161b;
+  background-color: #c4cbdc;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

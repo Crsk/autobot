@@ -4,7 +4,7 @@ import { snapValue } from 'shared/src/utils'
 
 const createGrid = (svg: any, width: number, height: number) => {
   const dotRadius = 2
-  const dotColor = '#0c0f11'
+  const dotColor = 'transparent'
 
   for (let x = 0; x <= width; x += snapValue) {
     for (let y = 0; y <= height; y += snapValue) {

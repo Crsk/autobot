@@ -1,0 +1,161 @@
+@use 'shared/src/abstracts' as *;
+
+$font-sizes: (
+  'xs': $font-size-xs,
+  's': $font-size-s,
+  'body': $font-size-body,
+  'body-bigger': $font-size-body-bigger,
+  'h3': $font-size-h3,
+  'h2': $font-size-h2,
+  'h1': $font-size-h1,
+  'l': $font-size-l,
+  'xl': $font-size-xl,
+  'xxl': $font-size-xxl,
+);
+
+$font-weights: (
+  'regular': $font-weight-regular,
+  'semi-bold': $font-weight-semi-bold,
+  'bold': $font-weight-bold,
+);
+
+$themes: (
+  'dark': $white,
+  'light': $black,
+);
+
+$color-map: (
+  'base': (
+    'dark': (
+      'title': $white,
+      'primary': rgba($white, 0.8),
+      'secondary': rgba($white, 0.65),
+      'tertiary': rgba($white, 0.45),
+      'disabled': rgba($white, 0.25),
+    ),
+    'light': (
+      'title': $black,
+      'primary': rgba($black, 0.8),
+      'secondary': rgba($black, 0.65),
+      'tertiary': rgba($black, 0.45),
+      'disabled': rgba($black, 0.25),
+    ),
+  ),
+  'blue': (
+    'dark': (
+      'title': $blue-11,
+      'primary': rgba($blue-11, 0.8),
+      'secondary': rgba($blue-11, 0.65),
+      'tertiary': rgba($blue-11, 0.45),
+      'disabled': rgba($blue-11, 0.25),
+    ),
+    'light': (
+      'title': $blue-9,
+      'primary': rgba($blue-9, 0.8),
+      'secondary': rgba($blue-9, 0.65),
+      'tertiary': rgba($blue-9, 0.45),
+      'disabled': rgba($blue-9, 0.25),
+    ),
+  ),
+  'green': (
+    'dark': (
+      'title': $green-11,
+      'primary': rgba($green-11, 0.8),
+      'secondary': rgba($green-11, 0.65),
+      'tertiary': rgba($green-11, 0.45),
+      'disabled': rgba($green-11, 0.25),
+    ),
+    'light': (
+      'title': $green-9,
+      'primary': rgba($green-9, 0.8),
+      'secondary': rgba($green-9, 0.65),
+      'tertiary': rgba($green-9, 0.45),
+      'disabled': rgba($green-9, 0.25),
+    ),
+  ),
+  'yellow': (
+    'dark': (
+      'title': $yellow-11,
+      'primary': rgba($yellow-11, 0.8),
+      'secondary': rgba($yellow-11, 0.65),
+      'tertiary': rgba($yellow-11, 0.45),
+      'disabled': rgba($yellow-11, 0.25),
+    ),
+    'light': (
+      'title': $yellow-9,
+      'primary': rgba($yellow-9, 0.8),
+      'secondary': rgba($yellow-9, 0.65),
+      'tertiary': rgba($yellow-9, 0.45),
+      'disabled': rgba($yellow-9, 0.25),
+    ),
+  ),
+  'red': (
+    'dark': (
+      'title': $red-11,
+      'primary': rgba($red-11, 0.8),
+      'secondary': rgba($red-11, 0.65),
+      'tertiary': rgba($red-11, 0.45),
+      'disabled': rgba($red-11, 0.25),
+    ),
+    'light': (
+      'title': $red-9,
+      'primary': rgba($red-9, 0.8),
+      'secondary': rgba($red-9, 0.65),
+      'tertiary': rgba($red-9, 0.45),
+      'disabled': rgba($red-9, 0.25),
+    ),
+  ),
+);
+
+@mixin fontStyle($weight) {
+  font-weight: if(map-has-key($font-weights, $weight), map-get($font-weights, $weight), normal);
+  font-style: if(str-index($weight, 'italic'), italic, normal);
+}
+
+.text {
+  @include font-family('regular');
+  @each $size, $value in $font-sizes {
+    &--#{$size} {
+      font-size: $value;
+
+      @if $size == xl or $size == xxl {
+        @include font-family('condensed');
+      }
+    }
+  }
+
+  @each $color, $themes in $color-map {
+    @each $theme, $levels in $themes {
+      @each $level, $color-value in $levels {
+        &--#{$color}--#{$theme}--#{$level} {
+          color: $color-value;
+        }
+      }
+    }
+  }
+}
+
+@each $weight in map-keys($font-weights) {
+  .#{$weight} {
+    @include fontStyle($weight);
+    font-weight: map-get($font-weights, $weight);
+  }
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.semi-bold--italic {
+  font-weight: $font-weight-semi-bold;
+  font-style: italic;
+}
+
+.bold--italic {
+  font-weight: $font-weight-bold;
+  font-style: italic;
+}

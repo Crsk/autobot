@@ -4,7 +4,7 @@ import styles from './text.module.scss'
 type TextSize = 'xs' | 's' | 'body' | 'body-bigger' | 'h3' | 'h2' | 'h1' | 'l' | 'xl' | 'xxl'
 type TextLevel = 'title' | 'primary' | 'secondary' | 'tertiary' | 'disabled'
 type TextStyle = 'regular' | 'semi-bold' | 'bold' | 'italic' | 'strikethrough' | 'semi-bold--italic' | 'bold--italic'
-type TextColor = 'base' | 'blue' | 'green' | 'yellow' | 'red'
+type TextColor = 'base' | 'blue' | 'green' | 'yellow' | 'red' | 'private'
 
 interface TextProps {
   level?: TextLevel

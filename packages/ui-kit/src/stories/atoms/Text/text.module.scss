@@ -105,6 +105,22 @@ $color-map: (
       'disabled': rgba($red-9, 0.25),
     ),
   ),
+  'private': (
+    'dark': (
+      'title': $private-11,
+      'primary': rgba($private-11, 0.8),
+      'secondary': rgba($private-11, 0.6),
+      'tertiary': rgba($private-11, 0.45),
+      'disabled': rgb($private-11, 0.25),
+    ),
+    'light': (
+      'title': $private-9,
+      'primary': rgba($private-9, 0.8),
+      'secondary': rgba($private-9, 0.6),
+      'tertiary': rgba($private-9, 0.45),
+      'disabled': rgb($private-9, 0.25),
+    ),
+  ),
 );
 
 @mixin fontStyle($weight) {

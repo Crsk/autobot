@@ -12,6 +12,11 @@
     height: 32px;
     cursor: default;
 
+    background-color: transparent;
+    border: none;
+    outline: none;
+    text-align: initial;
+
     .container {
       button {
         width: 16px;
@@ -33,7 +38,7 @@
       }
 
       &:hover {
-        background-color: $neutral-2;
+        background-color: $neutral-4;
       }
     }
 

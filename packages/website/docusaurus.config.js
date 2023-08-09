@@ -44,6 +44,7 @@ const config = {
         logo: { alt: 'Frow Logo', src: 'img/logo.svg' },
         items: [
           { to: '/blog', label: 'Blog', position: 'left' },
+          { to: '/docs', label: 'Docs', position: 'left' },
           {
             href: 'https://github.com/Crsk/frow',
             label: 'GitHub',

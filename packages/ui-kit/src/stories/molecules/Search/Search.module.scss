@@ -1,0 +1,42 @@
+@use 'shared/src/abstracts' as *;
+
+.search {
+  padding: 0 16px 0 24px;
+  width: 166px;
+  height: 32px;
+  border-radius: $space-2;
+
+  &--dark {
+    background: $neutral-3;
+  }
+
+  &--light {
+    background: $neutral-12;
+  }
+
+  &--input {
+    @include font-family('regular');
+    font-size: $font-size-body;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    &--light {
+      color: $text-primary-light-mode;
+
+      &::placeholder {
+        color: $text-tertiary-light-mode;
+      }
+    }
+
+    &--dark {
+      color: $text-primary-dark-mode;
+
+      &::placeholder {
+        color: $text-tertiary-dark-mode;
+      }
+    }
+  }
+}

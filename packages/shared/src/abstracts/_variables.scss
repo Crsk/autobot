@@ -1,0 +1,31 @@
+@use './colors' as *;
+
+$font-family: 'Nunito Sans', 'Inter', Helvetica, Arial, sans-serif;
+
+$primary: $yellow-10;
+$secondary: $blue-logo;
+
+$space-0: 0;
+$space-1: 4px;
+$space-2: 8px;
+$space-2-b: 12px;
+$space-3: 16px;
+$space-3-b: 24px;
+$space-4: 32px;
+
+$radius-0: 4px;
+$radius-1: 8px;
+$radius-2: 12px;
+$radius-3: 16px;
+$radius-4: 32px;
+
+$border-width-0: 0;
+$border-width-1: 1px;
+
+$size-1: 8px;
+$size-2: 12px;
+$size-3: 14px;
+$size-4: 16px;
+$size-5: 20px;
+$size-6: 24px;
+$size-7: 32px;

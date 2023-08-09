@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,800;1,6..12,400;1,6..12,600;1,6..12,800&display=swap');
+
+$font-family-regular: 'Nunito Sans', 'Inter', sans-serif;
+$font-family-condensed: 'Mona Sans', 'Inter', sans-serif;
+
+$font-size-xs: 8px;
+$font-size-s: 10px;
+$font-size-body: 12px;
+$font-size-body-bigger: 14px;
+$font-size-h3: 16px;
+$font-size-h2: 20px;
+$font-size-h1: 24px;
+$font-size-l: 30px;
+$font-size-xl: 38px;
+$font-size-xxl: 56px;
+
+$font-line-height-xs: 18px;
+$font-line-heighte-s: 20px;
+$font-line-height-body: 22px;
+$font-line-height-body-bigger: 24px;
+$font-line-height-h3: 26px;
+$font-line-height-h2: 30px;
+$font-line-height-h1: 34px;
+$font-line-height-l: 40px;
+$font-line-height-xl: 48px;
+$font-line-height-xxl: 66px;
+
+$font-weight-regular: 400;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 800;
+
+/**
+ * Bigger font sizes looks better with condensed space between letters
+ * So, condensed font is used for bigger font sizes
+ * @param {string} $font-type - 'regular' or 'condensed'
+ */
+@mixin font-family($font-type) {
+  @if $font-type == 'condensed' {
+    font-family: $font-family-condensed;
+    font-stretch: condensed;
+  } @else {
+    font-family: $font-family-regular;
+    font-stretch: normal;
+  }
+}

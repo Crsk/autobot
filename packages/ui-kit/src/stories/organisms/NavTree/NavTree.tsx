@@ -9,9 +9,9 @@ import { getAllNodes } from './utils/getAllNodes'
 /**
  * Recursively renders a NavChild
  */
-const NavChild: FC<TreeItem> = ({ value, isGroup, level, isPrivate, children }: TreeItem) => (
-  <NavItem value={value} isGroup={isGroup} level={level} isOpen isPrivate={isPrivate}>
-    {children?.map(child => <NavChild key={child.value} {...child} />)}
+const NavChild: FC<TreeItem> = ({ value, isFolder, level, isPrivate, children, onContextMenu }: TreeItem) => (
+  <NavItem value={value} isFolder={isFolder} level={level} isOpen isPrivate={isPrivate} onContextMenu={onContextMenu}>
+    {children?.map(child => <NavChild key={child.value} {...child} onContextMenu={onContextMenu} />)}
   </NavItem>
 )
 

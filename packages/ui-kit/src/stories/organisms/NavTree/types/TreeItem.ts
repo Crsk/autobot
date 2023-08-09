@@ -1,7 +1,8 @@
 export type TreeItem = {
   value: string
-  isGroup: boolean
+  isFolder: boolean
   level: number
   isPrivate?: boolean
   children: TreeItem[]
+  onContextMenu?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }

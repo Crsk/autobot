@@ -1,9 +1,8 @@
-import { Tree } from '../types/Tree'
 import { TreeItem } from '../types/TreeItem'
 
-const getRoot = (tree: Tree): TreeItem => ({
+const getRoot = (tree: TreeItem[]): TreeItem => ({
   value: tree[0].value,
-  isGroup: tree[0].isGroup,
+  isFolder: tree[0].isFolder,
   level: tree[0].level,
   isPrivate: tree[0].isPrivate,
   children: [],
@@ -12,11 +11,11 @@ const getRoot = (tree: Tree): TreeItem => ({
 /**
  * Recursively gets all children from tree (doesn't include root node)
  */
-const getAllChildren = (tree: Tree): Tree => {
+const getAllChildren = (tree: TreeItem[]): TreeItem[] => {
   if (tree.length === 0) return []
 
   const allChildren = tree.reduce(
-    (acc: Tree, curr: TreeItem) => [...acc, ...curr.children, ...getAllChildren(curr.children)],
+    (acc: TreeItem[], curr: TreeItem) => [...acc, ...curr.children, ...getAllChildren(curr.children)],
     []
   )
 
@@ -26,4 +25,4 @@ const getAllChildren = (tree: Tree): Tree => {
 /**
  * Recursively gets all nodes from tree (does include root node)
  */
-export const getAllNodes = (tree: Tree): Tree => [getRoot(tree), ...getAllChildren(tree)]
+export const getAllNodes = (tree: TreeItem[]): TreeItem[] => [getRoot(tree), ...getAllChildren(tree)]

@@ -1,12 +1,12 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { NavTree } from './NavTree'
-import { Tree } from './types/Tree'
+import { TreeItem } from './types/TreeItem'
 import { sampleTree } from './__fixtures__/tree'
 
 describe('NavTree', () => {
   const setup = () => {
-    const tree: Tree = sampleTree.data
+    const tree: TreeItem[] = sampleTree.data
     const utils = render(<NavTree tree={tree} />)
 
     return { ...utils }
@@ -14,9 +14,9 @@ describe('NavTree', () => {
 
   it('renders the children from the object argument', () => {
     const { getAllByTestId } = setup()
-    const groups = getAllByTestId('nav-group')
+    const folders = getAllByTestId('nav-folder')
     const nodes = getAllByTestId('nav-item')
-    expect(groups).toHaveLength(sampleTree.totalGroups)
+    expect(folders).toHaveLength(sampleTree.totalFolders)
     expect(nodes).toHaveLength(sampleTree.totalLeafNodes)
   })
 
@@ -37,20 +37,20 @@ describe('NavTree', () => {
     expect(leafNodes).toHaveLength(2)
   })
 
-  it('filters group nodes when the search input changes', () => {
+  it('filters folder nodes when the search input changes', () => {
     const { getAllByTestId, getByPlaceholderText } = setup()
 
-    let groupNodes = getAllByTestId('nav-group')
-    expect(groupNodes).toHaveLength(sampleTree.totalGroups)
+    let folderNodes = getAllByTestId('nav-folder')
+    expect(folderNodes).toHaveLength(sampleTree.totalFolders)
 
     const input = getByPlaceholderText('Search')
 
-    fireEvent.change(input, { target: { value: 'group 1' } })
-    groupNodes = getAllByTestId('nav-group')
-    expect(groupNodes).toHaveLength(1)
+    fireEvent.change(input, { target: { value: 'folder 1' } })
+    folderNodes = getAllByTestId('nav-folder')
+    expect(folderNodes).toHaveLength(1)
 
-    fireEvent.change(input, { target: { value: 'group' } })
-    groupNodes = getAllByTestId('nav-group')
-    expect(groupNodes).toHaveLength(2)
+    fireEvent.change(input, { target: { value: 'folder' } })
+    folderNodes = getAllByTestId('nav-folder')
+    expect(folderNodes).toHaveLength(2)
   })
 })

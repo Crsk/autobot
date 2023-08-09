@@ -1,35 +1,47 @@
 import React from 'react'
-import { NavTree, Tree } from 'ui-kit/src/stories'
 
-const navItems: Tree = [
+import { NavTree, TreeItem } from 'ui-kit/src/stories'
+
+const tree: TreeItem[] = [
   {
     value: 'Startup',
-    isGroup: true,
+    isFolder: true,
     level: 0,
     children: [
       {
         value: 'Y Combinator',
-        isGroup: true,
+        isFolder: true,
         level: 1,
         children: [
           {
             value: 'Startup School',
-            isGroup: true,
+            isFolder: true,
             level: 2,
             children: [
-              { value: 'Pricing', isGroup: false, level: 3, children: [] },
-              { value: 'Things to avoid', isGroup: false, level: 3, children: [] },
-              { value: 'Co-founder', isGroup: false, level: 3, children: [] },
+              { value: 'Pricing', isFolder: false, level: 3, children: [] },
+              { value: 'Things to avoid', isFolder: false, level: 3, children: [] },
+              { value: 'Co-founder', isFolder: false, level: 3, children: [] },
             ],
           },
-          { value: 'Paul Graham', isGroup: true, level: 2, children: [] },
+          {
+            value: 'Paul Graham',
+            isFolder: true,
+            level: 2,
+            children: [{ value: 'How to get startup ideas', isFolder: false, level: 4, children: [] }],
+          },
+          {
+            value: 'Sam Altman',
+            isFolder: true,
+            level: 2,
+            children: [{ value: 'How to be successful', isFolder: false, level: 4, children: [] }],
+          },
         ],
       },
-      { value: 'Ideas', isGroup: true, level: 1, isPrivate: true, children: [] },
+      { value: 'My ideas', isFolder: true, level: 1, isPrivate: true, children: [] },
     ],
   },
 ]
 
-const ContextPage = () => <NavTree theme="dark" tree={navItems} />
+const ContextPage = () => <NavTree theme="dark" tree={tree} />
 
 export { ContextPage }

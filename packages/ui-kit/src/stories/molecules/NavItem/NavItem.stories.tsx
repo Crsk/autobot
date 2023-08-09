@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>
 export const NavItemLevelOpen1: Story = {
   args: {
     value: 'Startup',
-    isGroup: true,
+    isFolder: true,
     isOpen: true,
     isPrivate: true,
     level: 1,

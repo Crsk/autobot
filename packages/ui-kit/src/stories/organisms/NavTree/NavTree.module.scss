@@ -1,0 +1,13 @@
+@use 'shared/src/abstracts' as *;
+
+.navtree {
+  width: 230px;
+  background-color: $neutral-1;
+  height: calc(100vh - 64px);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  margin: 16px;
+}

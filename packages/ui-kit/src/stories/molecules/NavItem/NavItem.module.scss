@@ -1,0 +1,59 @@
+@use 'shared/src/abstracts' as *;
+
+.container {
+  width: -webkit-fill-available;
+
+  .nav {
+    display: flex;
+    width: -webkit-fill-available;
+    padding: 0;
+    padding: 0 1px;
+    align-items: center;
+    height: 32px;
+    cursor: default;
+
+    .container {
+      button {
+        width: 16px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding-left: 4px;
+        padding-right: 4px;
+
+        svg {
+          top: -2px;
+          position: relative;
+        }
+      }
+
+      span {
+        width: inherit;
+      }
+
+      &:hover {
+        background-color: $neutral-2;
+      }
+    }
+
+    .options {
+      display: flex;
+      width: fit-content;
+      padding-top: 8px;
+
+      button {
+        width: 16px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        height: 16px;
+        display: block;
+        cursor: pointer;
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}

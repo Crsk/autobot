@@ -35,6 +35,17 @@ export const NavTreeDark: Story = {
                 ],
               },
               {
+                value: 'Paul Graham',
+                isFolder: true,
+                level: 2,
+                children: [{ value: 'How to get startup ideas', isFolder: false, level: 4, children: [] }],
+              },
+              {
+                value: 'Sam Altman',
+                isFolder: true,
+                level: 2,
+                children: [{ value: 'How to be successful', isFolder: false, level: 4, children: [] }],
+              },
             ],
           },
           { value: 'My ideas', isFolder: true, level: 1, isPrivate: true, children: [] },

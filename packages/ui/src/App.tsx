@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Flow from '@/pages/Flow/Flow'
 import { persistor, store } from './redux/config/store'
+import { ContextPage } from './pages/ContextPage/Context.page'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/flow" element={<Flow />} />
+              <Route path="/context" element={<ContextPage />} />
             </Routes>
           </BrowserRouter>
         </PersistGate>

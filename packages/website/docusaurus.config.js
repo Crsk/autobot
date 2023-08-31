@@ -4,7 +4,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const repoUrl = 'https://github.com/Crsk/frow/packages/website/'
 
 const config = {
-  title: 'Not sure yet what is this about',
+  title: 'Store and workflow your knoledge',
   tagline: '🍕  Topping the brainstorm pizza',
   favicon: 'img/favicon.ico',
   url: 'https://crsk.github.io',
@@ -41,7 +41,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        logo: { alt: 'Frow Logo', src: 'img/logo.svg' },
+        logo: { alt: 'Frow Logo', src: 'img/logo-white.svg' },
         items: [
           { to: '/blog', label: 'Blog', position: 'left' },
           { to: '/docs', label: 'Docs', position: 'left' },

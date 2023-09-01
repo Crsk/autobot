@@ -1,6 +1,6 @@
-CREATE DATABASE frow;
-CREATE SCHEMA frow;
-SET search_path TO frow;
+CREATE DATABASE nodeflow;
+CREATE SCHEMA nodeflow;
+SET search_path TO nodeflow;
 
 CREATE EXTENSION vector;
 

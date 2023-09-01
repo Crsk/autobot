@@ -1,16 +1,16 @@
 // @ts-check
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
-const repoUrl = 'https://github.com/Crsk/frow/packages/website/'
+const repoUrl = 'https://github.com/Crsk/node-flow/packages/website/'
 
 const config = {
   title: 'Store and workflow your knowledge',
   tagline: '🍕  Topping the brainstorm pizza',
   favicon: 'img/favicon.ico',
   url: 'https://crsk.github.io',
-  baseUrl: '/frow/',
-  organizationName: 'Frow',
-  projectName: 'frow',
+  baseUrl: '/node-flow/',
+  organizationName: 'node-flow',
+  projectName: 'node-flow',
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
   onBrokenLinks: 'throw',
@@ -41,12 +41,12 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        logo: { alt: 'Frow Logo', src: 'img/logo-white.svg' },
+        logo: { alt: 'NodeFlow Logo', src: 'img/logo-white.svg' },
         items: [
           { to: '/blog', label: 'Blog', position: 'left' },
           { to: '/docs', label: 'Docs', position: 'left' },
           {
-            href: 'https://github.com/Crsk/frow',
+            href: 'https://github.com/Crsk/node-flow',
             label: 'GitHub',
             position: 'right',
           },
